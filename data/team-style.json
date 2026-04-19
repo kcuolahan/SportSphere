@@ -1,0 +1,204 @@
+{
+  "updated_round": 6,
+  "season": 2026,
+  "teams": [
+    {
+      "code": "ADE",
+      "name": "Adelaide",
+      "disposal_index": -12,
+      "concedes_by_position": {
+        "MID": { "avg": 19.8, "vs_league": 0.99, "league_avg": 20.0, "games": 6 },
+        "DEF": { "avg": 18.2, "vs_league": 1.01, "league_avg": 18.0, "games": 6 },
+        "FWD": { "avg": 11.9, "vs_league": 0.99, "league_avg": 12.0, "games": 6 },
+        "RUCK": { "avg": 12.4, "vs_league": 1.03, "league_avg": 12.0, "games": 6 }
+      }
+    },
+    {
+      "code": "BRL",
+      "name": "Brisbane Lions",
+      "disposal_index": 18,
+      "concedes_by_position": {
+        "MID": { "avg": 21.4, "vs_league": 1.07, "league_avg": 20.0, "games": 6 },
+        "DEF": { "avg": 17.6, "vs_league": 0.98, "league_avg": 18.0, "games": 6 },
+        "FWD": { "avg": 12.8, "vs_league": 1.07, "league_avg": 12.0, "games": 6 },
+        "RUCK": { "avg": 13.2, "vs_league": 1.10, "league_avg": 12.0, "games": 6 }
+      }
+    },
+    {
+      "code": "CAR",
+      "name": "Carlton",
+      "disposal_index": 15,
+      "concedes_by_position": {
+        "MID": { "avg": 22.2, "vs_league": 1.11, "league_avg": 20.0, "games": 6 },
+        "DEF": { "avg": 18.9, "vs_league": 1.05, "league_avg": 18.0, "games": 6 },
+        "FWD": { "avg": 13.1, "vs_league": 1.09, "league_avg": 12.0, "games": 6 },
+        "RUCK": { "avg": 11.8, "vs_league": 0.98, "league_avg": 12.0, "games": 6 }
+      }
+    },
+    {
+      "code": "COL",
+      "name": "Collingwood",
+      "disposal_index": 53,
+      "concedes_by_position": {
+        "MID": { "avg": 18.2, "vs_league": 0.91, "league_avg": 20.0, "games": 6 },
+        "DEF": { "avg": 19.2, "vs_league": 1.07, "league_avg": 18.0, "games": 7 },
+        "FWD": { "avg": 13.8, "vs_league": 1.15, "league_avg": 12.0, "games": 7 },
+        "RUCK": { "avg": 13.0, "vs_league": 1.08, "league_avg": 12.0, "games": 6 }
+      }
+    },
+    {
+      "code": "ESS",
+      "name": "Essendon",
+      "disposal_index": -30,
+      "concedes_by_position": {
+        "MID": { "avg": 20.6, "vs_league": 1.03, "league_avg": 20.0, "games": 6 },
+        "DEF": { "avg": 17.1, "vs_league": 0.95, "league_avg": 18.0, "games": 6 },
+        "FWD": { "avg": 11.4, "vs_league": 0.95, "league_avg": 12.0, "games": 6 },
+        "RUCK": { "avg": 12.0, "vs_league": 1.00, "league_avg": 12.0, "games": 6 }
+      }
+    },
+    {
+      "code": "FRE",
+      "name": "Fremantle",
+      "disposal_index": -8,
+      "concedes_by_position": {
+        "MID": { "avg": 19.2, "vs_league": 0.96, "league_avg": 20.0, "games": 6 },
+        "DEF": { "avg": 17.5, "vs_league": 0.97, "league_avg": 18.0, "games": 6 },
+        "FWD": { "avg": 11.6, "vs_league": 0.97, "league_avg": 12.0, "games": 6 },
+        "RUCK": { "avg": 11.5, "vs_league": 0.96, "league_avg": 12.0, "games": 6 }
+      }
+    },
+    {
+      "code": "GCS",
+      "name": "Gold Coast Suns",
+      "disposal_index": 5,
+      "concedes_by_position": {
+        "MID": { "avg": 20.8, "vs_league": 1.04, "league_avg": 20.0, "games": 6 },
+        "DEF": { "avg": 18.5, "vs_league": 1.03, "league_avg": 18.0, "games": 6 },
+        "FWD": { "avg": 12.3, "vs_league": 1.03, "league_avg": 12.0, "games": 6 },
+        "RUCK": { "avg": 12.6, "vs_league": 1.05, "league_avg": 12.0, "games": 6 }
+      }
+    },
+    {
+      "code": "GEE",
+      "name": "Geelong",
+      "disposal_index": -20,
+      "concedes_by_position": {
+        "MID": { "avg": 18.8, "vs_league": 0.94, "league_avg": 20.0, "games": 6 },
+        "DEF": { "avg": 17.2, "vs_league": 0.96, "league_avg": 18.0, "games": 6 },
+        "FWD": { "avg": 11.5, "vs_league": 0.96, "league_avg": 12.0, "games": 6 },
+        "RUCK": { "avg": 11.2, "vs_league": 0.93, "league_avg": 12.0, "games": 6 }
+      }
+    },
+    {
+      "code": "GWS",
+      "name": "GWS Giants",
+      "disposal_index": -55,
+      "concedes_by_position": {
+        "MID": { "avg": 17.6, "vs_league": 0.88, "league_avg": 20.0, "games": 6 },
+        "DEF": { "avg": 19.3, "vs_league": 1.07, "league_avg": 18.0, "games": 6 },
+        "FWD": { "avg": 11.2, "vs_league": 0.93, "league_avg": 12.0, "games": 6 },
+        "RUCK": { "avg": 11.8, "vs_league": 0.98, "league_avg": 12.0, "games": 6 }
+      }
+    },
+    {
+      "code": "HAW",
+      "name": "Hawthorn",
+      "disposal_index": 10,
+      "concedes_by_position": {
+        "MID": { "avg": 20.2, "vs_league": 1.01, "league_avg": 20.0, "games": 6 },
+        "DEF": { "avg": 18.3, "vs_league": 1.02, "league_avg": 18.0, "games": 6 },
+        "FWD": { "avg": 12.1, "vs_league": 1.01, "league_avg": 12.0, "games": 6 },
+        "RUCK": { "avg": 12.2, "vs_league": 1.02, "league_avg": 12.0, "games": 6 }
+      }
+    },
+    {
+      "code": "MEL",
+      "name": "Melbourne",
+      "disposal_index": 25,
+      "concedes_by_position": {
+        "MID": { "avg": 19.5, "vs_league": 0.98, "league_avg": 20.0, "games": 6 },
+        "DEF": { "avg": 17.8, "vs_league": 0.99, "league_avg": 18.0, "games": 6 },
+        "FWD": { "avg": 11.8, "vs_league": 0.98, "league_avg": 12.0, "games": 6 },
+        "RUCK": { "avg": 11.6, "vs_league": 0.97, "league_avg": 12.0, "games": 6 }
+      }
+    },
+    {
+      "code": "NTH",
+      "name": "North Melbourne",
+      "disposal_index": -25,
+      "concedes_by_position": {
+        "MID": { "avg": 22.8, "vs_league": 1.14, "league_avg": 20.0, "games": 6 },
+        "DEF": { "avg": 19.8, "vs_league": 1.10, "league_avg": 18.0, "games": 6 },
+        "FWD": { "avg": 13.8, "vs_league": 1.15, "league_avg": 12.0, "games": 6 },
+        "RUCK": { "avg": 13.6, "vs_league": 1.13, "league_avg": 12.0, "games": 6 }
+      }
+    },
+    {
+      "code": "PTA",
+      "name": "Port Adelaide",
+      "disposal_index": 8,
+      "concedes_by_position": {
+        "MID": { "avg": 19.4, "vs_league": 0.97, "league_avg": 20.0, "games": 6 },
+        "DEF": { "avg": 17.9, "vs_league": 0.99, "league_avg": 18.0, "games": 6 },
+        "FWD": { "avg": 11.7, "vs_league": 0.98, "league_avg": 12.0, "games": 6 },
+        "RUCK": { "avg": 12.0, "vs_league": 1.00, "league_avg": 12.0, "games": 6 }
+      }
+    },
+    {
+      "code": "RCE",
+      "name": "Richmond",
+      "disposal_index": -15,
+      "concedes_by_position": {
+        "MID": { "avg": 21.0, "vs_league": 1.05, "league_avg": 20.0, "games": 6 },
+        "DEF": { "avg": 18.6, "vs_league": 1.03, "league_avg": 18.0, "games": 6 },
+        "FWD": { "avg": 12.5, "vs_league": 1.04, "league_avg": 12.0, "games": 6 },
+        "RUCK": { "avg": 12.3, "vs_league": 1.03, "league_avg": 12.0, "games": 6 }
+      }
+    },
+    {
+      "code": "STK",
+      "name": "St Kilda",
+      "disposal_index": -5,
+      "concedes_by_position": {
+        "MID": { "avg": 20.4, "vs_league": 1.02, "league_avg": 20.0, "games": 6 },
+        "DEF": { "avg": 18.1, "vs_league": 1.01, "league_avg": 18.0, "games": 6 },
+        "FWD": { "avg": 12.0, "vs_league": 1.00, "league_avg": 12.0, "games": 6 },
+        "RUCK": { "avg": 12.1, "vs_league": 1.01, "league_avg": 12.0, "games": 6 }
+      }
+    },
+    {
+      "code": "SYD",
+      "name": "Sydney Swans",
+      "disposal_index": 22,
+      "concedes_by_position": {
+        "MID": { "avg": 18.0, "vs_league": 0.90, "league_avg": 20.0, "games": 6 },
+        "DEF": { "avg": 20.2, "vs_league": 1.12, "league_avg": 18.0, "games": 6 },
+        "FWD": { "avg": 11.0, "vs_league": 0.92, "league_avg": 12.0, "games": 6 },
+        "RUCK": { "avg": 9.8, "vs_league": 0.82, "league_avg": 12.0, "games": 6 }
+      }
+    },
+    {
+      "code": "WBD",
+      "name": "Western Bulldogs",
+      "disposal_index": -40,
+      "concedes_by_position": {
+        "MID": { "avg": 23.6, "vs_league": 1.18, "league_avg": 20.0, "games": 6 },
+        "DEF": { "avg": 19.4, "vs_league": 1.08, "league_avg": 18.0, "games": 6 },
+        "FWD": { "avg": 13.5, "vs_league": 1.13, "league_avg": 12.0, "games": 6 },
+        "RUCK": { "avg": 13.8, "vs_league": 1.15, "league_avg": 12.0, "games": 6 }
+      }
+    },
+    {
+      "code": "WCE",
+      "name": "West Coast Eagles",
+      "disposal_index": -35,
+      "concedes_by_position": {
+        "MID": { "avg": 22.4, "vs_league": 1.12, "league_avg": 20.0, "games": 6 },
+        "DEF": { "avg": 19.1, "vs_league": 1.06, "league_avg": 18.0, "games": 6 },
+        "FWD": { "avg": 13.2, "vs_league": 1.10, "league_avg": 12.0, "games": 6 },
+        "RUCK": { "avg": 13.0, "vs_league": 1.08, "league_avg": 12.0, "games": 6 }
+      }
+    }
+  ]
+}

@@ -1,0 +1,307 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+
+type Signal = "🔥 HIGH CONVICTION" | "✅ BET" | "❌ SKIP" | "⛔ FWD NO BET";
+type Direction = "OVER ⬆" | "UNDER ⬇";
+type Confidence = "🔥 STRONG" | "⚠ MODERATE" | "LEAN";
+type VolTier = "LOW" | "MODERATE" | "HIGH" | "V.HIGH";
+
+interface Prediction {
+  player: string;
+  position: string;
+  team: string;
+  opponent: string;
+  venue: string;
+  bookie_line: number;
+  predicted: number;
+  edge: number;
+  direction: Direction;
+  confidence: Confidence;
+  condition: string;
+  edge_vol: number;
+  enhanced_signal: Signal;
+  bet_score: number;
+  filter_pass: boolean;
+  std_dev: number;
+  volatility_tier: VolTier;
+  play_style: string;
+}
+
+const PREDICTIONS: Prediction[] = [
+  { player: "Brodie Grundy", position: "RUCK", team: "SYD", opponent: "GWS", venue: "SCG", bookie_line: 21.5, predicted: 16.0, edge: -5.5, direction: "UNDER ⬇", confidence: "🔥 STRONG", condition: "Dry", edge_vol: 1.149, enhanced_signal: "🔥 HIGH CONVICTION", bet_score: 1.149, filter_pass: true, std_dev: 4.8, volatility_tier: "MODERATE", play_style: "HYBRID" },
+  { player: "Lachie Ash", position: "DEF", team: "GWS", opponent: "SYD", venue: "SCG", bookie_line: 27.5, predicted: 31.3, edge: 3.8, direction: "OVER ⬆", confidence: "🔥 STRONG", condition: "Dry", edge_vol: 1.115, enhanced_signal: "🔥 HIGH CONVICTION", bet_score: 1.115, filter_pass: true, std_dev: 3.4, volatility_tier: "LOW", play_style: "TRANS" },
+  { player: "Lachie Whitfield", position: "DEF", team: "GWS", opponent: "SYD", venue: "SCG", bookie_line: 27.5, predicted: 31.1, edge: 3.6, direction: "OVER ⬆", confidence: "🔥 STRONG", condition: "Dry", edge_vol: 0.988, enhanced_signal: "🔥 HIGH CONVICTION", bet_score: 0.988, filter_pass: true, std_dev: 3.6, volatility_tier: "LOW", play_style: "TRANS" },
+  { player: "Angus Sheldrick", position: "MID", team: "SYD", opponent: "GWS", venue: "SCG", bookie_line: 23.5, predicted: 18.8, edge: -4.7, direction: "UNDER ⬇", confidence: "🔥 STRONG", condition: "Dry", edge_vol: 0.944, enhanced_signal: "✅ BET", bet_score: 0.944, filter_pass: true, std_dev: 4.98, volatility_tier: "MODERATE", play_style: "STOP" },
+  { player: "Nick Daicos", position: "MID", team: "COL", opponent: "CAR", venue: "MCG", bookie_line: 30.5, predicted: 35.1, edge: 4.6, direction: "OVER ⬆", confidence: "🔥 STRONG", condition: "Dry", edge_vol: 0.803, enhanced_signal: "✅ BET", bet_score: 0.803, filter_pass: true, std_dev: 5.73, volatility_tier: "MODERATE", play_style: "TRANS" },
+  { player: "Scott Pendlebury", position: "MID", team: "COL", opponent: "CAR", venue: "MCG", bookie_line: 21.5, predicted: 16.7, edge: -4.8, direction: "UNDER ⬇", confidence: "🔥 STRONG", condition: "Dry", edge_vol: 0.829, enhanced_signal: "✅ BET", bet_score: 0.829, filter_pass: true, std_dev: 5.79, volatility_tier: "MODERATE", play_style: "STOP" },
+  { player: "Bailey Smith", position: "MID", team: "GEE", opponent: "WBD", venue: "GMHBA", bookie_line: 31.5, predicted: 35.0, edge: 3.5, direction: "OVER ⬆", confidence: "🔥 STRONG", condition: "Dry", edge_vol: 0.62, enhanced_signal: "✅ BET", bet_score: 0.62, filter_pass: true, std_dev: 5.65, volatility_tier: "MODERATE", play_style: "TRANS" },
+  { player: "Sam Walsh", position: "MID", team: "CAR", opponent: "COL", venue: "MCG", bookie_line: 29.5, predicted: 28.2, edge: -1.3, direction: "UNDER ⬇", confidence: "LEAN", condition: "Dry", edge_vol: 0.22, enhanced_signal: "❌ SKIP", bet_score: 0.22, filter_pass: false, std_dev: 5.9, volatility_tier: "MODERATE", play_style: "STOP" },
+];
+
+type FilterType = "ALL" | "ACTIONABLE" | "HC";
+
+export default function PredictionsPage() {
+  const [filter, setFilter] = useState<FilterType>("ACTIONABLE");
+  const [expanded, setExpanded] = useState<string | null>(null);
+
+  const filtered = PREDICTIONS.filter((p) => {
+    if (filter === "ACTIONABLE") return p.filter_pass;
+    if (filter === "HC") return p.enhanced_signal === "🔥 HIGH CONVICTION";
+    return true;
+  });
+
+  const hcCount = PREDICTIONS.filter(p => p.enhanced_signal === "🔥 HIGH CONVICTION").length;
+  const betCount = PREDICTIONS.filter(p => p.filter_pass).length;
+  const overCount = filtered.filter(p => p.direction.includes("OVER")).length;
+  const underCount = filtered.filter(p => p.direction.includes("UNDER")).length;
+
+  return (
+    <div style={{ minHeight: "100vh", background: "#000", color: "#f0f0f0", fontFamily: "system-ui, -apple-system, sans-serif" }}>
+
+      {/* ── NAV ── */}
+      <nav style={{
+        position: "sticky", top: 0, zIndex: 100,
+        background: "rgba(0,0,0,0.92)",
+        backdropFilter: "blur(12px)",
+        borderBottom: "1px solid #111",
+        padding: "0 20px",
+      }}>
+        <div style={{ maxWidth: 860, margin: "0 auto", height: 56, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
+            <div style={{ width: 24, height: 24, borderRadius: "50%", background: "#f97316", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 800, color: "#000" }}>S</div>
+            <span style={{ fontSize: 14, fontWeight: 700, color: "#f0f0f0" }}>Sport<span style={{ color: "#f97316" }}>Sphere</span></span>
+          </Link>
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <span style={{ fontSize: 11, color: "#333", letterSpacing: "0.06em", textTransform: "uppercase" }}>Round 6 · 2026</span>
+            <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e" }} />
+          </div>
+        </div>
+      </nav>
+
+      <div style={{ maxWidth: 860, margin: "0 auto", padding: "24px 20px" }}>
+
+        {/* ── PAGE HEADER ── */}
+        <div style={{ marginBottom: 24 }}>
+          <h1 style={{ fontSize: "clamp(22px, 4vw, 32px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 6px" }}>
+            Round 6 Predictions
+          </h1>
+          <p style={{ fontSize: 13, color: "#444", margin: 0 }}>
+            AFL player disposal props · Sorted by conviction score
+          </p>
+        </div>
+
+        {/* ── STAT ROW ── */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: 20 }}>
+          {[
+            { label: "Total", value: PREDICTIONS.length, color: "#f0f0f0" },
+            { label: "High Conv.", value: hcCount, color: "#f97316" },
+            { label: "Actionable", value: betCount, color: "#22c55e" },
+            { label: "Win Rate", value: "58.8%", color: "#60a5fa" },
+          ].map((s) => (
+            <div key={s.label} style={{
+              background: "#0a0a0a",
+              border: "1px solid #111",
+              borderRadius: 10,
+              padding: "12px",
+              textAlign: "center",
+            }}>
+              <div style={{ fontSize: 22, fontWeight: 800, color: s.color, letterSpacing: "-0.02em" }}>{s.value}</div>
+              <div style={{ fontSize: 10, color: "#333", marginTop: 2, textTransform: "uppercase", letterSpacing: "0.06em" }}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* ── ACCURACY STRIP ── */}
+        <div style={{
+          background: "#050505",
+          border: "1px solid #111",
+          borderRadius: 10,
+          padding: "12px 16px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: 20,
+          flexWrap: "wrap",
+          gap: 10,
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e" }} />
+            <span style={{ fontSize: 12, color: "#555" }}>Model track record · Rounds 3–5 · 68 filtered picks</span>
+          </div>
+          <div style={{ display: "flex", gap: 20 }}>
+            <div style={{ textAlign: "right" }}>
+              <span style={{ fontSize: 18, fontWeight: 800, color: "#22c55e" }}>58.8%</span>
+              <span style={{ fontSize: 10, color: "#333", marginLeft: 4 }}>filtered</span>
+            </div>
+            <div style={{ textAlign: "right" }}>
+              <span style={{ fontSize: 18, fontWeight: 800, color: "#f97316" }}>66%+</span>
+              <span style={{ fontSize: 10, color: "#333", marginLeft: 4 }}>STRONG</span>
+            </div>
+          </div>
+        </div>
+
+        {/* ── FILTERS ── */}
+        <div style={{ display: "flex", gap: 6, marginBottom: 16, alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: 6 }}>
+            {(["ALL", "ACTIONABLE", "HC"] as FilterType[]).map((tab) => (
+              <button key={tab} onClick={() => setFilter(tab)} style={{
+                padding: "7px 14px",
+                borderRadius: 7,
+                border: filter === tab ? "1px solid #f97316" : "1px solid #111",
+                background: filter === tab ? "#f97316" : "#0a0a0a",
+                color: filter === tab ? "#000" : "#555",
+                fontSize: 11,
+                fontWeight: 700,
+                cursor: "pointer",
+                letterSpacing: "0.04em",
+                textTransform: "uppercase",
+              }}>
+                {tab === "HC" ? "🔥 HC Only" : tab === "ACTIONABLE" ? "✅ Bets" : "All"}
+              </button>
+            ))}
+          </div>
+          <div style={{ display: "flex", gap: 10 }}>
+            <span style={{ fontSize: 11, color: "#333" }}>
+              <span style={{ color: "#22c55e", fontWeight: 700 }}>{overCount} OVER</span>
+              {" · "}
+              <span style={{ color: "#ef4444", fontWeight: 700 }}>{underCount} UNDER</span>
+            </span>
+          </div>
+        </div>
+
+        {/* ── PICKS ── */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {filtered.map((pred) => {
+            const isHC = pred.enhanced_signal === "🔥 HIGH CONVICTION";
+            const isBet = pred.enhanced_signal === "✅ BET";
+            const isOver = pred.direction.includes("OVER");
+            const isExpanded = expanded === pred.player;
+
+            return (
+              <div key={pred.player}
+                onClick={() => setExpanded(isExpanded ? null : pred.player)}
+                style={{
+                  background: isHC ? "#0d0800" : "#080808",
+                  border: isHC ? "1px solid #f9731630" : "1px solid #111",
+                  borderRadius: 10,
+                  padding: "14px 16px",
+                  cursor: "pointer",
+                  position: "relative",
+                  overflow: "hidden",
+                  transition: "border-color 0.15s",
+                }}
+              >
+                {/* HC accent */}
+                {isHC && <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 2, background: "#f97316" }} />}
+
+                {/* Main row */}
+                <div style={{ display: "flex", alignItems: "center", gap: 12, paddingLeft: isHC ? 8 : 0 }}>
+
+                  {/* Signal badge */}
+                  <div style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: 8,
+                    background: isHC ? "#f9731615" : isBet ? "#22c55e15" : "#111",
+                    border: isHC ? "1px solid #f9731640" : isBet ? "1px solid #22c55e30" : "1px solid #1a1a1a",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 14,
+                    flexShrink: 0,
+                  }}>
+                    {isHC ? "🔥" : isBet ? "✅" : "—"}
+                  </div>
+
+                  {/* Player info */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 2 }}>
+                      {pred.player}
+                    </div>
+                    <div style={{ fontSize: 11, color: "#444" }}>
+                      {pred.team} vs {pred.opponent} · {pred.position} · {pred.venue}
+                    </div>
+                  </div>
+
+                  {/* Numbers */}
+                  <div style={{ display: "flex", gap: 16, alignItems: "center", flexShrink: 0 }}>
+                    <div style={{ textAlign: "center" }}>
+                      <div style={{ fontSize: 10, color: "#333", textTransform: "uppercase", letterSpacing: "0.05em" }}>Line</div>
+                      <div style={{ fontSize: 16, fontWeight: 700, color: "#f0f0f0" }}>{pred.bookie_line}</div>
+                    </div>
+                    <div style={{ textAlign: "center" }}>
+                      <div style={{ fontSize: 10, color: "#333", textTransform: "uppercase", letterSpacing: "0.05em" }}>Model</div>
+                      <div style={{ fontSize: 16, fontWeight: 700, color: "#f97316" }}>{pred.predicted}</div>
+                    </div>
+                    <div style={{ textAlign: "center" }}>
+                      <div style={{ fontSize: 10, color: "#333", textTransform: "uppercase", letterSpacing: "0.05em" }}>Edge</div>
+                      <div style={{ fontSize: 16, fontWeight: 700, color: pred.edge > 0 ? "#22c55e" : "#ef4444" }}>
+                        {pred.edge > 0 ? "+" : ""}{pred.edge}
+                      </div>
+                    </div>
+                    <div style={{ textAlign: "center" }}>
+                      <div style={{ fontSize: 10, color: "#333", textTransform: "uppercase", letterSpacing: "0.05em" }}>E/V</div>
+                      <div style={{ fontSize: 16, fontWeight: 700, color: "#60a5fa" }}>{pred.bet_score.toFixed(2)}</div>
+                    </div>
+                    <div style={{
+                      fontSize: 12,
+                      fontWeight: 800,
+                      color: isOver ? "#22c55e" : "#ef4444",
+                      minWidth: 60,
+                      textAlign: "right",
+                    }}>
+                      {pred.direction}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Expanded detail */}
+                {isExpanded && (
+                  <div style={{
+                    marginTop: 14,
+                    paddingTop: 14,
+                    borderTop: "1px solid #111",
+                    paddingLeft: isHC ? 8 : 0,
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+                    gap: 8,
+                  }}>
+                    {[
+                      { label: "Condition", value: pred.condition },
+                      { label: "Play Style", value: pred.play_style },
+                      { label: "Volatility", value: pred.volatility_tier },
+                      { label: "Std Dev", value: pred.std_dev.toFixed(1) },
+                      { label: "Confidence", value: pred.confidence },
+                    ].map((item) => (
+                      <div key={item.label} style={{
+                        background: "#050505",
+                        border: "1px solid #111",
+                        borderRadius: 6,
+                        padding: "8px 10px",
+                      }}>
+                        <div style={{ fontSize: 9, color: "#333", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 3 }}>{item.label}</div>
+                        <div style={{ fontSize: 12, fontWeight: 600, color: "#888" }}>{item.value}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* ── FOOTER NOTE ── */}
+        <div style={{ marginTop: 40, textAlign: "center" }}>
+          <p style={{ fontSize: 11, color: "#222", lineHeight: 1.8 }}>
+            Analytics only · Not financial advice · Edge/Vol ≥ 0.50 filter applied · FWDs excluded<br />
+            <Link href="/" style={{ color: "#f97316", textDecoration: "none" }}>← Back to SportSphere</Link>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+	
