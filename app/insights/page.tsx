@@ -1,8 +1,10 @@
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import results from "@/data/results.json";
+import teamStyleData from "@/data/team-style.json";
 
 const analytics = (results as any).analytics;
+const teams = teamStyleData.teams;
 
 const POSITIONS = ["MID", "DEF", "FWD", "RUCK"] as const;
 const CONDITIONS = ["Dry", "Wet", "Roof"] as const;
@@ -28,12 +30,17 @@ function SectionBadge({ n }: { n: number }) {
 }
 
 export default function InsightsPage() {
-  const { model_bias, by_condition, by_venue, by_position_condition, by_confidence_condition } = analytics;
-
-  const sortedVenues = [...by_venue].sort((a: any, b: any) => b.win_rate - a.win_rate);
+  const { model_bias, by_condition, by_position_condition, by_confidence_condition } = analytics;
 
   const getPosCond = (pos: string, cond: string) =>
     by_position_condition.find((r: any) => r.position === pos && r.condition === cond);
+
+  // Classify teams into TRANS/STOP for team style section
+  const leagueAvgDisposalIndex = 0;
+  const teamStyleRows = [...teams].sort((a, b) => a.disposal_index - b.disposal_index);
+  const transTeams = teamStyleRows.filter(t => t.disposal_index < -20);
+  const stopTeams = teamStyleRows.filter(t => t.disposal_index > 20);
+  const midTeams = teamStyleRows.filter(t => Math.abs(t.disposal_index) <= 20);
 
   return (
     <>
@@ -54,57 +61,49 @@ export default function InsightsPage() {
             </p>
           </div>
 
-          {/* ── SECTION 1: Venue Performance ── */}
+          {/* ── SECTION 1: Team Style ── */}
           <section style={{ marginBottom: 56 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
               <SectionBadge n={1} />
-              <h2 style={{ fontSize: 20, fontWeight: 700, color: "#f0f0f0", margin: 0 }}>Venue Performance</h2>
+              <h2 style={{ fontSize: 20, fontWeight: 700, color: "#f0f0f0", margin: 0 }}>Team Style — Disposal Generation</h2>
             </div>
+            <p style={{ fontSize: 13, color: "#666", marginBottom: 20, marginLeft: 36, lineHeight: 1.6 }}>
+              TRANS-heavy teams move the ball fast via kick chains — their midfielders and defenders accumulate more disposals.
+              STOP teams play through stoppages — higher contested possession, lower individual disposal counts.
+              Use this when your pick faces a TRANS or STOP opposition.
+            </p>
 
-            <div style={{ overflowX: "auto" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-                <thead>
-                  <tr style={{ borderBottom: "1px solid #1a1a1a" }}>
-                    {["Venue", "Predictions", "Win Rate", "Notable"].map(h => (
-                      <th key={h} style={{ padding: "10px 14px", textAlign: "left", fontSize: 10, color: "#555", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 600 }}>{h}</th>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 24 }}>
+              {[
+                { label: "TRANS Teams", teams: transTeams, color: "#60a5fa", note: "Players facing TRANS opponents tend to accumulate more disposals — opponents create more ball movement and turnovers to capitalise on." },
+                { label: "Balanced", teams: midTeams, color: "#888", note: "Balanced team styles — disposal counts revert toward league average. Standard model prediction applies." },
+                { label: "STOP Teams", teams: stopTeams, color: "#f97316", note: "Players facing STOP opponents get fewer uncontested disposals — stoppages dominate. Lower overall disposal volumes." },
+              ].map(group => (
+                <div key={group.label} style={{ background: "#080808", border: "1px solid #111", borderRadius: 10, padding: "16px" }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: group.color, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>
+                    {group.label}
+                  </div>
+                  <div style={{ marginBottom: 12 }}>
+                    {group.teams.map(t => (
+                      <div key={t.code} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "4px 0", borderBottom: "1px solid #0d0d0d" }}>
+                        <span style={{ fontSize: 12, color: "#e0e0e0", fontWeight: 600 }}>{t.name}</span>
+                        <span style={{ fontSize: 11, color: group.color, fontWeight: 700 }}>
+                          {t.disposal_index > 0 ? "+" : ""}{t.disposal_index}
+                        </span>
+                      </div>
                     ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {sortedVenues.map((v: any) => {
-                    const isGood = v.venue === "Adelaide Oval";
-                    const isBad = v.venue === "Optus Stadium";
-                    const rowBg = isGood ? "rgba(5,46,22,0.4)" : isBad ? "rgba(69,10,10,0.4)" : "transparent";
-                    const rateColor = v.win_rate >= 55 ? "#4ade80" : v.win_rate < 48 ? "#f87171" : "#f0f0f0";
-                    const notable = isGood
-                      ? "✅ Best venue — act with conviction"
-                      : isBad
-                        ? "⚠ Worst venue — exercise caution"
-                        : v.venue === "MCG"
-                          ? "Model over-predicts — prefer UNDER"
-                          : v.venue === "GABBA"
-                            ? "Small sample — promising"
-                            : "—";
-                    return (
-                      <tr key={v.venue} style={{ background: rowBg, borderBottom: "1px solid #0d0d0d" }}>
-                        <td style={{ padding: "12px 14px", color: "#f0f0f0", fontWeight: 600 }}>{v.venue}</td>
-                        <td style={{ padding: "12px 14px", color: "#888" }}>{v.count}</td>
-                        <td style={{ padding: "12px 14px", color: rateColor, fontWeight: 700 }}>{v.win_rate}%</td>
-                        <td style={{ padding: "12px 14px", color: "#666", fontSize: 12 }}>{notable}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                  </div>
+                  <p style={{ fontSize: 11, color: "#555", margin: 0, lineHeight: 1.6 }}>{group.note}</p>
+                </div>
+              ))}
             </div>
 
-            <div style={{
-              marginTop: 16, background: "#080808", border: "1px solid #f97316",
-              borderRadius: 8, padding: "14px 16px",
-            }}>
+            <div style={{ background: "#080808", border: "1px solid #f97316", borderRadius: 8, padding: "14px 16px" }}>
               <span style={{ fontSize: 12, color: "#999" }}>
-                <strong style={{ color: "#f97316" }}>Key insight:</strong>{" "}
-                Adelaide Oval (57.1%) outperforms Optus Stadium (42.5%) by 14.6 percentage points. When a pick is at Adelaide Oval, the model has a structural edge. When it&apos;s at Optus Stadium, apply extra scrutiny before acting.
+                <strong style={{ color: "#f97316" }}>How to apply:</strong>{" "}
+                When a MID or DEF pick faces a TRANS-style team, the model&apos;s OVER prediction has a structural tailwind.
+                When facing STOP-heavy opponents, apply extra scrutiny to OVER picks — the disposal environment is more constrained.
+                Disposal Index: negative = TRANS (more kick chains), positive = STOP (more stoppages).
               </span>
             </div>
           </section>

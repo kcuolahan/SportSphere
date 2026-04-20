@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getCurrentPredictions } from "@/lib/data";
 import { Logo } from "@/components/Logo";
+import { supabase, signOut } from "@/lib/supabase";
+import type { User } from "@supabase/supabase-js";
 
 const { round, season } = getCurrentPredictions();
 
@@ -22,6 +24,15 @@ const LINKS = [
 export default function Nav() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_ev, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   return (
     <>
@@ -90,6 +101,23 @@ export default function Nav() {
             <Link href="/faq" style={{ fontSize: 12, color: "#666", textDecoration: "none" }} className="nav-desktop">
               FAQ
             </Link>
+            {user ? (
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }} className="nav-desktop">
+                <span style={{ fontSize: 11, color: "#555", maxWidth: 120, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  {user.email?.split("@")[0]}
+                </span>
+                <button
+                  onClick={() => signOut()}
+                  style={{ fontSize: 11, color: "#555", background: "none", border: "1px solid #1f1f1f", borderRadius: 5, padding: "4px 10px", cursor: "pointer" }}
+                >
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <Link href="/login" style={{ fontSize: 12, fontWeight: 600, color: "#f97316", textDecoration: "none", border: "1px solid #f9731640", borderRadius: 6, padding: "5px 12px" }} className="nav-desktop">
+                Sign In
+              </Link>
+            )}
 
             {/* Hamburger */}
             <button

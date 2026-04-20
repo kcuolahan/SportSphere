@@ -53,15 +53,117 @@ function BarChart({ value, max, color }: { value: number; max: number; color: st
   );
 }
 
+// ── Sparkline component ───────────────────────────────────────────────────────
+function Sparkline({ values, avg }: { values: number[]; avg: number }) {
+  if (!values.length) return <span style={{ fontSize: 10, color: "#555" }}>—</span>;
+  const max = Math.max(...values, avg + 2);
+  const min = Math.min(...values, avg - 2);
+  const range = max - min || 1;
+  const W = 80, H = 28;
+  const pts = values.map((v, i) => {
+    const x = (i / Math.max(values.length - 1, 1)) * W;
+    const y = H - ((v - min) / range) * H;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  });
+  const avgY = H - ((avg - min) / range) * H;
+  return (
+    <svg width={W} height={H} style={{ display: "block" }}>
+      <line x1={0} y1={avgY} x2={W} y2={avgY} stroke="#333" strokeWidth={0.5} strokeDasharray="2,2" />
+      <polyline points={pts.join(" ")} fill="none" stroke="#f97316" strokeWidth={1.5} strokeLinejoin="round" />
+      {values.map((v, i) => {
+        const x = (i / Math.max(values.length - 1, 1)) * W;
+        const y = H - ((v - min) / range) * H;
+        return <circle key={i} cx={x} cy={y} r={2} fill={v > avg ? "#22c55e" : "#ef4444"} />;
+      })}
+    </svg>
+  );
+}
+
 function PlayerDetail({ p }: { p: Player }) {
   const maxAvg = Math.max(...ALL_PLAYERS.map(x => x.avg_2026));
   const pick = predictions.picks.find(pk => pk.player === p.name);
   const slug = NAME_TO_SLUG.get(p.name);
 
+  // Median line edge analysis
+  const median = p.median_disposals ?? p.avg_2026;
+  const pickLine = pick?.bookie_line;
+  const medianEdge = pickLine != null
+    ? pickLine > median ? "UNDER" : "OVER"
+    : null;
+  const medianDiff = pickLine != null ? Math.abs(pickLine - median).toFixed(1) : null;
+
+  // Over rate label
+  const overRate = p.over_rate;
+  const overRatePct = overRate != null ? Math.round(overRate * 100) : null;
+  const last5 = p.last_5 ?? [];
+
   return (
     <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid #111" }}>
-      {/* Averages bar */}
-      <div style={{ marginBottom: 14, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+
+      {/* Median line insight — most prominent */}
+      <div style={{
+        background: "#0a0a0a", border: "1px solid #1f1f1f",
+        borderRadius: 8, padding: "12px 14px", marginBottom: 12,
+        display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12,
+      }}>
+        <div>
+          <div style={{ fontSize: 9, color: "#666", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Median Line</div>
+          <div style={{ fontSize: 20, fontWeight: 800, color: "#f0f0f0", lineHeight: 1 }}>{median.toFixed(1)}</div>
+          {pickLine != null && (
+            <div style={{ fontSize: 10, color: medianEdge === "UNDER" ? "#ef4444" : "#22c55e", marginTop: 3 }}>
+              Bookie {pickLine} → structural <strong>{medianEdge}</strong> edge ({medianDiff} away)
+            </div>
+          )}
+        </div>
+        <div>
+          <div style={{ fontSize: 9, color: "#666", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Season Range</div>
+          <div style={{ fontSize: 13, fontWeight: 700, color: "#888" }}>
+            <span style={{ color: "#ef4444" }}>{p.season_low ?? "—"}</span>
+            {" — "}
+            <span style={{ color: "#22c55e" }}>{p.season_high ?? "—"}</span>
+          </div>
+          <div style={{ fontSize: 10, color: "#555", marginTop: 2 }}>Low — High ({p.games_2026}g)</div>
+        </div>
+        <div>
+          <div style={{ fontSize: 9, color: "#666", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Over Avg Rate</div>
+          {overRatePct != null ? (
+            <>
+              <div style={{ fontSize: 20, fontWeight: 800, color: overRatePct >= 55 ? "#22c55e" : overRatePct >= 45 ? "#f97316" : "#ef4444", lineHeight: 1 }}>
+                {overRatePct}%
+              </div>
+              <div style={{ fontSize: 10, color: "#555", marginTop: 2 }}>games over season avg</div>
+            </>
+          ) : (
+            <div style={{ fontSize: 13, color: "#555" }}>—</div>
+          )}
+        </div>
+      </div>
+
+      {/* Last 5 sparkline */}
+      {last5.length > 0 && (
+        <div style={{ background: "#080808", border: "1px solid #111", borderRadius: 8, padding: "10px 14px", marginBottom: 12, display: "flex", alignItems: "center", gap: 16 }}>
+          <div>
+            <div style={{ fontSize: 9, color: "#666", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Last {last5.length}</div>
+            <Sparkline values={last5} avg={p.avg_2026} />
+          </div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 11, color: "#888" }}>
+              {last5.map((v, i) => (
+                <span key={i} style={{
+                  marginRight: 4, fontWeight: 700,
+                  color: v > p.avg_2026 ? "#22c55e" : "#ef4444",
+                }}>{v}</span>
+              ))}
+            </div>
+            <div style={{ fontSize: 10, color: "#555", marginTop: 2 }}>
+              {last5.filter(v => v > p.avg_2026).length}/{last5.length} over avg · Avg={p.avg_2026.toFixed(1)}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Averages bars */}
+      <div style={{ marginBottom: 12, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
         <div>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
             <span style={{ fontSize: 10, color: "#666", textTransform: "uppercase" }}>2025 Avg</span>
@@ -89,23 +191,16 @@ function PlayerDetail({ p }: { p: Player }) {
           { label: "Volatility", value: <span style={{ color: VOL_COLOR[p.volatility_tier] ?? "#888" }}>{p.volatility_tier}</span> },
           { label: "Form Trend", value: <TrendIcon p={p} /> },
         ].map((item, idx) => (
-          <div key={idx} style={{
-            background: "#050505", border: "1px solid #111",
-            borderRadius: 6, padding: "7px 9px",
-          }}>
+          <div key={idx} style={{ background: "#050505", border: "1px solid #111", borderRadius: 6, padding: "7px 9px" }}>
             <div style={{ fontSize: 9, color: "#555", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 2 }}>{item.label}</div>
             <div style={{ fontSize: 12, fontWeight: 600, color: "#888" }}>{item.value}</div>
           </div>
         ))}
       </div>
 
-      {/* Betting insight if featured */}
+      {/* Round model output */}
       {pick && (
-        <div style={{
-          background: "#0d0800", border: "1px solid #f9731630",
-          borderRadius: 6, padding: "10px 12px",
-          fontSize: 12, color: "#888", lineHeight: 1.6,
-        }}>
+        <div style={{ background: "#0d0800", border: "1px solid #f9731630", borderRadius: 6, padding: "10px 12px", fontSize: 12, color: "#888", lineHeight: 1.6 }}>
           <div style={{ fontSize: 10, color: "#f97316", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
             Round {currentRound} Model Output
           </div>
@@ -114,16 +209,11 @@ function PlayerDetail({ p }: { p: Player }) {
       )}
       {slug && (
         <div style={{ marginTop: 12 }}>
-          <Link
-            href={`/players/${slug}`}
-            onClick={e => e.stopPropagation()}
-            style={{
-              display: "inline-block", fontSize: 11, fontWeight: 700,
-              color: "#f97316", textDecoration: "none",
-              border: "1px solid #f9731640", borderRadius: 6,
-              padding: "5px 12px",
-            }}
-          >
+          <Link href={`/players/${slug}`} onClick={e => e.stopPropagation()} style={{
+            display: "inline-block", fontSize: 11, fontWeight: 700,
+            color: "#f97316", textDecoration: "none",
+            border: "1px solid #f9731640", borderRadius: 6, padding: "5px 12px",
+          }}>
             View Full Profile →
           </Link>
         </div>

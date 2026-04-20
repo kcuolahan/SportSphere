@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#000000"/>
+  <rect x="0" y="0" width="4" height="630" fill="#f97316"/>
+  <!-- Grid lines -->
+  <line x1="0" y1="400" x2="1200" y2="400" stroke="#0d0d0d" stroke-width="1"/>
+  <!-- Label -->
+  <text x="80" y="100" font-family="system-ui,-apple-system,sans-serif" font-size="14" font-weight="700" fill="#f97316" letter-spacing="3">AFL DISPOSAL ANALYTICS</text>
+  <!-- Title -->
+  <text x="80" y="165" font-family="system-ui,-apple-system,sans-serif" font-size="68" font-weight="800" fill="#f0f0f0" letter-spacing="-3">SportSphere</text>
+  <text x="80" y="235" font-family="system-ui,-apple-system,sans-serif" font-size="24" font-weight="400" fill="#555555">Australia's sharpest AFL disposal model</text>
+  <!-- Stats row -->
+  <g transform="translate(80, 310)">
+    <!-- Stat 1 -->
+    <text x="0" y="0" font-family="system-ui,-apple-system,sans-serif" font-size="52" font-weight="800" fill="#f97316" letter-spacing="-2">59.0%</text>
+    <text x="0" y="28" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#555555" letter-spacing="1">FILTERED WIN RATE</text>
+    <!-- Stat 2 -->
+    <text x="250" y="0" font-family="system-ui,-apple-system,sans-serif" font-size="52" font-weight="800" fill="#f0f0f0" letter-spacing="-2">67.7%</text>
+    <text x="250" y="28" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#555555" letter-spacing="1">STRONG TIER</text>
+    <!-- Stat 3 -->
+    <text x="500" y="0" font-family="system-ui,-apple-system,sans-serif" font-size="52" font-weight="800" fill="#f0f0f0" letter-spacing="-2">467</text>
+    <text x="500" y="28" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#555555" letter-spacing="1">PICKS TRACKED</text>
+  </g>
+  <!-- Footer -->
+  <text x="80" y="560" font-family="system-ui,-apple-system,sans-serif" font-size="16" fill="#333333">sport-sphere-ruddy.vercel.app</text>
+  <text x="80" y="590" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#222222">Publicly verified track record · Not financial advice · 18+</text>
+</svg>

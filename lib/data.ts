@@ -52,13 +52,24 @@ export interface ResultPick {
   player: string
   position: string
   team: string
-  line: number
+  line?: number
+  bookie_line?: number
   predicted: number
   actual: number
-  signal: string
+  signal?: string
+  enhanced_signal?: string
   confidence: string
   edge_vol: number
   result: 'WIN' | 'LOSS'
+  abs_error?: number
+  raw_inputs?: unknown
+  // forward-compat fields from predictions format
+  opponent?: string
+  venue?: string
+  condition?: string
+  play_style?: string
+  edge?: number
+  direction?: string
 }
 
 export interface Round {
@@ -110,11 +121,19 @@ export interface Player {
   avg_2026: number
   games_2025: number
   games_2026: number
+  avg_kicks?: number
+  avg_handballs?: number
   std_dev: number
   volatility_tier: string
   cba_pct: number
   avg_tog: number
   form_trend: 'UP' | 'DOWN' | 'STEADY'
+  // Enhanced stats (populated by update_players.py)
+  median_disposals?: number
+  season_high?: number
+  season_low?: number
+  over_rate?: number
+  last_5?: number[]
 }
 
 export interface ResultStats {
@@ -183,7 +202,8 @@ export function getResultStats(rounds?: number[]): ResultStats {
   const totalPicks = data.reduce((sum, r) => sum + (r.total_picks ?? r.picks.length), 0)
   const totalWins = data.reduce((sum, r) => sum + (r.wins ?? 0), 0)
 
-  const picks = data.flatMap(r => r.picks) as ResultPick[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const picks: ResultPick[] = data.flatMap(r => (r as any).picks)
   const strong = picks.filter(p => p.confidence === 'STRONG')
   const strongWins = strong.filter(p => p.result === 'WIN').length
   const filtered = picks.filter(p => p.edge_vol >= 0.50)

@@ -5,10 +5,31 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { SignalBadge, ConfidenceBadge } from "@/components/ui/Badge";
-import { getCurrentPredictions, getTeamConcession } from "@/lib/data";
+import { getCurrentPredictions, getAllResults, getTeamConcession } from "@/lib/data";
 import type { Pick, TeamNewsEntry } from "@/lib/data";
 
 const { round, season, generated_at, picks, team_news = [], verified_at } = getCurrentPredictions();
+
+// Look up results for the current round (if complete)
+const allResults = getAllResults();
+const currentRoundResults = allResults.find(r => r.round === round) ?? null;
+const resultsByPlayer: Record<string, { actual: number; result: string; abs_error?: number }> = {};
+if (currentRoundResults) {
+  for (const p of currentRoundResults.picks as Array<{ player: string; actual: number; result: string; abs_error?: number }>) {
+    resultsByPlayer[p.player] = { actual: p.actual, result: p.result, abs_error: p.abs_error };
+  }
+}
+
+// Venue performance scores for matchup quality (1=worst, 5=best based on model accuracy)
+const VENUE_PERF: Record<string, number> = {
+  "Adelaide Oval": 5, "AO": 5,
+  "Gabba": 4, "GABBA": 4,
+  "GMHBA Stadium": 3, "GMHBA": 3,
+  "Marvel Stadium": 3, "MRVL": 3,
+  "SCG": 3,
+  "MCG": 2,
+  "Optus Stadium": 1, "OS": 1,
+};
 
 type FilterType = "ALL" | "ACTIONABLE" | "HC";
 type ViewType = "CARD" | "TABLE";
@@ -34,6 +55,36 @@ function Tooltip({ text }: { text: string }) {
         </div>
       )}
     </span>
+  );
+}
+
+function RoundCompleteBanner() {
+  if (!currentRoundResults) return null;
+  const { wins, losses, win_rate } = currentRoundResults;
+  return (
+    <div style={{
+      borderLeft: "3px solid #22c55e",
+      background: "#030f08",
+      border: "1px solid #14532d",
+      borderRadius: 8, padding: "14px 18px",
+      display: "flex", alignItems: "center",
+      justifyContent: "space-between", gap: 12,
+      marginBottom: 16, flexWrap: "wrap",
+    }}>
+      <div>
+        <div style={{ fontSize: 13, fontWeight: 700, color: "#4ade80", marginBottom: 2 }}>
+          Round {round} Complete — {wins}W / {losses}L ({win_rate}%)
+        </div>
+        <div style={{ fontSize: 11, color: "#166534" }}>
+          Round {round + 1} picks publish Tuesday · Results logged below
+        </div>
+      </div>
+      <span style={{
+        fontSize: 9, fontWeight: 800, color: "#000",
+        background: "#22c55e", borderRadius: 4,
+        padding: "3px 8px", letterSpacing: "0.06em", flexShrink: 0,
+      }}>COMPLETE</span>
+    </div>
   );
 }
 
@@ -196,11 +247,20 @@ function ConfidenceExplainer({ confidence }: { confidence: string }) {
   );
 }
 
+function calcMatchupScore(pred: Pick): number {
+  const dvpRaw = getTeamConcession(pred.opponent, pred.position)?.vs_league ?? 0;
+  const dvp = dvpRaw > 0.10 ? 2 : dvpRaw > 0 ? 1.5 : dvpRaw > -0.05 ? 1 : 0;
+  const venueScore = (VENUE_PERF[pred.venue] ?? 3) / 5 * 2;
+  const cond = pred.condition === "Wet" ? 0 : 1;
+  return Math.min(5, Math.round((dvp + venueScore + cond) * 10) / 10);
+}
+
 export default function PredictionsPage() {
   const [filter, setFilter] = useState<FilterType>("ACTIONABLE");
   const [view, setView] = useState<ViewType>("CARD");
   const [expanded, setExpanded] = useState<string | null>(null);
   const [verifiedAgeWarn, setVerifiedAgeWarn] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
 
   useEffect(() => {
     if (verified_at) {
@@ -208,6 +268,26 @@ export default function PredictionsPage() {
       setVerifiedAgeWarn(ageMs > 48 * 60 * 60 * 1000);
     }
   }, []);
+
+  function handleShare() {
+    const hcPicks = picks.filter((p: Pick) => p.enhanced_signal === "HC");
+    const betPicks = picks.filter((p: Pick) => p.enhanced_signal === "BET");
+    const fmt = (p: Pick) => `  ${p.player} ${p.direction} ${p.bookie_line} (E/V ${p.edge_vol.toFixed(2)})`;
+    const text = [
+      `Round ${round} AFL disposal picks — SportSphere model`,
+      "",
+      hcPicks.length ? `HC picks:\n${hcPicks.map(fmt).join("\n")}` : "",
+      betPicks.length ? `BET picks:\n${betPicks.map(fmt).join("\n")}` : "",
+      "",
+      `Track record: 59% filtered win rate | 67.7% STRONG`,
+      `Full analysis: sport-sphere-ruddy.vercel.app/predictions`,
+      "#AFL #SportSphere",
+    ].filter(Boolean).join("\n");
+    navigator.clipboard.writeText(text).then(() => {
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 2000);
+    });
+  }
 
   const filtered = picks.filter((p: Pick) => {
     if (filter === "ACTIONABLE") return p.filter_pass;
@@ -229,6 +309,7 @@ export default function PredictionsPage() {
       <Nav />
 
       <div style={{ maxWidth: 920, margin: "0 auto", padding: "84px 20px 60px" }}>
+        <RoundCompleteBanner />
         <RoundConcludedBanner />
         <DisclaimerBanner />
 
@@ -319,6 +400,17 @@ export default function PredictionsPage() {
             <span style={{ fontSize: 11, color: "#555", marginRight: 6 }}>
               {filtered.length} of {picks.length} picks
             </span>
+            <button onClick={handleShare} style={{
+              padding: "6px 12px", borderRadius: 6,
+              border: "1px solid #1f1f1f",
+              background: shareCopied ? "#052e16" : "#0a0a0a",
+              color: shareCopied ? "#4ade80" : "#555",
+              fontSize: 10, fontWeight: 700, cursor: "pointer",
+              letterSpacing: "0.06em", textTransform: "uppercase",
+              transition: "all 0.2s",
+            }}>
+              {shareCopied ? "✓ Copied" : "Share"}
+            </button>
             {(["CARD", "TABLE"] as ViewType[]).map(v => (
               <button key={v} onClick={() => setView(v)} style={{
                 padding: "6px 12px", borderRadius: 6,
@@ -338,7 +430,7 @@ export default function PredictionsPage() {
             <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 600 }}>
               <thead>
                 <tr style={{ borderBottom: "1px solid #111" }}>
-                  {["Player", "Pos", "vs", "Line", "Model", "Edge", "E/V", "Signal", "Direction"].map(h => (
+                  {["Player", "Pos", "vs", "Line", "Model", "Edge", "E/V", "Signal", "Direction", ...(currentRoundResults ? ["Result"] : [])].map(h => (
                     <th key={h} style={{
                       padding: "8px 12px", fontSize: 10, color: "#555",
                       fontWeight: 600, textAlign: "left",
@@ -369,6 +461,23 @@ export default function PredictionsPage() {
                     <td style={{ padding: "10px 12px", fontSize: 12, fontWeight: 700, color: p.direction === "OVER" ? "#22c55e" : "#ef4444" }}>
                       {p.direction}
                     </td>
+                    {currentRoundResults && (() => {
+                      const res = resultsByPlayer[p.player];
+                      if (!res) return <td style={{ padding: "10px 12px", fontSize: 11, color: "#333" }}>—</td>;
+                      const isWin = res.result === "WIN";
+                      return (
+                        <td style={{ padding: "10px 12px", whiteSpace: "nowrap" }}>
+                          <span style={{ fontSize: 12, fontWeight: 700, color: isWin ? "#4ade80" : "#f87171" }}>
+                            {isWin ? "✓" : "✗"} {res.actual}
+                          </span>
+                          {res.abs_error != null && (
+                            <span style={{ fontSize: 10, color: "#555", marginLeft: 4 }}>
+                              (off {res.abs_error})
+                            </span>
+                          )}
+                        </td>
+                      );
+                    })()}
                   </tr>
                 ))}
               </tbody>
@@ -446,6 +555,18 @@ export default function PredictionsPage() {
                         </div>
                         <div style={{ fontSize: 15, fontWeight: 700, color: "#60a5fa" }}>{pred.edge_vol.toFixed(2)}</div>
                       </div>
+                      {(() => {
+                        const score = calcMatchupScore(pred);
+                        const scoreColor = score >= 4 ? "#4ade80" : score >= 3 ? "#facc15" : "#f87171";
+                        return (
+                          <div style={{ textAlign: "center" }}>
+                            <div style={{ fontSize: 10, color: "#555", textTransform: "uppercase" }}>Matchup</div>
+                            <div style={{ fontSize: 13, fontWeight: 700, color: scoreColor }}>
+                              {"★".repeat(Math.round(score))}{"☆".repeat(5 - Math.round(score))}
+                            </div>
+                          </div>
+                        );
+                      })()}
                       <div style={{
                         fontSize: 12, fontWeight: 800, minWidth: 58,
                         color: isOver ? "#22c55e" : "#ef4444",
@@ -500,6 +621,29 @@ export default function PredictionsPage() {
                             ⚠ Team news: {n.player_out} ({n.team}) — {n.note}
                           </div>
                         ))}
+
+                      {/* Round result */}
+                      {(() => {
+                        const res = resultsByPlayer[pred.player];
+                        if (!res) return null;
+                        const isWin = res.result === "WIN";
+                        return (
+                          <div style={{
+                            background: isWin ? "#030f08" : "#100303",
+                            border: `1px solid ${isWin ? "#14532d" : "#450a0a"}`,
+                            borderRadius: 6, padding: "10px 14px", marginBottom: 10,
+                            display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap",
+                          }}>
+                            <span style={{ fontSize: 13, fontWeight: 800, color: isWin ? "#4ade80" : "#f87171" }}>
+                              {isWin ? "✓ WIN" : "✗ LOSS"}
+                            </span>
+                            <span style={{ fontSize: 12, color: "#888" }}>
+                              Model: {pred.predicted} · Actual: {res.actual}
+                              {res.abs_error != null && ` · Off by ${res.abs_error}`}
+                            </span>
+                          </div>
+                        );
+                      })()}
 
                       <div style={{ fontSize: 10, color: "#555", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>
                         Model Breakdown

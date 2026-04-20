@@ -1,10 +1,13 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { getCurrentPredictions, getPlayers } from "@/lib/data";
+import { supabase } from "@/lib/supabase";
+import type { User } from "@supabase/supabase-js";
 
 const predictions = getCurrentPredictions();
 const allPlayers = getPlayers();
@@ -53,10 +56,19 @@ function exportCSV(bets: Bet[]) {
 }
 
 export default function TrackerPage() {
+  const [user, setUser] = useState<User | null | undefined>(undefined);
   const [bets, setBets] = useState<Bet[]>([]);
   const [search, setSearch] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [filterResult, setFilterResult] = useState<"ALL" | "WIN" | "LOSS" | "PENDING">("ALL");
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_ev, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   const [form, setForm] = useState({
     player: "",
@@ -153,8 +165,43 @@ export default function TrackerPage() {
   }, [bets]);
 
   return (
-    <div style={{ minHeight: "100vh", background: "#000", color: "#f0f0f0", fontFamily: "system-ui, -apple-system, sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "#000", color: "#f0f0f0", fontFamily: "system-ui, -apple-system, sans-serif", position: "relative" }}>
       <Nav />
+
+      {/* Auth gate — blur overlay when not signed in */}
+      {user === null && (
+        <div style={{
+          position: "fixed", inset: 0, zIndex: 50,
+          backdropFilter: "blur(8px)",
+          background: "rgba(0,0,0,0.6)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+        }}>
+          <div style={{
+            background: "#080808", border: "1px solid #1f1f1f",
+            borderRadius: 16, padding: "40px 36px", maxWidth: 380, textAlign: "center",
+          }}>
+            <div style={{ fontSize: 10, color: "#f97316", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 12 }}>Tracker</div>
+            <h2 style={{ fontSize: 22, fontWeight: 800, margin: "0 0 10px", letterSpacing: "-0.02em" }}>Sign in to save your picks</h2>
+            <p style={{ fontSize: 13, color: "#666", lineHeight: 1.7, marginBottom: 24 }}>
+              The tracker saves your bets locally and syncs across sessions when signed in. Free forever.
+            </p>
+            <Link href="/signup" style={{
+              display: "block", padding: "12px", marginBottom: 10,
+              background: "#f97316", color: "#000", borderRadius: 8,
+              fontSize: 14, fontWeight: 700, textDecoration: "none",
+            }}>
+              Create free account →
+            </Link>
+            <Link href="/login" style={{
+              display: "block", padding: "10px",
+              background: "none", color: "#666", border: "1px solid #1f1f1f", borderRadius: 8,
+              fontSize: 13, textDecoration: "none",
+            }}>
+              Already have an account? Sign in
+            </Link>
+          </div>
+        </div>
+      )}
 
       <div style={{ maxWidth: 900, margin: "0 auto", padding: "84px 20px 60px" }}>
 

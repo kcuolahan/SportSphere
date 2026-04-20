@@ -18,14 +18,28 @@ export const metadata: Metadata = {
     template: "%s | SportSphere",
   },
   description:
-    "Predictive AFL disposal analytics powered by a six-factor model, Edge/Vol filtering, and a publicly verified track record. Built for serious Australian AFL bettors.",
-  keywords: ["AFL", "AFL predictions", "AFL disposals", "AFL analytics", "sports analytics Australia"],
+    "59% filtered win rate across 467 backtested picks. Australia's sharpest AFL disposal model. Six-factor predictions, Edge/Vol filtering, publicly verified track record.",
+  keywords: ["AFL", "AFL predictions", "AFL disposals", "AFL analytics", "sports analytics Australia", "AFL disposal model"],
   openGraph: {
     title: "SportSphere — AFL Disposal Analytics",
-    description: "Australia's sharpest AFL disposal model. Six-factor predictions, Edge/Vol filtering, verified track record.",
+    description: "59% filtered win rate · 67.7% STRONG tier · 467 picks tracked. Australia's sharpest AFL disposal model.",
     siteName: "SportSphere",
     locale: "en_AU",
     type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "SportSphere — AFL Disposal Analytics. 59% filtered win rate. 67.7% STRONG. 467 picks tracked.",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "SportSphere — AFL Disposal Analytics",
+    description: "59% filtered win rate · 67.7% STRONG tier · 467 picks tracked. Australia's sharpest AFL disposal model.",
+    images: ["/og-image.png"],
   },
 };
 
