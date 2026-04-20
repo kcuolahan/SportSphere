@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 :root {
   --background: #000000;
   --foreground: #f0f0f0;
@@ -78,6 +82,40 @@ body {
   /* Picks page: force card view default */
   .picks-table-view { display: none !important; }
   .picks-card-view  { display: flex !important; }
+}
+
+/* ── Responsive 4→2 grid (stats bars, pick cards) ──────────────────────────── */
+.grid-4-to-2 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+@media (max-width: 640px) {
+  .grid-4-to-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ── Track record: hide columns on mobile ───────────────────────────────────── */
+@media (max-width: 768px) {
+  .col-hide-mobile { display: none !important; }
+
+  /* Redefine grid without hidden cols: Avatar Player Rd Pos vs Line E/V Dir Actual Result */
+  .track-row {
+    grid-template-columns: 36px 1.3fr 36px 44px 50px 48px 48px 42px 50px 58px !important;
+  }
+}
+
+/* ── Predictions pick stats 2x2 on mobile ───────────────────────────────────── */
+.pick-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 20px;
+}
+@media (max-width: 640px) {
+  .pick-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (min-width: 701px) {

@@ -332,9 +332,78 @@ export default function InsightsPage() {
             </div>
           </section>
 
+          {/* ── SECTION 6: Key Findings ── */}
+          <section style={{ marginBottom: 56 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
+              <SectionBadge n={6} />
+              <h2 style={{ fontSize: 20, fontWeight: 700, color: "#f0f0f0", margin: 0 }}>Key Findings</h2>
+            </div>
+            <p style={{ fontSize: 13, color: "#666", marginBottom: 20, marginLeft: 36, lineHeight: 1.6 }}>
+              The six most actionable insights from 611 picks across Rounds 3–6.
+            </p>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12 }}>
+              {[
+                {
+                  stat: "57.1%",
+                  label: "MID × Dry Win Rate",
+                  detail: "175 picks — best position/condition combo. Midfielders in dry weather are the model's most reliable target.",
+                  color: "#4ade80",
+                  icon: "🏆",
+                },
+                {
+                  stat: "57.1%",
+                  label: "Adelaide Oval Win Rate",
+                  detail: "196 picks tracked at AO — the highest accuracy venue by a significant margin. Prioritise Oval picks.",
+                  color: "#4ade80",
+                  icon: "📍",
+                },
+                {
+                  stat: "42.5%",
+                  label: "Optus Stadium Win Rate",
+                  detail: "40 picks — model significantly underperforms at Optus Stadium. Reduce stake or avoid OS games.",
+                  color: "#f87171",
+                  icon: "⚠",
+                },
+                {
+                  stat: "61.5%",
+                  label: "Roof Filtered Win Rate",
+                  detail: "261 picks in roof conditions. E/V ≥ 0.50 picks under roof hit 61.5% — the best condition for filtered picks.",
+                  color: "#4ade80",
+                  icon: "🏟",
+                },
+                {
+                  stat: "+0.78",
+                  label: "Model Over-Prediction Bias",
+                  detail: "The model over-predicts by 0.78 disposals on average, creating a structural UNDER edge across all pick types.",
+                  color: "#f97316",
+                  icon: "📊",
+                },
+                {
+                  stat: "16.7%",
+                  label: "MODERATE Picks in Wet",
+                  detail: "Only 18 wet picks total. MODERATE confidence picks in wet conditions hit at just 16.7% — avoid unless STRONG signal.",
+                  color: "#f87171",
+                  icon: "🌧",
+                },
+              ].map(card => (
+                <div key={card.label} style={{
+                  background: "#080808", border: "1px solid #111",
+                  borderRadius: 10, padding: "20px",
+                }}>
+                  <div style={{ fontSize: 20, marginBottom: 8 }}>{card.icon}</div>
+                  <div style={{ fontSize: 28, fontWeight: 800, color: card.color, letterSpacing: "-0.03em", lineHeight: 1, marginBottom: 6 }}>
+                    {card.stat}
+                  </div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: "#e0e0e0", marginBottom: 8 }}>{card.label}</div>
+                  <div style={{ fontSize: 12, color: "#555", lineHeight: 1.6 }}>{card.detail}</div>
+                </div>
+              ))}
+            </div>
+          </section>
+
           {/* Disclaimer */}
           <p style={{ fontSize: 11, color: "#444", lineHeight: 1.7, borderTop: "1px solid #111", paddingTop: 24 }}>
-            All figures based on backtested data across 457 historical picks. Past performance does not guarantee future results.
+            All figures based on 611 verified picks across Rounds 3–6 · 2026 season. Past performance does not guarantee future results.
             Analytics are updated weekly. For methodology, see{" "}
             <a href="/model" style={{ color: "#555", textDecoration: "none" }}>How It Works</a>.
           </p>

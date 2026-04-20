@@ -217,9 +217,8 @@ export default function LandingPage() {
 
       {/* ── SEASON SUMMARY STATS ── */}
       <div style={{ borderTop: "1px solid #111", borderBottom: "1px solid #111", background: "#050505" }}>
-        <div style={{
+        <div className="grid-4-to-2" style={{
           maxWidth: 1100, margin: "0 auto", padding: "0 24px",
-          display: "grid", gridTemplateColumns: "repeat(4, 1fr)",
         }}>
           {[
             { value: `${seasonSummary.strong_rate}%`, label: "HC Win Rate", sub: `${seasonSummary.strong_picks} picks · HIGH CONVICTION tier` },

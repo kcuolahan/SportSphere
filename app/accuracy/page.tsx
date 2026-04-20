@@ -379,17 +379,17 @@ export default function AccuracyPage() {
         {/* Table */}
         <div style={{ background: "#080808", border: "1px solid #111", borderRadius: 12, overflow: "hidden" }}>
           {/* Header row */}
-          <div style={{ display: "grid", gridTemplateColumns: GRID, borderBottom: "1px solid #111", background: "#050505" }}>
+          <div className="track-row" style={{ display: "grid", gridTemplateColumns: GRID, borderBottom: "1px solid #111", background: "#050505" }}>
             <div style={{ padding: "9px 8px" }} />
             <SortHeader label="Player" sortField="player" />
             <SortHeader label="Rd" sortField="round" />
             <div style={{ padding: "9px 8px", fontSize: 9, color: "#555", textTransform: "uppercase", letterSpacing: "0.07em" }}>Pos</div>
             <SortHeader label="vs" sortField="opponent" />
             <SortHeader label="Line" sortField="line" />
-            <SortHeader label="Model" sortField="predicted" />
-            <SortHeader label="Edge" sortField="predicted" />
+            <div className="col-hide-mobile"><SortHeader label="Model" sortField="predicted" /></div>
+            <div className="col-hide-mobile"><SortHeader label="Edge" sortField="predicted" /></div>
             <SortHeader label="E/V" sortField="edge_vol" />
-            <div style={{ padding: "9px 8px", fontSize: 9, color: "#555", textTransform: "uppercase", letterSpacing: "0.07em" }}>Tier</div>
+            <div className="col-hide-mobile" style={{ padding: "9px 8px", fontSize: 9, color: "#555", textTransform: "uppercase", letterSpacing: "0.07em" }}>Tier</div>
             <div style={{ padding: "9px 8px", fontSize: 9, color: "#555", textTransform: "uppercase", letterSpacing: "0.07em" }}>Dir</div>
             <SortHeader label="Actual" sortField="actual" />
             <SortHeader label="Result" sortField="result" />
@@ -414,6 +414,7 @@ export default function AccuracyPage() {
             return (
               <div
                 key={`${p.player}-${p.round}-${idx}`}
+                className="track-row"
                 onClick={() => setOpenPick(openPick?.player === p.player && openPick?.round === p.round && openPick === p ? null : p)}
                 style={{
                   display: "grid", gridTemplateColumns: GRID,
@@ -441,12 +442,12 @@ export default function AccuracyPage() {
                 </div>
                 <div style={{ padding: "8px 8px", fontSize: 11, color: "#666" }}>{p.opponent ?? "—"}</div>
                 <div style={{ padding: "8px 8px", fontSize: 12, fontWeight: 600, color: "#888" }}>{line}</div>
-                <div style={{ padding: "8px 8px", fontSize: 12, fontWeight: 600, color: "#f97316" }}>{p.predicted}</div>
-                <div style={{ padding: "8px 8px", fontSize: 12, fontWeight: 600, color: edge >= 0 ? "#22c55e" : "#ef4444" }}>
+                <div className="col-hide-mobile" style={{ padding: "8px 8px", fontSize: 12, fontWeight: 600, color: "#f97316" }}>{p.predicted}</div>
+                <div className="col-hide-mobile" style={{ padding: "8px 8px", fontSize: 12, fontWeight: 600, color: edge >= 0 ? "#22c55e" : "#ef4444" }}>
                   {edge >= 0 ? "+" : ""}{edge}
                 </div>
                 <div style={{ padding: "8px 8px", fontSize: 11, color: "#888" }}>{p.edge_vol.toFixed(2)}</div>
-                <div style={{ padding: "8px 8px" }}><TierBadge tier={tier} /></div>
+                <div className="col-hide-mobile" style={{ padding: "8px 8px" }}><TierBadge tier={tier} /></div>
                 <div style={{ padding: "8px 8px", fontSize: 11, fontWeight: 700, color: dir === "OVER" ? "#22c55e" : "#ef4444" }}>
                   {dir} {dir === "OVER" ? "⬆" : "⬇"}
                 </div>

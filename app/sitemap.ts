@@ -17,6 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/tracker`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     { url: `${BASE}/model`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     { url: `${BASE}/faq`, lastModified: now, changeFrequency: "monthly", priority: 0.4 },
+    { url: `${BASE}/about`, lastModified: now, changeFrequency: "monthly", priority: 0.4 },
   ];
 
   const playerRoutes: MetadataRoute.Sitemap = PLAYERS.map(player => ({

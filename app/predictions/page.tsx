@@ -31,7 +31,7 @@ const VENUE_PERF: Record<string, number> = {
   "Optus Stadium": 1, "OS": 1,
 };
 
-type FilterType = "ALL" | "ACTIONABLE" | "HC";
+type FilterType = "ALL" | "ACTIONABLE" | "SHARP" | "HC";
 type ViewType = "CARD" | "TABLE";
 
 function Tooltip({ text }: { text: string }) {
@@ -291,6 +291,7 @@ export default function PredictionsPage() {
 
   const filtered = picks.filter((p: Pick) => {
     if (filter === "ACTIONABLE") return p.filter_pass;
+    if (filter === "SHARP") return p.edge_vol >= 0.70 && p.edge_vol < 0.90;
     if (filter === "HC") return p.enhanced_signal === "HC";
     return true;
   });
@@ -337,7 +338,7 @@ export default function PredictionsPage() {
         <TeamNewsBanner news={team_news as TeamNewsEntry[]} />
 
         {/* Stats */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: 20 }}>
+        <div className="pick-stats-grid">
           {[
             { label: "Total Picks", value: picks.length, color: "#f0f0f0" },
             { label: "High Conv.", value: hcCount, color: "#f97316" },
@@ -362,7 +363,8 @@ export default function PredictionsPage() {
         }}>
           {[
             { tier: "HC", ev: "E/V ≥ 0.90", color: "#f97316", desc: "High Conviction — top tier picks" },
-            { tier: "BET", ev: "E/V 0.50–0.89", color: "#22c55e", desc: "Actionable edge — good value" },
+            { tier: "SHARP", ev: "E/V 0.70–0.89", color: "#60a5fa", desc: "Sharp edge — strong value picks" },
+            { tier: "BET", ev: "E/V 0.50–0.69", color: "#22c55e", desc: "Actionable edge — good value" },
             { tier: "SKIP", ev: "E/V < 0.50", color: "#666", desc: "Below threshold — shown for reference" },
           ].map(t => (
             <div key={t.tier} style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -383,18 +385,23 @@ export default function PredictionsPage() {
         {/* Filters + view toggle */}
         <div style={{ display: "flex", gap: 6, marginBottom: 16, alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" }}>
           <div style={{ display: "flex", gap: 6 }}>
-            {(["ALL", "ACTIONABLE", "HC"] as FilterType[]).map(tab => (
-              <button key={tab} onClick={() => setFilter(tab)} style={{
-                padding: "7px 14px", borderRadius: 7,
-                border: filter === tab ? "1px solid #f97316" : "1px solid #111",
-                background: filter === tab ? "#f97316" : "#0a0a0a",
-                color: filter === tab ? "#000" : "#555",
-                fontSize: 11, fontWeight: 700, cursor: "pointer",
-                letterSpacing: "0.04em", textTransform: "uppercase",
-              }}>
-                {tab === "HC" ? "HC Only" : tab === "ACTIONABLE" ? "Bets" : "All"}
-              </button>
-            ))}
+            {(["ALL", "ACTIONABLE", "SHARP", "HC"] as FilterType[]).map(tab => {
+              const LABELS: Record<FilterType, string> = { ALL: "All", ACTIONABLE: "Bets", SHARP: "Sharp", HC: "HC Only" };
+              const COLORS: Record<FilterType, string> = { ALL: "#f97316", ACTIONABLE: "#f97316", SHARP: "#60a5fa", HC: "#f97316" };
+              const ac = COLORS[tab];
+              return (
+                <button key={tab} onClick={() => setFilter(tab)} style={{
+                  padding: "7px 14px", borderRadius: 7,
+                  border: filter === tab ? `1px solid ${ac}` : "1px solid #111",
+                  background: filter === tab ? ac : "#0a0a0a",
+                  color: filter === tab ? "#000" : "#555",
+                  fontSize: 11, fontWeight: 700, cursor: "pointer",
+                  letterSpacing: "0.04em", textTransform: "uppercase",
+                }}>
+                  {LABELS[tab]}
+                </button>
+              );
+            })}
           </div>
           <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
             <span style={{ fontSize: 11, color: "#555", marginRight: 6 }}>
