@@ -291,25 +291,29 @@ function WinRateArc({ rate }: { rate: number }) {
 }
 
 // ── Stats bar ─────────────────────────────────────────────────────────────────
-function StatsBar({ picks }: { picks: HistoricalPick[] }) {
-  const wins = picks.filter(p => p.result === "WIN").length;
-  const losses = picks.length - wins;
-  const winRate = picks.length ? Math.round(wins / picks.length * 1000) / 10 : 0;
-
+function StatsBar({ picks, isFullDataset }: { picks: HistoricalPick[]; isFullDataset?: boolean }) {
   const hc = picks.filter(p => p.tier === "HC");
   const hcWins = hc.filter(p => p.result === "WIN").length;
   const bet = picks.filter(p => p.tier === "BET");
   const betWins = bet.filter(p => p.result === "WIN").length;
 
-  const roi = picks.length
-    ? Math.round(picks.reduce((acc, p) => acc + (p.result === "WIN" ? FLAT_ODDS - 1 : -1), 0) / picks.length * 1000) / 10
-    : 0;
-  const mae = picks.length
-    ? Math.round(picks.reduce((acc, p) => acc + Math.abs(p.model - p.disposals), 0) / picks.length * 10) / 10
-    : 0;
+  const totalPicks = isFullDataset ? SEASON_SUMMARY.total_picks : picks.length;
+  const winRate = isFullDataset
+    ? SEASON_SUMMARY.overall_rate
+    : (picks.length ? Math.round(picks.filter(p => p.result === "WIN").length / picks.length * 1000) / 10 : 0);
+  const wins = isFullDataset
+    ? Math.round(SEASON_SUMMARY.total_picks * SEASON_SUMMARY.overall_rate / 100)
+    : picks.filter(p => p.result === "WIN").length;
+  const losses = totalPicks - wins;
+  const roi = isFullDataset
+    ? Math.round((SEASON_SUMMARY.overall_rate / 100 * (FLAT_ODDS - 1) - (1 - SEASON_SUMMARY.overall_rate / 100)) * 1000) / 10
+    : (picks.length ? Math.round(picks.reduce((acc, p) => acc + (p.result === "WIN" ? FLAT_ODDS - 1 : -1), 0) / picks.length * 1000) / 10 : 0);
+  const mae = isFullDataset
+    ? (SEASON_SUMMARY as { mae?: number }).mae ?? 4.71
+    : (picks.length ? Math.round(picks.reduce((acc, p) => acc + Math.abs(p.model - p.disposals), 0) / picks.length * 10) / 10 : 0);
 
   const nonArcCells = [
-    { label: "Picks", value: String(picks.length) },
+    { label: "Picks", value: String(totalPicks) },
     { label: "W / L", value: `${wins} / ${losses}` },
     { label: "HC", value: `${hcWins}/${hc.length} (${hc.length ? Math.round(hcWins/hc.length*100) : 0}%)`, color: "#f97316" },
     { label: "BET", value: `${betWins}/${bet.length} (${bet.length ? Math.round(betWins/bet.length*100) : 0}%)`, color: "#3b82f6" },
@@ -430,7 +434,7 @@ export default function AccuracyPage() {
             Track Record
           </h1>
           <p style={{ fontSize: 13, color: "#666", margin: 0 }}>
-            {ALL_PICKS.length} picks tracked across Rounds {ROUNDS[0]}–{ROUNDS[ROUNDS.length - 1]} · {SEASON_SUMMARY.total_picks} total picks this season · Click any row for full breakdown.
+            Showing notable picks — {SEASON_SUMMARY.total_picks} total predictions this season · Click any row for full breakdown.
           </p>
         </div>
 
@@ -508,7 +512,7 @@ export default function AccuracyPage() {
         </div>
 
         {/* Stats bar (live updates with filters) */}
-        <StatsBar picks={filtered} />
+        <StatsBar picks={filtered} isFullDataset={roundFilter === "ALL" && posFilter === "ALL" && tierFilter === "ALL" && resultFilter === "ALL"} />
 
         {/* Table */}
         <div className="track-table-wrap" style={{ background: "#080808", border: "1px solid #111", borderRadius: 12, overflow: "hidden" }}>

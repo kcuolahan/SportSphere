@@ -227,11 +227,11 @@ export default function ModelPage() {
           </p>
           <div style={{ borderTop: "1px solid #111" }}>
             {[
-              { round: "Round 1", blend: "90% 2025 / 10% 2026", note: "Almost entirely 2025 data — single game of 2026 is unreliable." },
-              { round: "Round 3", blend: "70% 2025 / 30% 2026", note: "2026 data starts to become meaningful." },
-              { round: "Round 5", blend: "50% 2025 / 50% 2026", note: "Equal weighting. Transition point." },
-              { round: "Round 6", blend: "35% 2025 / 65% 2026", note: "Current round. 2026 data now dominant." },
-              { round: "Round 9+", blend: "20% 2025 / 80% 2026", note: "2025 used only as a stability anchor." },
+              { round: "Rds 1–3", blend: "60% 2025 / 40% 2026", note: "Early season — 2026 data is thin. 2025 full-season averages dominate." },
+              { round: "Rds 4–7", blend: "20% 2025 / 80% 2026", note: "2026 data becomes reliable. Heavy weighting shifts to current season." },
+              { round: "Rds 8–11", blend: "20% 2025 / 80% 2026", note: "Stable mid-season blend. 2025 retained as a small anchor." },
+              { round: "Rds 12–17", blend: "10% 2025 / 90% 2026", note: "2026 data now authoritative. 2025 used only for stability." },
+              { round: "Rd 18+", blend: "5% 2025 / 95% 2026", note: "Finals and late rounds — almost entirely current season data." },
             ].map(p => (
               <div key={p.round} style={{ display: "grid", gridTemplateColumns: "100px 200px 1fr", gap: 16, padding: "14px 0", borderBottom: "1px solid #0a0a0a", alignItems: "start" }}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: "#f0f0f0" }}>{p.round}</div>

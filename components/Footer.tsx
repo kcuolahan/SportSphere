@@ -39,6 +39,7 @@ export default function Footer() {
                 { href: "/accuracy", label: "Track Record" },
                 { href: "/defence", label: "DvP Rankings" },
                 { href: "/players", label: "Player Explorer" },
+                { href: "/tracker", label: "Tracker" },
                 { href: "/insights", label: "Model Insights" },
               ].map(l => (
                 <div key={l.href} style={{ marginBottom: 6 }}>

@@ -11,9 +11,9 @@ const { round, season } = getCurrentPredictions();
 const LINKS = [
   { href: "/predictions", label: "Picks" },
   { href: "/accuracy", label: "Track Record" },
-  { href: "/insights", label: "Insights" },
+  { href: "/insights", label: "Insights", isNew: true },
   { href: "/defence", label: "DvP" },
-  { href: "/simulator", label: "Simulator" },
+  { href: "/simulator", label: "Simulator", isNew: true },
   { href: "/players", label: "Players" },
   { href: "/tracker", label: "Tracker" },
   { href: "/model", label: "How It Works" },
@@ -63,8 +63,17 @@ export default function Nav() {
                   borderRadius: 6,
                   borderBottom: active ? "1px solid #f97316" : "1px solid transparent",
                   transition: "color 0.15s",
+                  display: "inline-flex", alignItems: "center", gap: 5,
                 }}>
                   {link.label}
+                  {(link as { isNew?: boolean }).isNew && (
+                    <span style={{
+                      fontSize: 8, fontWeight: 800, color: "#000",
+                      background: "#f97316", borderRadius: 3,
+                      padding: "1px 4px", letterSpacing: "0.04em",
+                      lineHeight: 1.5,
+                    }}>NEW</span>
+                  )}
                 </Link>
               );
             })}

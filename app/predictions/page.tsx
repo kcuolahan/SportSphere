@@ -37,6 +37,41 @@ function Tooltip({ text }: { text: string }) {
   );
 }
 
+function RoundConcludedBanner() {
+  const [dismissed, setDismissed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("ss_r6_concluded_dismissed") === "1";
+  });
+  if (dismissed) return null;
+  return (
+    <div style={{
+      background: "#0c0700", border: "1px solid #78350f",
+      borderRadius: 8, padding: "12px 16px",
+      display: "flex", alignItems: "center",
+      justifyContent: "space-between", gap: 12,
+      marginBottom: 16,
+    }}>
+      <p style={{ fontSize: 12, color: "#f59e0b", margin: 0, flex: 1, lineHeight: 1.6 }}>
+        ⚠ Round 6 has concluded. Results will be logged shortly. Round 7 picks will be published Tuesday.
+      </p>
+      <button
+        onClick={() => {
+          localStorage.setItem("ss_r6_concluded_dismissed", "1");
+          setDismissed(true);
+        }}
+        style={{
+          background: "none", border: "1px solid #78350f",
+          borderRadius: 4, padding: "4px 10px",
+          fontSize: 10, color: "#f59e0b", cursor: "pointer",
+          flexShrink: 0,
+        }}
+      >
+        Dismiss
+      </button>
+    </div>
+  );
+}
+
 function DisclaimerBanner() {
   const [dismissed, setDismissed] = useState(() => {
     if (typeof window === "undefined") return false;
@@ -194,6 +229,7 @@ export default function PredictionsPage() {
       <Nav />
 
       <div style={{ maxWidth: 920, margin: "0 auto", padding: "84px 20px 60px" }}>
+        <RoundConcludedBanner />
         <DisclaimerBanner />
 
         {/* Header */}

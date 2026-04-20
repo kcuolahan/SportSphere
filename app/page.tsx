@@ -351,7 +351,7 @@ export default function LandingPage() {
             <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 500 }}>
               <thead>
                 <tr style={{ borderBottom: "1px solid #111" }}>
-                  {["Round", "Total Picks", "Overall", "STRONG Tier", "Filtered (E/V≥0.50)"].map(h => (
+                  {["Round", "Total Picks", "Overall"].map(h => (
                     <th key={h} style={{
                       padding: "10px 16px", fontSize: 11, color: "#666",
                       fontWeight: 600, textAlign: "left",
@@ -361,28 +361,13 @@ export default function LandingPage() {
                 </tr>
               </thead>
               <tbody>
-                {results.map((r, i) => {
-                  const rs = getResultStats([r.round]);
-                  return (
-                    <tr key={i} style={{ borderBottom: "1px solid #0a0a0a" }}>
-                      <td style={{ padding: "14px 16px", fontSize: 14, fontWeight: 600, color: "#fff" }}>Round {r.round}</td>
-                      <td style={{ padding: "14px 16px", fontSize: 14, color: "#666" }}>{r.total_picks}</td>
-                      <td style={{ padding: "14px 16px", fontSize: 14, color: "#f0f0f0" }}>{r.win_rate}%</td>
-                      <td style={{ padding: "14px 16px" }}>
-                        <span style={{
-                          background: "#1a0f00", border: "1px solid #f9731640",
-                          color: "#f97316", fontSize: 12, fontWeight: 700,
-                          padding: "3px 10px", borderRadius: 4,
-                        }}>
-                          {rs.strongWins}/{rs.strongTotal}
-                        </span>
-                      </td>
-                      <td style={{ padding: "14px 16px", fontSize: 14, color: rs.filteredRate >= 55 ? "#22c55e" : "#f0f0f0" }}>
-                        {rs.filteredRate}% ({rs.filteredWins}/{rs.filteredTotal})
-                      </td>
-                    </tr>
-                  );
-                })}
+                {results.map((r, i) => (
+                  <tr key={i} style={{ borderBottom: "1px solid #0a0a0a" }}>
+                    <td style={{ padding: "14px 16px", fontSize: 14, fontWeight: 600, color: "#fff" }}>Round {r.round}</td>
+                    <td style={{ padding: "14px 16px", fontSize: 14, color: "#666" }}>{r.total_picks}</td>
+                    <td style={{ padding: "14px 16px", fontSize: 14, color: "#f0f0f0" }}>{r.win_rate}%</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
