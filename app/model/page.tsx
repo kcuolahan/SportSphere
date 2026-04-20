@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import { strongRate, strongPicks, filteredRate, filteredPicks, roundsLabel, currentSeason } from "@/lib/siteData";
 
 export const metadata: Metadata = {
   title: "How The Model Works",
@@ -172,7 +173,7 @@ export default function ModelPage() {
           </div>
 
           <InfoBox>
-            HIGH CONVICTION picks (E/V ≥ 0.90) achieved 60.7% accuracy across 84 picks. Filtered picks (E/V ≥ 0.50) achieved 60.0% across 100 picks. Rounds 3–6, 2026 season.
+            HIGH CONVICTION picks (E/V ≥ 0.90) achieved {strongRate}% accuracy across {strongPicks} picks. Filtered picks (E/V ≥ 0.50) achieved {filteredRate}% across {filteredPicks} picks. {roundsLabel}, {currentSeason} season.
           </InfoBox>
         </Section>
 

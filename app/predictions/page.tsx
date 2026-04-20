@@ -103,7 +103,7 @@ function RoundConcludedBanner() {
       marginBottom: 16,
     }}>
       <p style={{ fontSize: 12, color: "#f59e0b", margin: 0, flex: 1, lineHeight: 1.6 }}>
-        ⚠ Round 6 has concluded. Results will be logged shortly. Round 7 picks will be published Tuesday.
+        ⚠ Round {round} has concluded. Results will be logged shortly. Round {round + 1} picks will be published Tuesday.
       </p>
       <button
         onClick={() => {

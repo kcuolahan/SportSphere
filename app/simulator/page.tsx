@@ -11,6 +11,7 @@ import {
   type ModelWeights, type SimulatedPick, type SimStats, type RawHistoricalPick,
 } from "@/lib/model-engine";
 import resultsData from "@/data/results.json";
+import { roundsLabel, currentSeason } from "@/lib/siteData";
 
 // ── Synthesise raw_inputs for picks that don't have them ─────────────────────
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -946,7 +947,7 @@ export default function SimulatorPage() {
                 );
               })}
               <div style={{ padding: "8px 14px", fontSize: 10, color: "#555" }}>
-                Based on 611 verified picks · Rounds 3–6 · 2026 season
+                Based on {ALL_EXTENDED.length} verified picks · {roundsLabel} · {currentSeason} season
               </div>
             </div>
 
@@ -1193,7 +1194,7 @@ export default function SimulatorPage() {
         </div>
 
         <div style={{ marginTop: 24, fontSize: 11, color: "#1a1a1a" }}>
-          Simulation uses {ALL_EXTENDED.length} verified picks · Rounds 3–6 · 2026 season. Not betting advice. 18+ only.
+          Simulation uses {ALL_EXTENDED.length} verified picks · {roundsLabel} · {currentSeason} season. Not betting advice. 18+ only.
         </div>
       </div>
 

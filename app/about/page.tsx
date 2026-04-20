@@ -1,6 +1,7 @@
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import results from "@/data/results.json";
+import { roundsLabel, currentSeason } from "@/lib/siteData";
 
 const SS = results.season_summary;
 
@@ -61,7 +62,7 @@ export default function AboutPage() {
               ))}
             </div>
             <p style={{ fontSize: 13, color: "#666", lineHeight: 1.7, margin: 0 }}>
-              All results verified against Wheeloratings actual disposal data. Rounds 3–6 · 2026 AFL season.
+              All results verified against Wheeloratings actual disposal data. {roundsLabel} · {currentSeason} AFL season.
               Full pick-by-pick history available on the{" "}
               <a href="/accuracy" style={{ color: "#f97316", textDecoration: "none" }}>Track Record</a> page.
             </p>

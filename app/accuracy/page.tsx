@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import resultsData from "@/data/results.json";
+import { totalPicks, roundsLabel, currentSeason } from "@/lib/siteData";
 
 /* ── Types ─────────────────────────────────────────────────────────────────── */
 interface Pick {
@@ -256,7 +257,7 @@ function SeasonSummary() {
       <div style={{ background: "#080808", padding: "24px" }}>
         <div style={{ fontSize: 10, color: "#666", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Overall (all picks)</div>
         <div style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.03em", color: "#f0f0f0" }}>{SS.overall_rate}%</div>
-        <div style={{ fontSize: 11, color: "#555", marginTop: 6 }}>{SS.total_picks} total picks · Rounds 3–6</div>
+        <div style={{ fontSize: 11, color: "#555", marginTop: 6 }}>{SS.total_picks} total picks · {roundsLabel}</div>
       </div>
     </div>
   );
@@ -336,7 +337,7 @@ export default function AccuracyPage() {
             Track Record
           </h1>
           <p style={{ fontSize: 13, color: "#666", margin: 0, lineHeight: 1.7 }}>
-            611 picks · Rounds 3–6 · 2026 season · verified vs Wheeloratings
+            {totalPicks} picks · {roundsLabel} · {currentSeason} season · verified vs Wheeloratings
           </p>
         </div>
 

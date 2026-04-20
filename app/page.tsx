@@ -8,6 +8,7 @@ import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { getCurrentPredictions, getAllResults, getResultStats, getSeasonSummary } from "@/lib/data";
 import { EmailSignup } from "@/components/EmailSignup";
 import predictionsData from "@/data/predictions.json";
+import { roundsLabel, currentSeason } from "@/lib/siteData";
 
 const currentRound = predictionsData.round;
 const predictions = getCurrentPredictions();
@@ -223,7 +224,7 @@ export default function LandingPage() {
           {[
             { value: `${seasonSummary.strong_rate}%`, label: "HC Win Rate", sub: `${seasonSummary.strong_picks} picks · HIGH CONVICTION tier` },
             { value: `${seasonSummary.filtered_rate}%`, label: "Filtered Win Rate", sub: `${seasonSummary.filtered_picks} picks · E/V ≥ 0.50` },
-            { value: seasonSummary.total_picks.toString(), label: "Picks Analysed", sub: "Rounds 3–6 · 2026 season" },
+            { value: seasonSummary.total_picks.toString(), label: "Picks Analysed", sub: `${roundsLabel} · ${currentSeason} season` },
             { value: `${seasonSummary.overall_rate}%`, label: "Overall Win Rate", sub: `All ${seasonSummary.total_picks} picks tracked` },
           ].map((s, i) => (
             <div key={i} style={{

@@ -2,6 +2,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import results from "@/data/results.json";
 import teamStyleData from "@/data/team-style.json";
+import { totalPicks, strongRate, filteredRate, roundsLabel, currentSeason } from "@/lib/siteData";
 
 const analytics = (results as any).analytics;
 const teams = teamStyleData.teams;
@@ -58,7 +59,7 @@ export default function InsightsPage() {
               Model Insights
             </h1>
             <p style={{ fontSize: 15, color: "#777", margin: 0, maxWidth: 600, lineHeight: 1.7 }}>
-              Performance breakdowns from 611 backtested picks. Understand when the model fires and when to exercise caution.
+              Performance breakdowns from {totalPicks} backtested picks. Understand when the model fires and when to exercise caution.
             </p>
           </div>
 
@@ -364,14 +365,14 @@ export default function InsightsPage() {
               <h2 style={{ fontSize: 20, fontWeight: 700, color: "#f0f0f0", margin: 0 }}>Key Data Findings</h2>
             </div>
             <p style={{ fontSize: 13, color: "#666", marginBottom: 20, marginLeft: 36, lineHeight: 1.6 }}>
-              The five most actionable findings from 611 picks across Rounds 3–6.
+              The five most actionable findings from {totalPicks} picks across {roundsLabel}.
             </p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12 }}>
               {[
                 {
-                  stat: "60.7%",
+                  stat: `${strongRate}%`,
                   label: "Raise Your E/V Threshold",
-                  detail: "HC picks (E/V ≥ 0.90) hit 60.7% vs 60.0% for all filtered picks. Every 0.1 increase in your threshold cuts noise and improves hit rate. When in doubt, filter up — not down.",
+                  detail: `HC picks (E/V ≥ 0.90) hit ${strongRate}% vs ${filteredRate}% for all filtered picks. Every 0.1 increase in your threshold cuts noise and improves hit rate. When in doubt, filter up — not down.`,
                   color: "#f97316",
                   border: "#f9731620",
                 },
@@ -420,7 +421,7 @@ export default function InsightsPage() {
 
           {/* Disclaimer */}
           <p style={{ fontSize: 11, color: "#444", lineHeight: 1.7, borderTop: "1px solid #111", paddingTop: 24 }}>
-            All figures based on 611 verified picks across Rounds 3–6 · 2026 season. Past performance does not guarantee future results.
+            All figures based on {totalPicks} verified picks across {roundsLabel} · {currentSeason} season. Past performance does not guarantee future results.
             Analytics are updated weekly. For methodology, see{" "}
             <a href="/model" style={{ color: "#555", textDecoration: "none" }}>How It Works</a>.
           </p>

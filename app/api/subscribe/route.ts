@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
+import { strongRate, filteredRate, totalPicks } from "@/lib/siteData";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const AUDIENCE_ID = process.env.RESEND_AUDIENCE_ID ?? "";
@@ -48,7 +49,7 @@ export async function POST(req: NextRequest) {
         "",
         "You'll get Round picks in your inbox each week before the games start.",
         "",
-        "Model stats: 60.7% HC win rate | 60.0% filtered win rate | 611 picks tracked",
+        `Model stats: ${strongRate}% HC win rate | ${filteredRate}% filtered win rate | ${totalPicks} picks tracked`,
         "",
         "We don't spam. One email per round, every Tuesday.",
         "",
