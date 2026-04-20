@@ -14,16 +14,16 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "SportSphere — AFL Disposal Analytics | Australia's Sharpest Model",
-    template: "%s | SportSphere",
+    default: "SportSphere HQ — AFL Disposal Analytics | Australia's Sharpest Model",
+    template: "%s | SportSphere HQ",
   },
   description:
-    "59% filtered win rate across 467 backtested picks. Australia's sharpest AFL disposal model. Six-factor predictions, Edge/Vol filtering, publicly verified track record.",
+    "60.7% HC win rate across 611 verified picks. Australia's sharpest AFL disposal model. Six-factor predictions, Edge/Vol filtering, publicly verified track record.",
   keywords: ["AFL", "AFL predictions", "AFL disposals", "AFL analytics", "sports analytics Australia", "AFL disposal model"],
   openGraph: {
-    title: "SportSphere — AFL Disposal Analytics",
-    description: "59% filtered win rate · 67.7% STRONG tier · 467 picks tracked. Australia's sharpest AFL disposal model.",
-    siteName: "SportSphere",
+    title: "SportSphere HQ — AFL Disposal Analytics",
+    description: "60.7% HC win rate · 60.0% filtered · 611 picks tracked. Australia's sharpest AFL disposal model.",
+    siteName: "SportSphere HQ",
     locale: "en_AU",
     type: "website",
     images: [
@@ -31,14 +31,14 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "SportSphere — AFL Disposal Analytics. 59% filtered win rate. 67.7% STRONG. 467 picks tracked.",
+        alt: "SportSphere HQ — AFL Disposal Analytics. 60.7% HC win rate. 611 picks tracked.",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "SportSphere — AFL Disposal Analytics",
-    description: "59% filtered win rate · 67.7% STRONG tier · 467 picks tracked. Australia's sharpest AFL disposal model.",
+    title: "SportSphere HQ — AFL Disposal Analytics",
+    description: "60.7% HC win rate · 60.0% filtered · 611 picks tracked. Australia's sharpest AFL disposal model.",
     images: ["/og-image.png"],
   },
 };

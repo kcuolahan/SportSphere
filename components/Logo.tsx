@@ -36,7 +36,7 @@ export function Logo({ size = 'md', showText = true }: LogoProps) {
           color: '#f0f0f0',
           lineHeight: 1,
         }}>
-          Sport<span style={{ color: '#f97316' }}>Sphere</span>
+          Sport<span style={{ color: '#f97316' }}>Sphere</span> HQ
         </span>
       )}
     </div>

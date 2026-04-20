@@ -6,7 +6,7 @@ import { strongRate, strongPicks, filteredRate, filteredPicks, roundsLabel, curr
 
 export const metadata: Metadata = {
   title: "How The Model Works",
-  description: "A technical breakdown of the SportSphere AFL disposal prediction model — six factors, Edge/Vol filtering, position thresholds, and dynamic season blending.",
+  description: "A technical breakdown of the SportSphere HQ AFL disposal prediction model — six factors, Edge/Vol filtering, position thresholds, and dynamic season blending.",
 };
 
 function Section({ num, title, children }: { num: string; title: string; children: ReactNode }) {
@@ -75,7 +75,7 @@ export default function ModelPage() {
             How The Model Works
           </h1>
           <p style={{ fontSize: 15, color: "#555", lineHeight: 1.7, margin: 0, maxWidth: 560 }}>
-            A full technical breakdown of how SportSphere generates AFL disposal predictions — every factor, every weight, every filter. No black boxes.
+            A full technical breakdown of how SportSphere HQ generates AFL disposal predictions — every factor, every weight, every filter. No black boxes.
           </p>
         </div>
 

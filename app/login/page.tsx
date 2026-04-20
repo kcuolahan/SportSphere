@@ -39,7 +39,7 @@ export default function LoginPage() {
 
         <div style={{ marginBottom: 32, textAlign: "center" }}>
           <div style={{ fontSize: 10, color: "#f97316", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 10 }}>
-            SportSphere
+            SportSphere HQ
           </div>
           <h1 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.02em", margin: "0 0 8px" }}>
             Welcome back

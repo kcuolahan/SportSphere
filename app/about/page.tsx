@@ -18,21 +18,21 @@ export default function AboutPage() {
               About
             </div>
             <h1 style={{ fontSize: 32, fontWeight: 800, color: "#f0f0f0", margin: "0 0 12px", letterSpacing: "-0.02em" }}>
-              SportSphere
+              SportSphere HQ
             </h1>
             <p style={{ fontSize: 15, color: "#777", margin: 0, maxWidth: 560, lineHeight: 1.7 }}>
               An independent AFL disposal analytics model built to cut through noise and find genuine statistical edges in player prop markets.
             </p>
           </div>
 
-          {/* Section 1 — What is SportSphere */}
+          {/* Section 1 — What is SportSphere HQ */}
           <section style={{ marginBottom: 48 }}>
             <h2 style={{ fontSize: 20, fontWeight: 700, color: "#f0f0f0", margin: "0 0 16px", letterSpacing: "-0.01em" }}>
-              What is SportSphere?
+              What is SportSphere HQ?
             </h2>
             <div style={{ background: "#080808", border: "1px solid #111", borderRadius: 12, padding: "24px 28px" }}>
               <p style={{ fontSize: 14, color: "#888", lineHeight: 1.8, margin: "0 0 16px" }}>
-                SportSphere is a statistical model that predicts AFL player disposal counts and evaluates player prop betting lines offered by bookmakers. It identifies picks where the model has genuine confidence the bookmaker line is mispriced.
+                SportSphere HQ is a statistical model that predicts AFL player disposal counts and evaluates player prop betting lines offered by bookmakers. It identifies picks where the model has genuine confidence the bookmaker line is mispriced.
               </p>
               <p style={{ fontSize: 14, color: "#888", lineHeight: 1.8, margin: "0 0 16px" }}>
                 Every pick is graded using <strong style={{ color: "#f97316" }}>Edge/Volatility (E/V)</strong> — the ratio of predicted edge to historical standard deviation. This measures not just whether the model predicts differently from the line, but whether that difference is statistically meaningful.
@@ -75,13 +75,13 @@ export default function AboutPage() {
             </h2>
             <div style={{ background: "#080808", border: "1px solid #111", borderRadius: 12, padding: "24px 28px" }}>
               <p style={{ fontSize: 14, color: "#888", lineHeight: 1.8, margin: "0 0 16px" }}>
-                SportSphere is an independent project built by an AFL fan and software developer who got frustrated by the lack of transparent, data-driven analysis in the player prop space.
+                SportSphere HQ is an independent project built by an AFL fan and software developer who got frustrated by the lack of transparent, data-driven analysis in the player prop space.
               </p>
               <p style={{ fontSize: 14, color: "#888", lineHeight: 1.8, margin: "0 0 16px" }}>
                 The model was built from scratch using historical AFL player data, bookmaker line history, and a custom Edge/Volatility framework. Every design decision — from the tier system to the position exclusions — is grounded in backtested results, not intuition.
               </p>
               <p style={{ fontSize: 14, color: "#888", lineHeight: 1.8, margin: 0 }}>
-                SportSphere is not affiliated with any bookmaker, tipping service, or betting syndicate. There is no subscription fee. The model is published weekly for free.
+                SportSphere HQ is not affiliated with any bookmaker, tipping service, or betting syndicate. There is no subscription fee. The model is published weekly for free.
               </p>
             </div>
           </section>
@@ -99,11 +99,11 @@ export default function AboutPage() {
                 <span style={{ fontSize: 13, fontWeight: 700, color: "#fb923c" }}>You must be 18 or over to use this service.</span>
               </div>
               {[
-                "SportSphere provides statistical analysis only. Nothing published here constitutes financial advice, betting advice, or a recommendation to place any wager.",
+                "SportSphere HQ provides statistical analysis only. Nothing published here constitutes financial advice, betting advice, or a recommendation to place any wager.",
                 "Past model performance does not guarantee future results. All predictions carry inherent uncertainty.",
-                "SportSphere is not a licensed financial service provider and is not regulated by ASIC or any gambling authority.",
+                "SportSphere HQ is not a licensed financial service provider and is not regulated by ASIC or any gambling authority.",
                 "You are solely responsible for any betting decisions you make. Never bet more than you can afford to lose.",
-                "AFL match and player statistics are used for analytical purposes. SportSphere is not affiliated with the AFL or any club.",
+                "AFL match and player statistics are used for analytical purposes. SportSphere HQ is not affiliated with the AFL or any club.",
               ].map((item, i) => (
                 <div key={i} style={{ fontSize: 13, color: "#888", lineHeight: 1.7, padding: "10px 0", borderBottom: "1px solid #1c0a00" }}>
                   {item}

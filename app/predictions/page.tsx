@@ -140,7 +140,7 @@ function DisclaimerBanner() {
       marginBottom: 20, flexWrap: "wrap",
     }}>
       <p style={{ fontSize: 11, color: "#666", margin: 0, flex: 1, lineHeight: 1.6 }}>
-        SportSphere provides model outputs for analytical purposes only. Not financial or betting advice. 18+ only. Gamble responsibly.
+        SportSphere HQ provides model outputs for analytical purposes only. Not financial or betting advice. 18+ only. Gamble responsibly.
       </p>
       <button
         onClick={() => {
@@ -274,14 +274,14 @@ export default function PredictionsPage() {
     const betPicks = picks.filter((p: Pick) => p.enhanced_signal === "BET");
     const fmt = (p: Pick) => `  ${p.player} ${p.direction} ${p.bookie_line} (E/V ${p.edge_vol.toFixed(2)})`;
     const text = [
-      `Round ${round} AFL disposal picks — SportSphere model`,
+      `Round ${round} AFL disposal picks — SportSphere HQ model`,
       "",
       hcPicks.length ? `HC picks:\n${hcPicks.map(fmt).join("\n")}` : "",
       betPicks.length ? `BET picks:\n${betPicks.map(fmt).join("\n")}` : "",
       "",
       `Track record: 59% filtered win rate | 67.7% STRONG`,
-      `Full analysis: sport-sphere-ruddy.vercel.app/predictions`,
-      "#AFL #SportSphere",
+      `Full analysis: sportspherehq.com/predictions`,
+      "#AFL #SportSphere HQ",
     ].filter(Boolean).join("\n");
     navigator.clipboard.writeText(text).then(() => {
       setShareCopied(true);

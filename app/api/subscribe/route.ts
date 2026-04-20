@@ -4,7 +4,7 @@ import { strongRate, filteredRate, totalPicks } from "@/lib/siteData";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const AUDIENCE_ID = process.env.RESEND_AUDIENCE_ID ?? "";
-const FROM = "SportSphere <picks@sportsphere.com.au>";
+const FROM = "SportSphere HQ <picks@sportspherehq.com>";
 
 function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
@@ -43,9 +43,9 @@ export async function POST(req: NextRequest) {
     await resend.emails.send({
       from: FROM,
       to: email,
-      subject: "You're on the SportSphere list",
+      subject: "You're on the SportSphere HQ list",
       text: [
-        "Welcome to SportSphere — Australia's sharpest AFL disposal model.",
+        "Welcome to SportSphere HQ — Australia's sharpest AFL disposal model.",
         "",
         "You'll get Round picks in your inbox each week before the games start.",
         "",
@@ -53,8 +53,8 @@ export async function POST(req: NextRequest) {
         "",
         "We don't spam. One email per round, every Tuesday.",
         "",
-        "— SportSphere",
-        "https://sportstphere.com.au",
+        "— SportSphere HQ",
+        "https://sportspherehq.com",
       ].join("\n"),
     });
 

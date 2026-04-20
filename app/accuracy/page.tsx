@@ -525,7 +525,7 @@ export default function AccuracyPage() {
         {/* Disclaimer */}
         <div style={{ marginTop: 24, padding: "14px 18px", background: "#080808", border: "1px solid #111", borderRadius: 10 }}>
           <div style={{ fontSize: 10, color: "#555", lineHeight: 1.8 }}>
-            <strong style={{ color: "#666" }}>Disclaimer:</strong> SportSphere provides analytical data only. Nothing here is financial or betting advice. Past model performance does not guarantee future results. You must be 18+ to bet. National Gambling Helpline: <strong style={{ color: "#666" }}>1800 858 858</strong>
+            <strong style={{ color: "#666" }}>Disclaimer:</strong> SportSphere HQ provides analytical data only. Nothing here is financial or betting advice. Past model performance does not guarantee future results. You must be 18+ to bet. National Gambling Helpline: <strong style={{ color: "#666" }}>1800 858 858</strong>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 import { PLAYERS } from "@/data/players";
 
-const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://sportstphere.com.au";
+const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://sportspherehq.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

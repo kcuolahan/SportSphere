@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About | SportSphere",
-  description: "What SportSphere is, how it works, our track record, and the legal disclaimer. AFL disposal analytics — not financial advice.",
+  title: "About | SportSphere HQ",
+  description: "What SportSphere HQ is, how it works, our track record, and the legal disclaimer. AFL disposal analytics — not financial advice.",
   openGraph: {
-    title: "About SportSphere — AFL Disposal Analytics",
+    title: "About SportSphere HQ — AFL Disposal Analytics",
     description: "Independent AFL disposal model with a verified track record. Built on real data, not intuition.",
     type: "website",
   },
   twitter: {
     card: "summary",
-    title: "About SportSphere",
+    title: "About SportSphere HQ",
     description: "Independent AFL disposal analytics model. Verified results, no subscription.",
   },
 };

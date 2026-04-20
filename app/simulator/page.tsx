@@ -391,7 +391,7 @@ export default function SimulatorPage() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `sportstphere_config_${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `sportspherehq_config_${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
   }, [weights, simStats, origStatsForFilter]);

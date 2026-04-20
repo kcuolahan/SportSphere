@@ -9,7 +9,7 @@ const { round } = getCurrentPredictions();
 
 export const metadata: Metadata = {
   title: "FAQ",
-  description: "Frequently asked questions about SportSphere, how the model works, and responsible gambling information.",
+  description: "Frequently asked questions about SportSphere HQ, how the model works, and responsible gambling information.",
 };
 
 function Q({ q, children }: { q: string; children: React.ReactNode }) {
@@ -46,14 +46,14 @@ export default function FAQPage() {
         </div>
 
         {/* About */}
-        <div style={{ fontSize: 11, color: "#f97316", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 4 }}>About SportSphere</div>
+        <div style={{ fontSize: 11, color: "#f97316", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 4 }}>About SportSphere HQ</div>
 
-        <Q q="What is SportSphere?">
-          SportSphere is an AFL disposal prediction analytics platform. We publish model outputs, edge scores, and verified accuracy data for AFL player disposal markets each round. We are an analytics tool — not a tipping service and not a bookmaker.
+        <Q q="What is SportSphere HQ?">
+          SportSphere HQ is an AFL disposal prediction analytics platform. We publish model outputs, edge scores, and verified accuracy data for AFL player disposal markets each round. We are an analytics tool — not a tipping service and not a bookmaker.
         </Q>
 
         <Q q="How does the model work?">
-          SportSphere uses a six-factor weighted prediction model that combines season averages, opponent concession rates, time-on-ground adjustment, play style factors, conditions multipliers, and CBA attendance data. Read the full technical breakdown on the{" "}
+          SportSphere HQ uses a six-factor weighted prediction model that combines season averages, opponent concession rates, time-on-ground adjustment, play style factors, conditions multipliers, and CBA attendance data. Read the full technical breakdown on the{" "}
           <Link href="/model" style={{ color: "#f97316", textDecoration: "none" }}>How It Works</Link> page.
         </Q>
 
@@ -78,18 +78,18 @@ export default function FAQPage() {
         </Q>
 
         <Q q="Are you affiliated with any bookmaker?">
-          No. SportSphere is not affiliated with, sponsored by, or endorsed by any bookmaker or gambling operator. We do not receive referral fees or commissions from any betting platform.
+          No. SportSphere HQ is not affiliated with, sponsored by, or endorsed by any bookmaker or gambling operator. We do not receive referral fees or commissions from any betting platform.
         </Q>
 
         {/* Legal */}
         <div style={{ fontSize: 11, color: "#f97316", letterSpacing: "0.1em", textTransform: "uppercase", marginTop: 40, marginBottom: 4 }}>Legal & Responsible Gambling</div>
 
         <Q q="Is this financial advice?">
-          No. SportSphere provides statistical analysis and model outputs only. Nothing on this platform constitutes financial advice, betting advice, or a recommendation to place any wager. All decisions are made solely at the user's own risk and discretion. Past model performance does not guarantee future results.
+          No. SportSphere HQ provides statistical analysis and model outputs only. Nothing on this platform constitutes financial advice, betting advice, or a recommendation to place any wager. All decisions are made solely at the user's own risk and discretion. Past model performance does not guarantee future results.
         </Q>
 
         <Q q="How do I use this responsibly?">
-          SportSphere is an analytical tool. If you choose to use this data in conjunction with betting markets, we strongly recommend: setting strict loss limits before you start, never chasing losses, treating every bet as independent and not part of a system, and taking regular breaks. The model helps identify statistical edges — it does not remove variance or guarantee profits.
+          SportSphere HQ is an analytical tool. If you choose to use this data in conjunction with betting markets, we strongly recommend: setting strict loss limits before you start, never chasing losses, treating every bet as independent and not part of a system, and taking regular breaks. The model helps identify statistical edges — it does not remove variance or guarantee profits.
         </Q>
 
         <Q q="I need help with problem gambling.">
@@ -117,7 +117,7 @@ export default function FAQPage() {
             Full Disclaimer
           </div>
           <p style={{ fontSize: 11, color: "#333", lineHeight: 1.9, margin: 0 }}>
-            SportSphere is an independent analytics platform providing data-driven analysis of AFL player disposal markets. All content is produced for analytical and informational purposes only. Nothing on this website constitutes financial advice, sports betting advice, or a recommendation to place any wager of any kind. SportSphere does not accept any liability for decisions made by users based on information provided on this platform. Past accuracy data does not constitute a guarantee or prediction of future results. Disposal markets are inherently variable and unpredictable. Users must exercise their own judgment and are solely responsible for any betting decisions they make. You must be 18 years of age or older to access betting markets in Australia. If gambling is causing harm, please contact the National Gambling Helpline on 1800 858 858 or visit gamblinghelponline.org.au.
+            SportSphere HQ is an independent analytics platform providing data-driven analysis of AFL player disposal markets. All content is produced for analytical and informational purposes only. Nothing on this website constitutes financial advice, sports betting advice, or a recommendation to place any wager of any kind. SportSphere HQ does not accept any liability for decisions made by users based on information provided on this platform. Past accuracy data does not constitute a guarantee or prediction of future results. Disposal markets are inherently variable and unpredictable. Users must exercise their own judgment and are solely responsible for any betting decisions they make. You must be 18 years of age or older to access betting markets in Australia. If gambling is causing harm, please contact the National Gambling Helpline on 1800 858 858 or visit gamblinghelponline.org.au.
           </p>
         </div>
 

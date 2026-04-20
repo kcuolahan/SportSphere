@@ -298,7 +298,7 @@ export default function LandingPage() {
             The model
           </div>
           <h2 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 800, letterSpacing: "-0.03em", margin: 0 }}>
-            How SportSphere works
+            How SportSphere HQ works
           </h2>
         </div>
 
