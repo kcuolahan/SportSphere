@@ -379,25 +379,34 @@ export default function AccuracyPage() {
           </p>
         </div>
 
-        {/* Season headline stats */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 1, background: "#111", borderRadius: 12, overflow: "hidden", marginBottom: 20 }}>
+        {/* Season headline stats — HC leads */}
+        <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr", gap: 1, background: "#111", borderRadius: 12, overflow: "hidden", marginBottom: 20 }}>
+          <div style={{ background: "#080808", padding: "24px 28px", borderRight: "1px solid #111" }}>
+            <div style={{ fontSize: 10, color: "#f97316", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 700, marginBottom: 8 }}>
+              HC — HIGH CONVICTION (E/V ≥ 0.90)
+            </div>
+            <div style={{ fontSize: 44, fontWeight: 800, letterSpacing: "-0.04em", color: "#f97316", lineHeight: 1 }}>
+              {SEASON_SUMMARY.strong_rate}%
+            </div>
+            <div style={{ fontSize: 13, color: "#888", marginTop: 8 }}>
+              {SEASON_SUMMARY.strong_wins}W / {SEASON_SUMMARY.strong_picks - SEASON_SUMMARY.strong_wins}L · {SEASON_SUMMARY.strong_picks} picks
+            </div>
+          </div>
           {[
-            { label: "Overall (full season)", value: `${SEASON_SUMMARY.overall_rate}%`, sub: `${SEASON_SUMMARY.total_picks} total picks`, color: "#f0f0f0" },
-            { label: "Filtered (E/V ≥ 0.50)", value: `${SEASON_SUMMARY.filtered_rate}%`, sub: `${SEASON_SUMMARY.filtered_wins}W / ${SEASON_SUMMARY.filtered_picks - SEASON_SUMMARY.filtered_wins}L`, color: "#f97316" },
-            { label: "HC (STRONG)", value: `${SEASON_SUMMARY.strong_rate}%`, sub: `${SEASON_SUMMARY.strong_wins}W / ${SEASON_SUMMARY.strong_picks - SEASON_SUMMARY.strong_wins}L`, color: "#22c55e" },
+            { label: "Filtered (E/V ≥ 0.50)", value: `${SEASON_SUMMARY.filtered_rate}%`, sub: `${SEASON_SUMMARY.filtered_wins}W / ${SEASON_SUMMARY.filtered_picks - SEASON_SUMMARY.filtered_wins}L · ${SEASON_SUMMARY.filtered_picks} picks`, color: "#22c55e" },
+            { label: "Overall (all picks)", value: `${SEASON_SUMMARY.overall_rate}%`, sub: `${SEASON_SUMMARY.total_picks} total picks · Rounds 3–6`, color: "#f0f0f0" },
           ].map(({ label, value, sub, color }) => (
-            <div key={label} style={{ background: "#080808", padding: "20px 24px" }}>
+            <div key={label} style={{ background: "#080808", padding: "24px 24px" }}>
               <div style={{ fontSize: 10, color: "#666", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>{label}</div>
               <div style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.03em", color }}>{value}</div>
-              <div style={{ fontSize: 11, color: "#555", marginTop: 4 }}>{sub}</div>
+              <div style={{ fontSize: 11, color: "#555", marginTop: 6 }}>{sub}</div>
             </div>
           ))}
         </div>
 
         {/* Disclaimer on overall stats */}
         <div style={{ marginBottom: 20, padding: "10px 14px", background: "#080808", border: "1px solid #111", borderRadius: 8, fontSize: 11, color: "#555", lineHeight: 1.7 }}>
-          Season summary figures (52.7%, 59.0%, 67.7%) are derived from the complete 467-pick backtested dataset.
-          The per-pick table below shows only the HC/BET picks stored in results.json (Rounds 3–6) — every entry is 100% verifiable.
+          All figures are from the live results dataset (Rounds 3–6, 2026 season). Every pick in the table below is 100% verifiable against Wheeloratings actual disposals.
         </div>
 
         {/* ROI Chart */}

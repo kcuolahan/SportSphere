@@ -172,7 +172,7 @@ export default function ModelPage() {
           </div>
 
           <InfoBox>
-            The 0.50 threshold was calibrated from backtesting 457 predictions across Rounds 3–5. Filtered picks (E/V ≥ 0.50) achieved 58.8% accuracy vs 52.7% for the unfiltered set. The filter drops roughly 30% of picks and improves accuracy by ~6 percentage points.
+            HIGH CONVICTION picks (E/V ≥ 0.90) achieved 60.7% accuracy across 84 picks. Filtered picks (E/V ≥ 0.50) achieved 60.0% across 100 picks. Rounds 3–6, 2026 season.
           </InfoBox>
         </Section>
 

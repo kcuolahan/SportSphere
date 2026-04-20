@@ -220,10 +220,10 @@ export default function LandingPage() {
           display: "grid", gridTemplateColumns: "repeat(4, 1fr)",
         }}>
           {[
+            { value: `${seasonSummary.strong_rate}%`, label: "HC Win Rate", sub: `${seasonSummary.strong_picks} picks · HIGH CONVICTION tier` },
             { value: `${seasonSummary.filtered_rate}%`, label: "Filtered Win Rate", sub: `${seasonSummary.filtered_picks} picks · E/V ≥ 0.50` },
-            { value: `${seasonSummary.strong_rate}%`, label: "STRONG Accuracy", sub: `${seasonSummary.strong_wins}W / ${seasonSummary.strong_picks - seasonSummary.strong_wins}L` },
-            { value: seasonSummary.total_picks.toString(), label: "Picks Analysed", sub: "2026 season to date" },
-            { value: `${seasonSummary.overall_rate}%`, label: "Overall Win Rate", sub: "All picks tracked" },
+            { value: seasonSummary.total_picks.toString(), label: "Picks Analysed", sub: "Rounds 3–6 · 2026 season" },
+            { value: `${seasonSummary.overall_rate}%`, label: "Overall Win Rate", sub: `All ${seasonSummary.total_picks} picks tracked` },
           ].map((s, i) => (
             <div key={i} style={{
               padding: "28px 20px",
