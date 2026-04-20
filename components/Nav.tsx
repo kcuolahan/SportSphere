@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { getCurrentPredictions } from "@/lib/data";
-import { Logo } from "@/components/Logo";
 import { supabase, signOut } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
 
@@ -57,8 +56,11 @@ export default function Nav() {
         }}>
 
           {/* Logo */}
-          <Link href="/" style={{ textDecoration: "none", flexShrink: 0 }}>
-            <Logo size="md" showText={true} />
+          <Link href="/" style={{ textDecoration: "none", flexShrink: 0, display: "flex", alignItems: "center", gap: 8 }}>
+            <img src="/logo.svg" alt="SportSphere HQ" width={32} height={32} style={{ borderRadius: "50%" }} />
+            <span style={{ fontSize: 15, fontWeight: 700, letterSpacing: "-0.02em", color: "#f0f0f0", lineHeight: 1 }}>
+              Sport<span style={{ color: "#f97316" }}>Sphere</span> HQ
+            </span>
           </Link>
 
           {/* Desktop nav links */}

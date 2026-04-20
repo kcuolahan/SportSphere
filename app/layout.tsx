@@ -20,6 +20,10 @@ export const metadata: Metadata = {
   description:
     "60.7% HC win rate across 611 verified picks. Australia's sharpest AFL disposal model. Six-factor predictions, Edge/Vol filtering, publicly verified track record.",
   keywords: ["AFL", "AFL predictions", "AFL disposals", "AFL analytics", "sports analytics Australia", "AFL disposal model"],
+  icons: {
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    apple: "/logo.svg",
+  },
   openGraph: {
     title: "SportSphere HQ — AFL Disposal Analytics",
     description: "60.7% HC win rate · 60.0% filtered · 611 picks tracked. Australia's sharpest AFL disposal model.",
