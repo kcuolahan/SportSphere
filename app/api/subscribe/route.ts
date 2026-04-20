@@ -22,9 +22,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid email address" }, { status: 400 });
   }
 
-  if (!process.env.RESEND_API_KEY) {
-    console.error("RESEND_API_KEY is not set");
-    return NextResponse.json({ error: "Email service not configured" }, { status: 503 });
+  const apiKey = process.env.RESEND_API_KEY ?? "";
+  if (!apiKey || apiKey.startsWith("your_") || apiKey === "re_placeholder") {
+    console.error("RESEND_API_KEY is missing or placeholder");
+    return NextResponse.json({ error: "Email service not configured — check back soon" }, { status: 503 });
   }
 
   try {
@@ -47,12 +48,12 @@ export async function POST(req: NextRequest) {
         "",
         "You'll get Round picks in your inbox each week before the games start.",
         "",
-        "Model stats: 58.8% filtered win rate | 66.7% STRONG tier | 457 picks tracked",
+        "Model stats: 60.7% HC win rate | 60.0% filtered win rate | 611 picks tracked",
         "",
         "We don't spam. One email per round, every Tuesday.",
         "",
         "— SportSphere",
-        "https://sport-sphere-ruddy.vercel.app",
+        "https://sportstphere.com.au",
       ].join("\n"),
     });
 

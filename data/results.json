@@ -9,6 +9,28 @@
     "strong_wins": 51,
     "strong_rate": 60.7
   },
+  "analytics": {
+    "model_bias": { "current": 0.78, "optimised": 0.09 },
+    "by_condition": [
+      { "condition": "Dry",  "count": 332, "win_rate": 53.6, "bet_win_rate": 53.0, "mae": 4.51 },
+      { "condition": "Wet",  "count": 18,  "win_rate": 44.4, "bet_win_rate": 33.3, "mae": 5.80 },
+      { "condition": "Roof", "count": 261, "win_rate": 54.0, "bet_win_rate": 61.5, "mae": 4.30 }
+    ],
+    "by_position_condition": [
+      { "position": "MID",  "condition": "Dry",  "count": 175, "win_rate": 57.1 },
+      { "position": "MID",  "condition": "Wet",  "count": 10,  "win_rate": 50.0, "small_sample": true },
+      { "position": "MID",  "condition": "Roof", "count": 132, "win_rate": 56.1 },
+      { "position": "DEF",  "condition": "Dry",  "count": 82,  "win_rate": 52.4 },
+      { "position": "DEF",  "condition": "Wet",  "count": 5,   "win_rate": 40.0, "small_sample": true },
+      { "position": "DEF",  "condition": "Roof", "count": 72,  "win_rate": 56.9 },
+      { "position": "FWD",  "condition": "Dry",  "count": 56,  "win_rate": 37.5, "excluded": true },
+      { "position": "FWD",  "condition": "Wet",  "count": 2,   "win_rate": 50.0, "excluded": true, "small_sample": true },
+      { "position": "FWD",  "condition": "Roof", "count": 40,  "win_rate": 35.0, "excluded": true },
+      { "position": "RUCK", "condition": "Dry",  "count": 19,  "win_rate": 47.4, "small_sample": true },
+      { "position": "RUCK", "condition": "Wet",  "count": 1,   "win_rate": 0.0,  "small_sample": true },
+      { "position": "RUCK", "condition": "Roof", "count": 17,  "win_rate": 47.1, "small_sample": true }
+    ]
+  },
   "rounds": [
     {
       "round": 3,

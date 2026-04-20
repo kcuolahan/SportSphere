@@ -7,7 +7,9 @@ import Footer from "@/components/Footer";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { getCurrentPredictions, getAllResults, getResultStats, getSeasonSummary } from "@/lib/data";
 import { EmailSignup } from "@/components/EmailSignup";
+import predictionsData from "@/data/predictions.json";
 
+const currentRound = predictionsData.round;
 const predictions = getCurrentPredictions();
 const highImpactNews = (predictions.team_news ?? []).filter((n: { impact: string }) => n.impact === "HIGH");
 const results = getAllResults();
@@ -209,7 +211,7 @@ export default function LandingPage() {
         padding: "40px 24px",
       }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <EmailSignup round={predictions.round} variant="hero" />
+          <EmailSignup round={currentRound} variant="hero" />
         </div>
       </div>
 

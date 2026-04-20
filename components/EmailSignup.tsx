@@ -109,10 +109,23 @@ export function EmailSignup({ round, variant = "hero" }: EmailSignupProps) {
             whiteSpace: "nowrap",
             transition: "background 0.15s",
             opacity: !email.trim() ? 0.5 : 1,
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
           }}
         >
+          {status === "loading" && (
+            <span style={{
+              width: 14, height: 14, borderRadius: "50%",
+              border: "2px solid rgba(0,0,0,0.3)",
+              borderTopColor: "#000",
+              display: "inline-block",
+              animation: "spin 0.7s linear infinite",
+            }} />
+          )}
           {status === "loading" ? "Sending…" : "Get free picks"}
         </button>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </form>
 
       {/* Legal + error */}
