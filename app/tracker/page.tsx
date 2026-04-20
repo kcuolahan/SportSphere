@@ -63,6 +63,7 @@ export default function TrackerPage() {
   const [filterResult, setFilterResult] = useState<"ALL" | "WIN" | "LOSS" | "PENDING">("ALL");
 
   useEffect(() => {
+    if (!supabase) { setUser(null); return; }
     supabase.auth.getUser().then(({ data }) => setUser(data.user));
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_ev, session) => {
       setUser(session?.user ?? null);

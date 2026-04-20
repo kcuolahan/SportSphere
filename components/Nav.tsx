@@ -27,6 +27,7 @@ export default function Nav() {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
+    if (!supabase) { setUser(null); return; }
     supabase.auth.getUser().then(({ data }) => setUser(data.user));
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_ev, session) => {
       setUser(session?.user ?? null);
