@@ -2,7 +2,7 @@ import resultsData from '@/data/results.json'
 import predictionsData from '@/data/predictions.json'
 import siteConfig from '@/data/site_config.json'
 
-export const currentRound   = predictionsData.round
+export const currentRound   = siteConfig.current_round
 export const currentSeason  = siteConfig.current_season
 
 const ss = resultsData.season_summary

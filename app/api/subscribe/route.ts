@@ -32,15 +32,16 @@ export async function POST(req: NextRequest) {
   try {
     // 1. Add to audience list (if audience ID is configured)
     if (AUDIENCE_ID) {
-      await resend.contacts.create({
+      const contactResult = await resend.contacts.create({
         email,
         audienceId: AUDIENCE_ID,
         unsubscribed: false,
       });
+      console.log("Resend contact result:", JSON.stringify(contactResult));
     }
 
     // 2. Send confirmation email to subscriber
-    await resend.emails.send({
+    const emailResult = await resend.emails.send({
       from: FROM,
       to: email,
       subject: "You're on the SportSphere HQ list",
@@ -57,18 +58,23 @@ export async function POST(req: NextRequest) {
         "https://sportspherehq.com",
       ].join("\n"),
     });
+    console.log("Resend email result:", JSON.stringify(emailResult));
+
+    if (emailResult.error) {
+      console.error("Resend email error:", JSON.stringify(emailResult.error));
+      return NextResponse.json({ error: `Email failed: ${emailResult.error.message}` }, { status: 500 });
+    }
 
     return NextResponse.json({ success: true });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
+    console.error("Subscribe error (full):", message);
 
     // Resend returns a specific error for duplicate contacts
     if (message.includes("already exists") || message.includes("Contact already")) {
-      // Still count as success — they're already subscribed
       return NextResponse.json({ success: true, note: "already_subscribed" });
     }
 
-    console.error("Subscribe error:", message);
-    return NextResponse.json({ error: "Failed to subscribe — please try again" }, { status: 500 });
+    return NextResponse.json({ error: `Subscribe failed: ${message}` }, { status: 500 });
   }
 }

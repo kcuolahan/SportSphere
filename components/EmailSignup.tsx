@@ -7,7 +7,7 @@ interface EmailSignupProps {
   variant?: "hero" | "footer";
 }
 
-export function EmailSignup({ round, variant = "hero" }: EmailSignupProps) {
+export function EmailSignup({ round = 7, variant = "hero" }: EmailSignupProps) {
   const [email, setEmail]   = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");

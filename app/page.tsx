@@ -7,10 +7,7 @@ import Footer from "@/components/Footer";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { getCurrentPredictions, getAllResults, getResultStats, getSeasonSummary } from "@/lib/data";
 import { EmailSignup } from "@/components/EmailSignup";
-import predictionsData from "@/data/predictions.json";
-import { roundsLabel, currentSeason } from "@/lib/siteData";
-
-const currentRound = predictionsData.round;
+import { roundsLabel, currentSeason, currentRound } from "@/lib/siteData";
 const predictions = getCurrentPredictions();
 const highImpactNews = (predictions.team_news ?? []).filter((n: { impact: string }) => n.impact === "HIGH");
 const results = getAllResults();

@@ -57,7 +57,7 @@ export default function Nav() {
 
           {/* Logo */}
           <Link href="/" style={{ textDecoration: "none", flexShrink: 0, display: "flex", alignItems: "center", gap: 8 }}>
-            <img src="/logo.svg" alt="SportSphere HQ" width={32} height={32} style={{ borderRadius: "50%" }} />
+            <img src="/logo.svg" alt="SportSphere HQ" width={32} height={32} />
             <span style={{ fontSize: 15, fontWeight: 700, letterSpacing: "-0.02em", color: "#f0f0f0", lineHeight: 1 }}>
               Sport<span style={{ color: "#f97316" }}>Sphere</span> HQ
             </span>
