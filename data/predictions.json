@@ -23,7 +23,19 @@
       "tier": "HC",
       "avg_2026": 30.8,
       "avg_2025": 27.9,
-      "line_at_publish": 23.5
+      "line_at_publish": 23.5,
+      "recent_form": [
+        35,
+        31,
+        30,
+        30,
+        36
+      ],
+      "recent_avg": 32.4,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Callum Wilkie",
@@ -43,7 +55,18 @@
       "tier": "HC",
       "avg_2026": 26.5,
       "avg_2025": 18.7,
-      "line_at_publish": 23.5
+      "line_at_publish": 23.5,
+      "recent_form": [
+        31,
+        23,
+        24,
+        28
+      ],
+      "recent_avg": 26.5,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Nick Daicos",
@@ -63,7 +86,17 @@
       "tier": "HC",
       "avg_2026": 36.0,
       "avg_2025": 30.0,
-      "line_at_publish": 33.5
+      "line_at_publish": 33.5,
+      "recent_form": [
+        39,
+        31,
+        36
+      ],
+      "recent_avg": 35.3,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Brodie Grundy",
@@ -83,7 +116,17 @@
       "tier": "HC",
       "avg_2026": 19.8,
       "avg_2025": 19.5,
-      "line_at_publish": 23.5
+      "line_at_publish": 23.5,
+      "recent_form": [
+        27,
+        28,
+        19
+      ],
+      "recent_avg": 24.7,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Patrick Dangerfield",
@@ -103,7 +146,13 @@
       "tier": "BET",
       "avg_2026": 11.5,
       "avg_2025": 15.2,
-      "line_at_publish": 18.5
+      "line_at_publish": 18.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Luke Jackson",
@@ -123,7 +172,17 @@
       "tier": "HC",
       "avg_2026": 19.0,
       "avg_2025": 17.8,
-      "line_at_publish": 20.5
+      "line_at_publish": 20.5,
+      "recent_form": [
+        16,
+        17,
+        27
+      ],
+      "recent_avg": 20.0,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Josh Daicos",
@@ -143,7 +202,17 @@
       "tier": "HC",
       "avg_2026": 28.5,
       "avg_2025": 26.8,
-      "line_at_publish": 27.5
+      "line_at_publish": 27.5,
+      "recent_form": [
+        26,
+        25,
+        33
+      ],
+      "recent_avg": 28.0,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Miles Bergman",
@@ -163,7 +232,13 @@
       "tier": "BET",
       "avg_2026": 13.0,
       "avg_2025": 17.8,
-      "line_at_publish": 18.5
+      "line_at_publish": 18.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Max Gawn",
@@ -183,7 +258,19 @@
       "tier": "BET",
       "avg_2026": 22.2,
       "avg_2025": 20.7,
-      "line_at_publish": 23.5
+      "line_at_publish": 23.5,
+      "recent_form": [
+        22,
+        22,
+        23,
+        23,
+        22
+      ],
+      "recent_avg": 22.4,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Brayden Maynard",
@@ -203,7 +290,16 @@
       "tier": "BET",
       "avg_2026": 19.8,
       "avg_2025": 16.0,
-      "line_at_publish": 17.5
+      "line_at_publish": 17.5,
+      "recent_form": [
+        17,
+        24
+      ],
+      "recent_avg": 20.5,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "James Peatling",
@@ -223,7 +319,16 @@
       "tier": "BET",
       "avg_2026": 20.7,
       "avg_2025": 18.7,
-      "line_at_publish": 22.5
+      "line_at_publish": 22.5,
+      "recent_form": [
+        24,
+        26
+      ],
+      "recent_avg": 25.0,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Willem Drew",
@@ -243,7 +348,13 @@
       "tier": "BET",
       "avg_2026": 18.5,
       "avg_2025": 18.2,
-      "line_at_publish": 20.5
+      "line_at_publish": 20.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "James Worpel",
@@ -263,7 +374,13 @@
       "tier": "BET",
       "avg_2026": 17.7,
       "avg_2025": 20.0,
-      "line_at_publish": 19.5
+      "line_at_publish": 19.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Caleb Daniel",
@@ -283,7 +400,19 @@
       "tier": "BET",
       "avg_2026": 24.7,
       "avg_2025": 25.6,
-      "line_at_publish": 24.5
+      "line_at_publish": 24.5,
+      "recent_form": [
+        32,
+        27,
+        23,
+        25,
+        23
+      ],
+      "recent_avg": 26.0,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Luke McDonald",
@@ -303,7 +432,15 @@
       "tier": "BET",
       "avg_2026": 18.0,
       "avg_2025": 15.5,
-      "line_at_publish": 16.5
+      "line_at_publish": 16.5,
+      "recent_form": [
+        25
+      ],
+      "recent_avg": 25.0,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Marcus Windhager",
@@ -323,7 +460,17 @@
       "tier": "BET",
       "avg_2026": 24.3,
       "avg_2025": 22.1,
-      "line_at_publish": 22.5
+      "line_at_publish": 22.5,
+      "recent_form": [
+        20,
+        24,
+        32
+      ],
+      "recent_avg": 25.3,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Koltyn Tholstrup",
@@ -343,7 +490,15 @@
       "tier": "BET",
       "avg_2026": 17.7,
       "avg_2025": 7.1,
-      "line_at_publish": 21.5
+      "line_at_publish": 21.5,
+      "recent_form": [
+        26
+      ],
+      "recent_avg": 26.0,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Jack Sinclair",
@@ -363,7 +518,18 @@
       "tier": "BET",
       "avg_2026": 30.7,
       "avg_2025": 27.0,
-      "line_at_publish": 30.5
+      "line_at_publish": 30.5,
+      "recent_form": [
+        35,
+        23,
+        29,
+        31
+      ],
+      "recent_avg": 29.5,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Rory Laird",
@@ -383,7 +549,16 @@
       "tier": "BET",
       "avg_2026": 23.2,
       "avg_2025": 24.1,
-      "line_at_publish": 24.5
+      "line_at_publish": 24.5,
+      "recent_form": [
+        26,
+        25
+      ],
+      "recent_avg": 25.5,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Adam Cerra",
@@ -403,7 +578,13 @@
       "tier": "BET",
       "avg_2026": 21.3,
       "avg_2025": 24.6,
-      "line_at_publish": 23.5
+      "line_at_publish": 23.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Tristan Xerri",
@@ -423,7 +604,15 @@
       "tier": "BET",
       "avg_2026": 19.7,
       "avg_2025": 17.2,
-      "line_at_publish": 19.5
+      "line_at_publish": 19.5,
+      "recent_form": [
+        25
+      ],
+      "recent_avg": 25.0,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Sam Lalor",
@@ -443,7 +632,13 @@
       "tier": "SKIP",
       "avg_2026": 16.7,
       "avg_2025": 12.0,
-      "line_at_publish": 19.5
+      "line_at_publish": 19.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Dylan Stephens",
@@ -463,7 +658,18 @@
       "tier": "BET",
       "avg_2026": 21.5,
       "avg_2025": 17.5,
-      "line_at_publish": 19.5
+      "line_at_publish": 19.5,
+      "recent_form": [
+        21,
+        26,
+        23,
+        29
+      ],
+      "recent_avg": 24.8,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Bradley Hill",
@@ -483,7 +689,17 @@
       "tier": "BET",
       "avg_2026": 22.7,
       "avg_2025": 19.6,
-      "line_at_publish": 21.5
+      "line_at_publish": 21.5,
+      "recent_form": [
+        23,
+        21,
+        20
+      ],
+      "recent_avg": 21.3,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Hayden Young",
@@ -503,7 +719,13 @@
       "tier": "SKIP",
       "avg_2026": 19.5,
       "avg_2025": 16.8,
-      "line_at_publish": 22.5
+      "line_at_publish": 22.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Tom Stewart",
@@ -523,7 +745,13 @@
       "tier": "SKIP",
       "avg_2026": 21.0,
       "avg_2025": 18.6,
-      "line_at_publish": 22.5
+      "line_at_publish": 22.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Nick Blakey",
@@ -543,7 +771,13 @@
       "tier": "SKIP",
       "avg_2026": 24.5,
       "avg_2025": 21.4,
-      "line_at_publish": 24.5
+      "line_at_publish": 24.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Izak Rankine",
@@ -563,7 +797,13 @@
       "tier": "SKIP",
       "avg_2026": 15.8,
       "avg_2025": 20.5,
-      "line_at_publish": 19.5
+      "line_at_publish": 19.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Ed Langdon",
@@ -583,7 +823,13 @@
       "tier": "SKIP",
       "avg_2026": 16.8,
       "avg_2025": 19.0,
-      "line_at_publish": 22.5
+      "line_at_publish": 22.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Darcy Wilmot",
@@ -603,7 +849,13 @@
       "tier": "SKIP",
       "avg_2026": 20.7,
       "avg_2025": 20.3,
-      "line_at_publish": 23.5
+      "line_at_publish": 23.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "George Wardlaw",
@@ -623,7 +875,13 @@
       "tier": "SKIP",
       "avg_2026": 18.5,
       "avg_2025": 15.5,
-      "line_at_publish": 18.5
+      "line_at_publish": 18.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Jack Bowes",
@@ -643,7 +901,13 @@
       "tier": "SKIP",
       "avg_2026": 18.3,
       "avg_2025": 14.2,
-      "line_at_publish": 18.5
+      "line_at_publish": 18.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Tom Sparrow",
@@ -663,7 +927,13 @@
       "tier": "SKIP",
       "avg_2026": 17.2,
       "avg_2025": 13.0,
-      "line_at_publish": 19.5
+      "line_at_publish": 19.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Harry Perryman",
@@ -683,7 +953,13 @@
       "tier": "SKIP",
       "avg_2026": 18.2,
       "avg_2025": 15.3,
-      "line_at_publish": 16.5
+      "line_at_publish": 16.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Tom Atkins",
@@ -703,7 +979,13 @@
       "tier": "SKIP",
       "avg_2026": 20.3,
       "avg_2025": 19.7,
-      "line_at_publish": 20.5
+      "line_at_publish": 20.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Karl Amon",
@@ -723,7 +1005,13 @@
       "tier": "SKIP",
       "avg_2026": 19.0,
       "avg_2025": 24.0,
-      "line_at_publish": 22.5
+      "line_at_publish": 22.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Josh Ward",
@@ -743,7 +1031,13 @@
       "tier": "SKIP",
       "avg_2026": 21.3,
       "avg_2025": 20.6,
-      "line_at_publish": 21.5
+      "line_at_publish": 21.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Conor Nash",
@@ -763,7 +1057,13 @@
       "tier": "SKIP",
       "avg_2026": 19.0,
       "avg_2025": 18.4,
-      "line_at_publish": 19.5
+      "line_at_publish": 19.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Darcy Wilson",
@@ -783,7 +1083,13 @@
       "tier": "SKIP",
       "avg_2026": 19.0,
       "avg_2025": 15.6,
-      "line_at_publish": 18.5
+      "line_at_publish": 18.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Darcy Parish",
@@ -803,7 +1109,13 @@
       "tier": "SKIP",
       "avg_2026": 24.5,
       "avg_2025": 29.3,
-      "line_at_publish": 27.5
+      "line_at_publish": 27.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Zach Guthrie",
@@ -823,7 +1135,13 @@
       "tier": "SKIP",
       "avg_2026": 16.2,
       "avg_2025": 17.5,
-      "line_at_publish": 17.5
+      "line_at_publish": 17.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Nathan Broad",
@@ -843,7 +1161,13 @@
       "tier": "SKIP",
       "avg_2026": 14.2,
       "avg_2025": 14.0,
-      "line_at_publish": 16.5
+      "line_at_publish": 16.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Sam Walsh",
@@ -863,7 +1187,13 @@
       "tier": "SKIP",
       "avg_2026": 28.2,
       "avg_2025": 26.3,
-      "line_at_publish": 28.5
+      "line_at_publish": 28.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Patrick Cripps",
@@ -883,7 +1213,13 @@
       "tier": "SKIP",
       "avg_2026": 24.5,
       "avg_2025": 24.2,
-      "line_at_publish": 25.5
+      "line_at_publish": 25.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Harry Sheezel",
@@ -903,7 +1239,13 @@
       "tier": "SKIP",
       "avg_2026": 32.7,
       "avg_2025": 29.3,
-      "line_at_publish": 32.5
+      "line_at_publish": 32.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Lawson Humphries",
@@ -923,7 +1265,13 @@
       "tier": "SKIP",
       "avg_2026": 18.7,
       "avg_2025": 16.2,
-      "line_at_publish": 20.5
+      "line_at_publish": 20.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Josh Battle",
@@ -943,7 +1291,13 @@
       "tier": "SKIP",
       "avg_2026": 19.5,
       "avg_2025": 18.5,
-      "line_at_publish": 19.5
+      "line_at_publish": 19.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Ned Long",
@@ -963,7 +1317,13 @@
       "tier": "SKIP",
       "avg_2026": 16.2,
       "avg_2025": 17.8,
-      "line_at_publish": 18.5
+      "line_at_publish": 18.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Angus Sheldrick",
@@ -983,7 +1343,13 @@
       "tier": "SKIP",
       "avg_2026": 22.4,
       "avg_2025": 16.1,
-      "line_at_publish": 23.5
+      "line_at_publish": 23.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Tom McCartin",
@@ -1003,7 +1369,13 @@
       "tier": "SKIP",
       "avg_2026": 20.3,
       "avg_2025": 13.2,
-      "line_at_publish": 24.5
+      "line_at_publish": 24.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Sam Berry",
@@ -1023,7 +1395,13 @@
       "tier": "SKIP",
       "avg_2026": 22.2,
       "avg_2025": 14.7,
-      "line_at_publish": 20.5
+      "line_at_publish": 20.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Connor Idun",
@@ -1043,7 +1421,13 @@
       "tier": "SKIP",
       "avg_2026": 18.7,
       "avg_2025": 18.2,
-      "line_at_publish": 18.5
+      "line_at_publish": 18.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Jai Newcombe",
@@ -1063,7 +1447,13 @@
       "tier": "SKIP",
       "avg_2026": 25.8,
       "avg_2025": 22.9,
-      "line_at_publish": 25.5
+      "line_at_publish": 25.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Christian Petracca",
@@ -1083,7 +1473,13 @@
       "tier": "SKIP",
       "avg_2026": 25.5,
       "avg_2025": 25.5,
-      "line_at_publish": 24.5
+      "line_at_publish": 24.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Clayton Oliver",
@@ -1103,7 +1499,13 @@
       "tier": "SKIP",
       "avg_2026": 31.7,
       "avg_2025": 25.5,
-      "line_at_publish": 30.5
+      "line_at_publish": 30.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Dion Prestia",
@@ -1123,7 +1525,13 @@
       "tier": "SKIP",
       "avg_2026": 20.0,
       "avg_2025": 23.0,
-      "line_at_publish": 22.5
+      "line_at_publish": 22.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Bailey Humphrey",
@@ -1143,7 +1551,13 @@
       "tier": "SKIP",
       "avg_2026": 16.0,
       "avg_2025": 15.4,
-      "line_at_publish": 17.5
+      "line_at_publish": 17.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Jordan Clark",
@@ -1163,7 +1577,13 @@
       "tier": "SKIP",
       "avg_2026": 23.8,
       "avg_2025": 24.1,
-      "line_at_publish": 24.5
+      "line_at_publish": 24.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Joel Freijah",
@@ -1183,7 +1603,13 @@
       "tier": "SKIP",
       "avg_2026": 20.5,
       "avg_2025": 19.0,
-      "line_at_publish": 18.5
+      "line_at_publish": 18.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Shai Bolton",
@@ -1203,7 +1629,13 @@
       "tier": "SKIP",
       "avg_2026": 22.5,
       "avg_2025": 17.9,
-      "line_at_publish": 19.5
+      "line_at_publish": 19.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Darcy Cameron",
@@ -1223,7 +1655,13 @@
       "tier": "SKIP",
       "avg_2026": 16.0,
       "avg_2025": 17.6,
-      "line_at_publish": 17.5
+      "line_at_publish": 17.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Andrew Brayshaw",
@@ -1243,7 +1681,13 @@
       "tier": "SKIP",
       "avg_2026": 22.2,
       "avg_2025": 27.0,
-      "line_at_publish": 24.5
+      "line_at_publish": 24.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Tom Powell",
@@ -1263,7 +1707,13 @@
       "tier": "SKIP",
       "avg_2026": 19.0,
       "avg_2025": 23.0,
-      "line_at_publish": 18.5
+      "line_at_publish": 18.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Cooper Lord",
@@ -1283,7 +1733,13 @@
       "tier": "SKIP",
       "avg_2026": 23.0,
       "avg_2025": 14.0,
-      "line_at_publish": 19.5
+      "line_at_publish": 19.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Patrick Lipinski",
@@ -1303,7 +1759,13 @@
       "tier": "SKIP",
       "avg_2026": 19.2,
       "avg_2025": 17.2,
-      "line_at_publish": 19.5
+      "line_at_publish": 19.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Matthew Kennedy",
@@ -1323,7 +1785,13 @@
       "tier": "SKIP",
       "avg_2026": 28.2,
       "avg_2025": 23.2,
-      "line_at_publish": 26.5
+      "line_at_publish": 26.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Ryley Sanders",
@@ -1343,7 +1811,13 @@
       "tier": "SKIP",
       "avg_2026": 24.8,
       "avg_2025": 18.6,
-      "line_at_publish": 24.5
+      "line_at_publish": 24.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Kane McAuliffe",
@@ -1363,7 +1837,13 @@
       "tier": "SKIP",
       "avg_2026": 18.3,
       "avg_2025": 18.4,
-      "line_at_publish": 20.5
+      "line_at_publish": 20.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Daniel Rioli",
@@ -1383,7 +1863,13 @@
       "tier": "SKIP",
       "avg_2026": 17.8,
       "avg_2025": 18.6,
-      "line_at_publish": 19.5
+      "line_at_publish": 19.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Jack Crisp",
@@ -1403,7 +1889,13 @@
       "tier": "SKIP",
       "avg_2026": 22.5,
       "avg_2025": 20.0,
-      "line_at_publish": 21.5
+      "line_at_publish": 21.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "James Rowbottom",
@@ -1423,7 +1915,13 @@
       "tier": "SKIP",
       "avg_2026": 17.3,
       "avg_2025": 16.0,
-      "line_at_publish": 18.5
+      "line_at_publish": 18.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Wil Powell",
@@ -1443,7 +1941,13 @@
       "tier": "SKIP",
       "avg_2026": 17.7,
       "avg_2025": 16.2,
-      "line_at_publish": 18.5
+      "line_at_publish": 18.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Wayne Milera",
@@ -1463,7 +1967,13 @@
       "tier": "SKIP",
       "avg_2026": 25.5,
       "avg_2025": 17.8,
-      "line_at_publish": 24.5
+      "line_at_publish": 24.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Jayden Short",
@@ -1483,7 +1993,13 @@
       "tier": "SKIP",
       "avg_2026": 25.5,
       "avg_2025": 21.2,
-      "line_at_publish": 25.5
+      "line_at_publish": 25.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Bailey Williams",
@@ -1503,7 +2019,13 @@
       "tier": "SKIP",
       "avg_2026": 22.2,
       "avg_2025": 19.7,
-      "line_at_publish": 20.5
+      "line_at_publish": 20.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Jordan Dawson",
@@ -1523,7 +2045,13 @@
       "tier": "SKIP",
       "avg_2026": 23.8,
       "avg_2025": 23.4,
-      "line_at_publish": 23.5
+      "line_at_publish": 23.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Finn Callaghan",
@@ -1543,7 +2071,13 @@
       "tier": "SKIP",
       "avg_2026": 30.5,
       "avg_2025": 28.4,
-      "line_at_publish": 26.5
+      "line_at_publish": 26.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Keidean Coleman",
@@ -1563,7 +2097,13 @@
       "tier": "SKIP",
       "avg_2026": 18.3,
       "avg_2025": 19.0,
-      "line_at_publish": 19.5
+      "line_at_publish": 19.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Luke Parker",
@@ -1583,7 +2123,13 @@
       "tier": "SKIP",
       "avg_2026": 25.0,
       "avg_2025": 23.3,
-      "line_at_publish": 25.5
+      "line_at_publish": 25.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Kysaiah Pickett",
@@ -1603,7 +2149,13 @@
       "tier": "SKIP",
       "avg_2026": 23.8,
       "avg_2025": 19.5,
-      "line_at_publish": 26.5
+      "line_at_publish": 26.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Harvey Langford",
@@ -1623,7 +2175,13 @@
       "tier": "SKIP",
       "avg_2026": 15.5,
       "avg_2025": 18.0,
-      "line_at_publish": 18.5
+      "line_at_publish": 18.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Josh Dunkley",
@@ -1643,7 +2201,13 @@
       "tier": "SKIP",
       "avg_2026": 20.3,
       "avg_2025": 24.6,
-      "line_at_publish": 21.5
+      "line_at_publish": 21.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Jack Ross",
@@ -1663,7 +2227,13 @@
       "tier": "SKIP",
       "avg_2026": 21.7,
       "avg_2025": 19.1,
-      "line_at_publish": 22.5
+      "line_at_publish": 22.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Jack Ginnivan",
@@ -1683,7 +2253,13 @@
       "tier": "SKIP",
       "avg_2026": 21.0,
       "avg_2025": 18.6,
-      "line_at_publish": 20.5
+      "line_at_publish": 20.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Will Ashcroft",
@@ -1703,7 +2279,13 @@
       "tier": "SKIP",
       "avg_2026": 27.2,
       "avg_2025": 27.1,
-      "line_at_publish": 29.5
+      "line_at_publish": 29.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Zac Bailey",
@@ -1723,7 +2305,13 @@
       "tier": "SKIP",
       "avg_2026": 19.0,
       "avg_2025": 20.0,
-      "line_at_publish": 19.5
+      "line_at_publish": 19.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Bailey Smith",
@@ -1743,7 +2331,13 @@
       "tier": "SKIP",
       "avg_2026": 32.3,
       "avg_2025": 31.3,
-      "line_at_publish": 33.5
+      "line_at_publish": 33.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Hugo Garcia",
@@ -1763,7 +2357,13 @@
       "tier": "SKIP",
       "avg_2026": 19.8,
       "avg_2025": 15.6,
-      "line_at_publish": 19.5
+      "line_at_publish": 19.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Josh Rachele",
@@ -1783,7 +2383,13 @@
       "tier": "SKIP",
       "avg_2026": 23.0,
       "avg_2025": 11.5,
-      "line_at_publish": 21.5
+      "line_at_publish": 21.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Callum Mills",
@@ -1803,7 +2409,13 @@
       "tier": "SKIP",
       "avg_2026": 23.3,
       "avg_2025": 23.8,
-      "line_at_publish": 24.5
+      "line_at_publish": 24.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Jye Caldwell",
@@ -1823,7 +2435,13 @@
       "tier": "SKIP",
       "avg_2026": 20.8,
       "avg_2025": 25.9,
-      "line_at_publish": 22.5
+      "line_at_publish": 22.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Matt Roberts",
@@ -1843,7 +2461,13 @@
       "tier": "SKIP",
       "avg_2026": 19.3,
       "avg_2025": 21.2,
-      "line_at_publish": 21.5
+      "line_at_publish": 21.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Jarman Impey",
@@ -1863,7 +2487,13 @@
       "tier": "SKIP",
       "avg_2026": 22.5,
       "avg_2025": 19.3,
-      "line_at_publish": 23.5
+      "line_at_publish": 23.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Jaspa Fletcher",
@@ -1883,7 +2513,13 @@
       "tier": "SKIP",
       "avg_2026": 18.8,
       "avg_2025": 21.3,
-      "line_at_publish": 21.5
+      "line_at_publish": 21.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Riley Bice",
@@ -1903,7 +2539,13 @@
       "tier": "SKIP",
       "avg_2026": 22.3,
       "avg_2025": 13.8,
-      "line_at_publish": 23.5
+      "line_at_publish": 23.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Murphy Reid",
@@ -1923,7 +2565,13 @@
       "tier": "SKIP",
       "avg_2026": 23.3,
       "avg_2025": 14.5,
-      "line_at_publish": 23.5
+      "line_at_publish": 23.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Jy Simpkin",
@@ -1943,7 +2591,13 @@
       "tier": "SKIP",
       "avg_2026": 21.7,
       "avg_2025": 22.1,
-      "line_at_publish": 22.5
+      "line_at_publish": 22.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Dan Houston",
@@ -1963,7 +2617,13 @@
       "tier": "SKIP",
       "avg_2026": 24.8,
       "avg_2025": 16.9,
-      "line_at_publish": 24.5
+      "line_at_publish": 24.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Andrew McGrath",
@@ -1983,7 +2643,13 @@
       "tier": "SKIP",
       "avg_2026": 19.8,
       "avg_2025": 22.7,
-      "line_at_publish": 21.5
+      "line_at_publish": 21.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Justin McInerney",
@@ -2003,7 +2669,13 @@
       "tier": "SKIP",
       "avg_2026": 25.8,
       "avg_2025": 21.5,
-      "line_at_publish": 25.5
+      "line_at_publish": 25.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Jake Lever",
@@ -2023,7 +2695,13 @@
       "tier": "SKIP",
       "avg_2026": 15.7,
       "avg_2025": 12.0,
-      "line_at_publish": 16.5
+      "line_at_publish": 16.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Massimo D'Ambrosio",
@@ -2043,7 +2721,13 @@
       "tier": "SKIP",
       "avg_2026": 17.5,
       "avg_2025": 18.2,
-      "line_at_publish": 18.5
+      "line_at_publish": 18.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Josh Weddle",
@@ -2063,7 +2747,13 @@
       "tier": "SKIP",
       "avg_2026": 16.2,
       "avg_2025": 16.1,
-      "line_at_publish": 16.5
+      "line_at_publish": 16.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Nasiah Wanganeen-Milera",
@@ -2083,7 +2773,13 @@
       "tier": "SKIP",
       "avg_2026": 24.8,
       "avg_2025": 29.9,
-      "line_at_publish": 28.5
+      "line_at_publish": 28.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Sam Flanders",
@@ -2103,7 +2799,13 @@
       "tier": "SKIP",
       "avg_2026": 24.8,
       "avg_2025": 18.7,
-      "line_at_publish": 24.5
+      "line_at_publish": 24.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Tim Kelly",
@@ -2123,7 +2825,13 @@
       "tier": "SKIP",
       "avg_2026": 22.6,
       "avg_2025": 17.6,
-      "line_at_publish": 21.5
+      "line_at_publish": 21.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Bailey Dale",
@@ -2143,7 +2851,13 @@
       "tier": "SKIP",
       "avg_2026": 22.2,
       "avg_2025": 27.0,
-      "line_at_publish": 23.5
+      "line_at_publish": 23.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Jack Steele",
@@ -2163,7 +2877,13 @@
       "tier": "SKIP",
       "avg_2026": 24.8,
       "avg_2025": 20.9,
-      "line_at_publish": 24.5
+      "line_at_publish": 24.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Ed Richards",
@@ -2183,7 +2903,13 @@
       "tier": "SKIP",
       "avg_2026": 26.0,
       "avg_2025": 25.8,
-      "line_at_publish": 25.5
+      "line_at_publish": 25.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Kade Chandler",
@@ -2203,7 +2929,13 @@
       "tier": "SKIP",
       "avg_2026": 15.5,
       "avg_2025": 14.6,
-      "line_at_publish": 16.5
+      "line_at_publish": 16.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Lachie Neale",
@@ -2223,7 +2955,13 @@
       "tier": "SKIP",
       "avg_2026": 29.3,
       "avg_2025": 26.8,
-      "line_at_publish": 28.5
+      "line_at_publish": 28.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Levi Ashcroft",
@@ -2243,7 +2981,13 @@
       "tier": "SKIP",
       "avg_2026": 20.3,
       "avg_2025": 19.1,
-      "line_at_publish": 20.5
+      "line_at_publish": 20.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Oliver Dempsey",
@@ -2263,7 +3007,13 @@
       "tier": "SKIP",
       "avg_2026": 18.7,
       "avg_2025": 17.0,
-      "line_at_publish": 18.5
+      "line_at_publish": 18.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Harley Reid",
@@ -2283,7 +3033,13 @@
       "tier": "SKIP",
       "avg_2026": 22.2,
       "avg_2025": 18.8,
-      "line_at_publish": 21.5
+      "line_at_publish": 21.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Lachie Ash",
@@ -2303,7 +3059,13 @@
       "tier": "SKIP",
       "avg_2026": 30.3,
       "avg_2025": 27.9,
-      "line_at_publish": 29.5
+      "line_at_publish": 29.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Toby Greene",
@@ -2323,7 +3085,13 @@
       "tier": "SKIP",
       "avg_2026": 24.0,
       "avg_2025": 16.5,
-      "line_at_publish": 21.5
+      "line_at_publish": 21.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Jayden Laverde",
@@ -2343,7 +3111,13 @@
       "tier": "SKIP",
       "avg_2026": 17.5,
       "avg_2025": 15.4,
-      "line_at_publish": 17.5
+      "line_at_publish": 17.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Jacob Hopper",
@@ -2363,7 +3137,13 @@
       "tier": "SKIP",
       "avg_2026": 22.4,
       "avg_2025": 26.4,
-      "line_at_publish": 23.5
+      "line_at_publish": 23.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Bodhi Uwland",
@@ -2383,7 +3163,13 @@
       "tier": "SKIP",
       "avg_2026": 24.3,
       "avg_2025": 16.0,
-      "line_at_publish": 23.5
+      "line_at_publish": 23.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Sam Durham",
@@ -2403,7 +3189,13 @@
       "tier": "SKIP",
       "avg_2026": 18.0,
       "avg_2025": 21.9,
-      "line_at_publish": 18.5
+      "line_at_publish": 18.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Harvey Thomas",
@@ -2423,7 +3215,13 @@
       "tier": "SKIP",
       "avg_2026": 21.5,
       "avg_2025": 11.6,
-      "line_at_publish": 20.5
+      "line_at_publish": 20.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Chad Warner",
@@ -2443,7 +3241,13 @@
       "tier": "SKIP",
       "avg_2026": 22.3,
       "avg_2025": 22.2,
-      "line_at_publish": 24.5
+      "line_at_publish": 24.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Blake Hardwick",
@@ -2463,7 +3267,13 @@
       "tier": "SKIP",
       "avg_2026": 17.8,
       "avg_2025": 14.7,
-      "line_at_publish": 18.5
+      "line_at_publish": 18.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Caleb Serong",
@@ -2483,7 +3293,13 @@
       "tier": "SKIP",
       "avg_2026": 26.3,
       "avg_2025": 27.4,
-      "line_at_publish": 28.5
+      "line_at_publish": 28.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Luke Ryan",
@@ -2503,7 +3319,13 @@
       "tier": "SKIP",
       "avg_2026": 19.8,
       "avg_2025": 20.8,
-      "line_at_publish": 21.5
+      "line_at_publish": 21.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Tyler Sonsie",
@@ -2523,7 +3345,13 @@
       "tier": "SKIP",
       "avg_2026": 17.0,
       "avg_2025": 15.2,
-      "line_at_publish": 18.5
+      "line_at_publish": 18.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Max Holmes",
@@ -2543,7 +3371,13 @@
       "tier": "SKIP",
       "avg_2026": 29.5,
       "avg_2025": 26.9,
-      "line_at_publish": 28.5
+      "line_at_publish": 28.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Oliver Florent",
@@ -2563,7 +3397,13 @@
       "tier": "SKIP",
       "avg_2026": 21.8,
       "avg_2025": 15.2,
-      "line_at_publish": 21.5
+      "line_at_publish": 21.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Luke Davies-Uniacke",
@@ -2583,7 +3423,13 @@
       "tier": "SKIP",
       "avg_2026": 27.0,
       "avg_2025": 24.7,
-      "line_at_publish": 26.5
+      "line_at_publish": 26.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Joel Jeffrey",
@@ -2603,7 +3449,13 @@
       "tier": "SKIP",
       "avg_2026": 19.7,
       "avg_2025": 18.8,
-      "line_at_publish": 19.5
+      "line_at_publish": 19.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Liam Duggan",
@@ -2623,7 +3475,13 @@
       "tier": "SKIP",
       "avg_2026": 19.3,
       "avg_2025": 20.2,
-      "line_at_publish": 20.5
+      "line_at_publish": 20.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Lachie Whitfield",
@@ -2643,7 +3501,13 @@
       "tier": "SKIP",
       "avg_2026": 29.8,
       "avg_2025": 28.7,
-      "line_at_publish": 29.5
+      "line_at_publish": 29.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Harry Himmelberg",
@@ -2663,7 +3527,13 @@
       "tier": "SKIP",
       "avg_2026": 17.2,
       "avg_2025": 18.5,
-      "line_at_publish": 17.5
+      "line_at_publish": 17.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Touk Miller",
@@ -2683,7 +3553,13 @@
       "tier": "SKIP",
       "avg_2026": 26.3,
       "avg_2025": 24.7,
-      "line_at_publish": 25.5
+      "line_at_publish": 25.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Connor Macdonald",
@@ -2703,7 +3579,13 @@
       "tier": "SKIP",
       "avg_2026": 21.3,
       "avg_2025": 14.9,
-      "line_at_publish": 20.5
+      "line_at_publish": 20.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Archie Roberts",
@@ -2723,7 +3605,13 @@
       "tier": "SKIP",
       "avg_2026": 30.5,
       "avg_2025": 24.5,
-      "line_at_publish": 32.5
+      "line_at_publish": 32.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Zach Merrett",
@@ -2743,7 +3631,13 @@
       "tier": "SKIP",
       "avg_2026": 27.0,
       "avg_2025": 27.8,
-      "line_at_publish": 29.5
+      "line_at_publish": 29.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Kane Farrell",
@@ -2763,7 +3657,13 @@
       "tier": "SKIP",
       "avg_2026": 20.2,
       "avg_2025": 20.3,
-      "line_at_publish": 20.5
+      "line_at_publish": 20.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Jase Burgoyne",
@@ -2783,7 +3683,13 @@
       "tier": "SKIP",
       "avg_2026": 19.0,
       "avg_2025": 19.2,
-      "line_at_publish": 19.5
+      "line_at_publish": 19.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     },
     {
       "player": "Josh Worrell",
@@ -2803,7 +3709,14 @@
       "tier": "SKIP",
       "avg_2026": 25.7,
       "avg_2025": 21.0,
-      "line_at_publish": 24.5
+      "line_at_publish": 24.5,
+      "recent_form": [],
+      "recent_avg": null,
+      "h2h_vs_opponent": [],
+      "h2h_avg": null,
+      "h2h_sample": 0,
+      "h2h_vs_line": null
     }
-  ]
+  ],
+  "h2h_enriched_at": "2026-04-23T09:34:29"
 }
