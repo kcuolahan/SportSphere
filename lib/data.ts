@@ -12,7 +12,6 @@ export interface Pick {
   opponent: string
   venue: string
   condition: string
-  play_style: string
   bookie_line: number
   predicted: number
   edge: number
@@ -20,15 +19,17 @@ export interface Pick {
   confidence: string
   edge_vol: number
   enhanced_signal: string
-  bet_score: number
   filter_pass: boolean
-  std_dev: number
-  volatility_tier: string
   avg_2025: number
   avg_2026: number
-  opp_factor: number
-  team_style_index: number
-  cba_pct: number
+  // optional model-detail fields (present when exported from full pipeline)
+  play_style?: string
+  bet_score?: number
+  std_dev?: number
+  volatility_tier?: string
+  opp_factor?: number
+  team_style_index?: number
+  cba_pct?: number
 }
 
 export interface TeamNewsEntry {

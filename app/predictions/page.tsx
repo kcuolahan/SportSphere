@@ -8,7 +8,8 @@ import { SignalBadge, ConfidenceBadge } from "@/components/ui/Badge";
 import { getCurrentPredictions, getAllResults, getTeamConcession } from "@/lib/data";
 import type { Pick, TeamNewsEntry } from "@/lib/data";
 
-const { round, season, generated_at, picks, team_news = [], verified_at } = getCurrentPredictions();
+const { round, season, generated_at, team_news = [], verified_at } = getCurrentPredictions();
+const picks = [...getCurrentPredictions().picks].sort((a, b) => b.edge_vol - a.edge_vol);
 
 // Look up results for the current round (if complete)
 const allResults = getAllResults();
@@ -88,39 +89,42 @@ function RoundCompleteBanner() {
   );
 }
 
-function RoundConcludedBanner() {
-  const [dismissed, setDismissed] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return localStorage.getItem("ss_r6_concluded_dismissed") === "1";
-  });
-  if (dismissed) return null;
-  return (
-    <div style={{
-      background: "#0c0700", border: "1px solid #78350f",
-      borderRadius: 8, padding: "12px 16px",
-      display: "flex", alignItems: "center",
-      justifyContent: "space-between", gap: 12,
-      marginBottom: 16,
-    }}>
-      <p style={{ fontSize: 12, color: "#f59e0b", margin: 0, flex: 1, lineHeight: 1.6 }}>
-        ⚠ Round {round} has concluded. Results will be logged shortly. Round {round + 1} picks will be published Tuesday.
-      </p>
-      <button
-        onClick={() => {
-          localStorage.setItem("ss_r6_concluded_dismissed", "1");
-          setDismissed(true);
-        }}
-        style={{
-          background: "none", border: "1px solid #78350f",
-          borderRadius: 4, padding: "4px 10px",
-          fontSize: 10, color: "#f59e0b", cursor: "pointer",
-          flexShrink: 0,
-        }}
-      >
-        Dismiss
-      </button>
-    </div>
-  );
+function RoundStatusBanner() {
+  if (currentRoundResults) return null; // RoundCompleteBanner handles this case
+  const lastCompletedRound = allResults.length > 0 ? Math.max(...allResults.map(r => r.round)) : 0;
+
+  if (round > lastCompletedRound) {
+    return (
+      <div style={{
+        background: "#030f08", border: "1px solid #14532d",
+        borderRadius: 8, padding: "10px 16px",
+        display: "flex", alignItems: "center", gap: 10,
+        marginBottom: 16,
+      }}>
+        <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e", flexShrink: 0 }} />
+        <span style={{ fontSize: 12, color: "#4ade80", fontWeight: 600 }}>
+          Round {round} — Live · Picks locked in for this weekend
+        </span>
+      </div>
+    );
+  }
+
+  if (round === lastCompletedRound) {
+    return (
+      <div style={{
+        background: "#0c0700", border: "1px solid #78350f",
+        borderRadius: 8, padding: "10px 16px",
+        display: "flex", alignItems: "center", gap: 10,
+        marginBottom: 16,
+      }}>
+        <span style={{ fontSize: 12, color: "#f59e0b" }}>
+          ⚠ Round {round} complete — results being logged
+        </span>
+      </div>
+    );
+  }
+
+  return null;
 }
 
 function DisclaimerBanner() {
@@ -160,12 +164,16 @@ function DisclaimerBanner() {
   );
 }
 
-const VENUE_ALERTS: Record<string, { level: "warn" | "good" | "caution"; msg: string }> = {
-  "Optus Stadium": { level: "warn", msg: "⚠ Optus Stadium — model has 42.5% accuracy here. Exercise caution." },
-  "OS": { level: "warn", msg: "⚠ Optus Stadium — model has 42.5% accuracy here. Exercise caution." },
-  "Adelaide Oval": { level: "good", msg: "✅ Adelaide Oval — best venue for model accuracy (57.1%)" },
-  "AO": { level: "good", msg: "✅ Adelaide Oval — best venue for model accuracy (57.1%)" },
+const VENUE_ALERTS: Record<string, { level: "warn" | "good" | "caution" | "info"; msg: string }> = {
+  "Optus Stadium": { level: "warn", msg: "⚠ Optus Stadium — model's weakest venue (42.5% accuracy). Extra caution advised." },
+  "OS": { level: "warn", msg: "⚠ Optus Stadium — model's weakest venue (42.5% accuracy). Extra caution advised." },
+  "Adelaide Oval": { level: "good", msg: "✅ Adelaide Oval — model's best venue (57.1% accuracy)" },
+  "AO": { level: "good", msg: "✅ Adelaide Oval — model's best venue (57.1% accuracy)" },
   "MCG": { level: "caution", msg: "⚠ MCG — model over-predicts here. Prefer UNDER direction." },
+  "MRVL": { level: "info", msg: "Marvel Stadium — Roof venue, slightly higher disposal counts expected." },
+  "Marvel Stadium": { level: "info", msg: "Marvel Stadium — Roof venue, slightly higher disposal counts expected." },
+  "G": { level: "good", msg: "✅ The Gabba — model performs well here (60% accuracy)." },
+  "GABBA": { level: "good", msg: "✅ The Gabba — model performs well here (60% accuracy)." },
 };
 
 function OppFactorText(pick: Pick) {
@@ -311,7 +319,7 @@ export default function PredictionsPage() {
 
       <div style={{ maxWidth: 920, margin: "0 auto", padding: "84px 20px 60px" }}>
         <RoundCompleteBanner />
-        <RoundConcludedBanner />
+        <RoundStatusBanner />
         <DisclaimerBanner />
 
         {/* Header */}
@@ -381,6 +389,64 @@ export default function PredictionsPage() {
             </div>
           ))}
         </div>
+
+        {/* SHARP picks section */}
+        {(() => {
+          const sharpPicks = picks.filter((p: Pick) => p.edge_vol >= 0.70 && p.enhanced_signal !== "HC" && p.filter_pass);
+          if (sharpPicks.length === 0) return null;
+          return (
+            <div style={{
+              background: "#0a0800", border: "1px solid #a16207",
+              borderRadius: 10, padding: "14px 16px", marginBottom: 16,
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+                <span style={{
+                  fontSize: 9, fontWeight: 800, color: "#000",
+                  background: "#facc15", padding: "2px 8px",
+                  borderRadius: 4, letterSpacing: "0.08em",
+                }}>⚡ SHARP</span>
+                <span style={{ fontSize: 12, fontWeight: 700, color: "#fbbf24" }}>
+                  Sharp picks this round
+                </span>
+                <span style={{ fontSize: 10, color: "#78350f", marginLeft: "auto" }}>
+                  E/V 0.70+ · 69% historical win rate
+                </span>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {sharpPicks.map((p: Pick) => (
+                  <div key={p.player} style={{
+                    display: "flex", alignItems: "center",
+                    justifyContent: "space-between", flexWrap: "wrap", gap: 8,
+                    background: "#080600", borderRadius: 6, padding: "10px 12px",
+                    border: "1px solid #3d2800",
+                  }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <PlayerAvatar name={p.player} team={p.team} size={36} />
+                      <div>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: "#f0f0f0" }}>{p.player}</div>
+                        <div style={{ fontSize: 11, color: "#666" }}>
+                          {p.team} vs {p.opponent} · {p.venue} · {p.position}
+                        </div>
+                      </div>
+                    </div>
+                    <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+                      <div style={{ textAlign: "center" }}>
+                        <div style={{ fontSize: 9, color: "#555", textTransform: "uppercase" }}>Direction</div>
+                        <div style={{ fontSize: 13, fontWeight: 800, color: p.direction === "OVER" ? "#22c55e" : "#ef4444" }}>
+                          {p.direction} {p.direction === "OVER" ? "⬆" : "⬇"} {p.bookie_line}
+                        </div>
+                      </div>
+                      <div style={{ textAlign: "center" }}>
+                        <div style={{ fontSize: 9, color: "#555", textTransform: "uppercase" }}>E/V</div>
+                        <div style={{ fontSize: 14, fontWeight: 800, color: "#facc15" }}>{p.edge_vol.toFixed(2)}</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Filters + view toggle */}
         <div style={{ display: "flex", gap: 6, marginBottom: 16, alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" }}>
@@ -602,9 +668,9 @@ export default function PredictionsPage() {
                       {/* Venue alert */}
                       {VENUE_ALERTS[pred.venue] && (() => {
                         const alert = VENUE_ALERTS[pred.venue];
-                        const borderColor = alert.level === "good" ? "#14532d" : alert.level === "warn" ? "#7f1d1d" : "#78350f";
-                        const bgColor = alert.level === "good" ? "rgba(5,46,22,0.5)" : alert.level === "warn" ? "rgba(69,10,10,0.5)" : "rgba(28,14,0,0.5)";
-                        const textColor = alert.level === "good" ? "#4ade80" : alert.level === "warn" ? "#f87171" : "#fb923c";
+                        const borderColor = alert.level === "good" ? "#14532d" : alert.level === "warn" ? "#7f1d1d" : alert.level === "info" ? "#1e3a5f" : "#78350f";
+                        const bgColor = alert.level === "good" ? "rgba(5,46,22,0.5)" : alert.level === "warn" ? "rgba(69,10,10,0.5)" : alert.level === "info" ? "rgba(14,30,60,0.5)" : "rgba(28,14,0,0.5)";
+                        const textColor = alert.level === "good" ? "#4ade80" : alert.level === "warn" ? "#f87171" : alert.level === "info" ? "#60a5fa" : "#fb923c";
                         return (
                           <div style={{
                             background: bgColor, border: `1px solid ${borderColor}`,
@@ -657,15 +723,15 @@ export default function PredictionsPage() {
                       </div>
                       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(110px, 1fr))", gap: 6 }}>
                         {[
-                          { label: "2025 Avg", value: pred.avg_2025.toFixed(1) },
-                          { label: "2026 Avg", value: pred.avg_2026.toFixed(1) },
-                          { label: "Opp Factor", value: `×${pred.opp_factor.toFixed(3)}` },
-                          { label: "Team Style", value: pred.team_style_index > 0 ? `+${pred.team_style_index}` : pred.team_style_index.toString() },
-                          { label: "CBA%", value: pred.cba_pct > 0 ? `${(pred.cba_pct * 100).toFixed(0)}%` : "—" },
+                          { label: "2025 Avg", value: pred.avg_2025?.toFixed(1) ?? "—" },
+                          { label: "2026 Avg", value: pred.avg_2026?.toFixed(1) ?? "—" },
+                          { label: "Opp Factor", value: pred.opp_factor != null ? `×${pred.opp_factor.toFixed(3)}` : "—" },
+                          { label: "Team Style", value: pred.team_style_index != null ? (pred.team_style_index > 0 ? `+${pred.team_style_index}` : pred.team_style_index.toString()) : "—" },
+                          { label: "CBA%", value: pred.cba_pct != null ? `${(pred.cba_pct * 100).toFixed(0)}%` : "—" },
                           { label: "Condition", value: pred.condition },
-                          { label: "Play Style", value: pred.play_style },
-                          { label: "Volatility", value: pred.volatility_tier },
-                          { label: "Std Dev", value: pred.std_dev.toFixed(1) },
+                          { label: "Play Style", value: pred.play_style ?? "—" },
+                          { label: "Volatility", value: pred.volatility_tier ?? "—" },
+                          { label: "Std Dev", value: pred.std_dev?.toFixed(1) ?? "—" },
                           { label: "Confidence", value: <ConfidenceBadge confidence={pred.confidence} /> },
                         ].map((item, idx) => (
                           <div key={idx} style={{
