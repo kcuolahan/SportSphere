@@ -22,7 +22,8 @@
       "filter_pass": true,
       "tier": "HC",
       "avg_2026": 30.8,
-      "avg_2025": 27.9
+      "avg_2025": 27.9,
+      "line_at_publish": 23.5
     },
     {
       "player": "Callum Wilkie",
@@ -41,7 +42,8 @@
       "filter_pass": true,
       "tier": "HC",
       "avg_2026": 26.5,
-      "avg_2025": 18.7
+      "avg_2025": 18.7,
+      "line_at_publish": 23.5
     },
     {
       "player": "Nick Daicos",
@@ -60,7 +62,8 @@
       "filter_pass": true,
       "tier": "HC",
       "avg_2026": 36.0,
-      "avg_2025": 30.0
+      "avg_2025": 30.0,
+      "line_at_publish": 33.5
     },
     {
       "player": "Brodie Grundy",
@@ -79,7 +82,8 @@
       "filter_pass": true,
       "tier": "HC",
       "avg_2026": 19.8,
-      "avg_2025": 19.5
+      "avg_2025": 19.5,
+      "line_at_publish": 23.5
     },
     {
       "player": "Patrick Dangerfield",
@@ -98,7 +102,8 @@
       "filter_pass": true,
       "tier": "BET",
       "avg_2026": 11.5,
-      "avg_2025": 15.2
+      "avg_2025": 15.2,
+      "line_at_publish": 18.5
     },
     {
       "player": "Luke Jackson",
@@ -117,7 +122,8 @@
       "filter_pass": true,
       "tier": "HC",
       "avg_2026": 19.0,
-      "avg_2025": 17.8
+      "avg_2025": 17.8,
+      "line_at_publish": 20.5
     },
     {
       "player": "Josh Daicos",
@@ -136,7 +142,8 @@
       "filter_pass": true,
       "tier": "HC",
       "avg_2026": 28.5,
-      "avg_2025": 26.8
+      "avg_2025": 26.8,
+      "line_at_publish": 27.5
     },
     {
       "player": "Miles Bergman",
@@ -155,7 +162,8 @@
       "filter_pass": true,
       "tier": "BET",
       "avg_2026": 13.0,
-      "avg_2025": 17.8
+      "avg_2025": 17.8,
+      "line_at_publish": 18.5
     },
     {
       "player": "Max Gawn",
@@ -174,7 +182,8 @@
       "filter_pass": true,
       "tier": "BET",
       "avg_2026": 22.2,
-      "avg_2025": 20.7
+      "avg_2025": 20.7,
+      "line_at_publish": 23.5
     },
     {
       "player": "Brayden Maynard",
@@ -193,7 +202,8 @@
       "filter_pass": true,
       "tier": "BET",
       "avg_2026": 19.8,
-      "avg_2025": 16.0
+      "avg_2025": 16.0,
+      "line_at_publish": 17.5
     },
     {
       "player": "James Peatling",
@@ -212,7 +222,8 @@
       "filter_pass": true,
       "tier": "BET",
       "avg_2026": 20.7,
-      "avg_2025": 18.7
+      "avg_2025": 18.7,
+      "line_at_publish": 22.5
     },
     {
       "player": "Willem Drew",
@@ -231,7 +242,8 @@
       "filter_pass": true,
       "tier": "BET",
       "avg_2026": 18.5,
-      "avg_2025": 18.2
+      "avg_2025": 18.2,
+      "line_at_publish": 20.5
     },
     {
       "player": "James Worpel",
@@ -250,7 +262,8 @@
       "filter_pass": true,
       "tier": "BET",
       "avg_2026": 17.7,
-      "avg_2025": 20.0
+      "avg_2025": 20.0,
+      "line_at_publish": 19.5
     },
     {
       "player": "Caleb Daniel",
@@ -269,7 +282,8 @@
       "filter_pass": true,
       "tier": "BET",
       "avg_2026": 24.7,
-      "avg_2025": 25.6
+      "avg_2025": 25.6,
+      "line_at_publish": 24.5
     },
     {
       "player": "Luke McDonald",
@@ -288,7 +302,8 @@
       "filter_pass": true,
       "tier": "BET",
       "avg_2026": 18.0,
-      "avg_2025": 15.5
+      "avg_2025": 15.5,
+      "line_at_publish": 16.5
     },
     {
       "player": "Marcus Windhager",
@@ -307,7 +322,8 @@
       "filter_pass": true,
       "tier": "BET",
       "avg_2026": 24.3,
-      "avg_2025": 22.1
+      "avg_2025": 22.1,
+      "line_at_publish": 22.5
     },
     {
       "player": "Koltyn Tholstrup",
@@ -326,7 +342,8 @@
       "filter_pass": true,
       "tier": "BET",
       "avg_2026": 17.7,
-      "avg_2025": 7.1
+      "avg_2025": 7.1,
+      "line_at_publish": 21.5
     },
     {
       "player": "Jack Sinclair",
@@ -345,7 +362,8 @@
       "filter_pass": true,
       "tier": "BET",
       "avg_2026": 30.7,
-      "avg_2025": 27.0
+      "avg_2025": 27.0,
+      "line_at_publish": 30.5
     },
     {
       "player": "Rory Laird",
@@ -364,7 +382,8 @@
       "filter_pass": true,
       "tier": "BET",
       "avg_2026": 23.2,
-      "avg_2025": 24.1
+      "avg_2025": 24.1,
+      "line_at_publish": 24.5
     },
     {
       "player": "Adam Cerra",
@@ -383,7 +402,8 @@
       "filter_pass": true,
       "tier": "BET",
       "avg_2026": 21.3,
-      "avg_2025": 24.6
+      "avg_2025": 24.6,
+      "line_at_publish": 23.5
     },
     {
       "player": "Tristan Xerri",
@@ -402,7 +422,8 @@
       "filter_pass": true,
       "tier": "BET",
       "avg_2026": 19.7,
-      "avg_2025": 17.2
+      "avg_2025": 17.2,
+      "line_at_publish": 19.5
     },
     {
       "player": "Sam Lalor",
@@ -421,7 +442,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 16.7,
-      "avg_2025": 12.0
+      "avg_2025": 12.0,
+      "line_at_publish": 19.5
     },
     {
       "player": "Dylan Stephens",
@@ -440,7 +462,8 @@
       "filter_pass": true,
       "tier": "BET",
       "avg_2026": 21.5,
-      "avg_2025": 17.5
+      "avg_2025": 17.5,
+      "line_at_publish": 19.5
     },
     {
       "player": "Bradley Hill",
@@ -459,7 +482,8 @@
       "filter_pass": true,
       "tier": "BET",
       "avg_2026": 22.7,
-      "avg_2025": 19.6
+      "avg_2025": 19.6,
+      "line_at_publish": 21.5
     },
     {
       "player": "Hayden Young",
@@ -478,7 +502,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 19.5,
-      "avg_2025": 16.8
+      "avg_2025": 16.8,
+      "line_at_publish": 22.5
     },
     {
       "player": "Tom Stewart",
@@ -497,7 +522,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 21.0,
-      "avg_2025": 18.6
+      "avg_2025": 18.6,
+      "line_at_publish": 22.5
     },
     {
       "player": "Nick Blakey",
@@ -516,7 +542,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 24.5,
-      "avg_2025": 21.4
+      "avg_2025": 21.4,
+      "line_at_publish": 24.5
     },
     {
       "player": "Izak Rankine",
@@ -535,7 +562,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 15.8,
-      "avg_2025": 20.5
+      "avg_2025": 20.5,
+      "line_at_publish": 19.5
     },
     {
       "player": "Ed Langdon",
@@ -554,7 +582,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 16.8,
-      "avg_2025": 19.0
+      "avg_2025": 19.0,
+      "line_at_publish": 22.5
     },
     {
       "player": "Darcy Wilmot",
@@ -573,7 +602,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 20.7,
-      "avg_2025": 20.3
+      "avg_2025": 20.3,
+      "line_at_publish": 23.5
     },
     {
       "player": "George Wardlaw",
@@ -592,7 +622,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 18.5,
-      "avg_2025": 15.5
+      "avg_2025": 15.5,
+      "line_at_publish": 18.5
     },
     {
       "player": "Jack Bowes",
@@ -611,7 +642,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 18.3,
-      "avg_2025": 14.2
+      "avg_2025": 14.2,
+      "line_at_publish": 18.5
     },
     {
       "player": "Tom Sparrow",
@@ -630,7 +662,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 17.2,
-      "avg_2025": 13.0
+      "avg_2025": 13.0,
+      "line_at_publish": 19.5
     },
     {
       "player": "Harry Perryman",
@@ -649,7 +682,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 18.2,
-      "avg_2025": 15.3
+      "avg_2025": 15.3,
+      "line_at_publish": 16.5
     },
     {
       "player": "Tom Atkins",
@@ -668,7 +702,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 20.3,
-      "avg_2025": 19.7
+      "avg_2025": 19.7,
+      "line_at_publish": 20.5
     },
     {
       "player": "Karl Amon",
@@ -687,7 +722,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 19.0,
-      "avg_2025": 24.0
+      "avg_2025": 24.0,
+      "line_at_publish": 22.5
     },
     {
       "player": "Josh Ward",
@@ -706,7 +742,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 21.3,
-      "avg_2025": 20.6
+      "avg_2025": 20.6,
+      "line_at_publish": 21.5
     },
     {
       "player": "Conor Nash",
@@ -725,7 +762,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 19.0,
-      "avg_2025": 18.4
+      "avg_2025": 18.4,
+      "line_at_publish": 19.5
     },
     {
       "player": "Darcy Wilson",
@@ -744,7 +782,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 19.0,
-      "avg_2025": 15.6
+      "avg_2025": 15.6,
+      "line_at_publish": 18.5
     },
     {
       "player": "Darcy Parish",
@@ -763,7 +802,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 24.5,
-      "avg_2025": 29.3
+      "avg_2025": 29.3,
+      "line_at_publish": 27.5
     },
     {
       "player": "Zach Guthrie",
@@ -782,7 +822,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 16.2,
-      "avg_2025": 17.5
+      "avg_2025": 17.5,
+      "line_at_publish": 17.5
     },
     {
       "player": "Nathan Broad",
@@ -801,7 +842,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 14.2,
-      "avg_2025": 14.0
+      "avg_2025": 14.0,
+      "line_at_publish": 16.5
     },
     {
       "player": "Sam Walsh",
@@ -820,7 +862,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 28.2,
-      "avg_2025": 26.3
+      "avg_2025": 26.3,
+      "line_at_publish": 28.5
     },
     {
       "player": "Patrick Cripps",
@@ -839,7 +882,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 24.5,
-      "avg_2025": 24.2
+      "avg_2025": 24.2,
+      "line_at_publish": 25.5
     },
     {
       "player": "Harry Sheezel",
@@ -858,7 +902,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 32.7,
-      "avg_2025": 29.3
+      "avg_2025": 29.3,
+      "line_at_publish": 32.5
     },
     {
       "player": "Lawson Humphries",
@@ -877,7 +922,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 18.7,
-      "avg_2025": 16.2
+      "avg_2025": 16.2,
+      "line_at_publish": 20.5
     },
     {
       "player": "Josh Battle",
@@ -896,7 +942,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 19.5,
-      "avg_2025": 18.5
+      "avg_2025": 18.5,
+      "line_at_publish": 19.5
     },
     {
       "player": "Ned Long",
@@ -915,7 +962,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 16.2,
-      "avg_2025": 17.8
+      "avg_2025": 17.8,
+      "line_at_publish": 18.5
     },
     {
       "player": "Angus Sheldrick",
@@ -934,7 +982,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 22.4,
-      "avg_2025": 16.1
+      "avg_2025": 16.1,
+      "line_at_publish": 23.5
     },
     {
       "player": "Tom McCartin",
@@ -953,7 +1002,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 20.3,
-      "avg_2025": 13.2
+      "avg_2025": 13.2,
+      "line_at_publish": 24.5
     },
     {
       "player": "Sam Berry",
@@ -972,7 +1022,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 22.2,
-      "avg_2025": 14.7
+      "avg_2025": 14.7,
+      "line_at_publish": 20.5
     },
     {
       "player": "Connor Idun",
@@ -991,7 +1042,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 18.7,
-      "avg_2025": 18.2
+      "avg_2025": 18.2,
+      "line_at_publish": 18.5
     },
     {
       "player": "Jai Newcombe",
@@ -1010,7 +1062,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 25.8,
-      "avg_2025": 22.9
+      "avg_2025": 22.9,
+      "line_at_publish": 25.5
     },
     {
       "player": "Christian Petracca",
@@ -1029,7 +1082,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 25.5,
-      "avg_2025": 25.5
+      "avg_2025": 25.5,
+      "line_at_publish": 24.5
     },
     {
       "player": "Clayton Oliver",
@@ -1048,7 +1102,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 31.7,
-      "avg_2025": 25.5
+      "avg_2025": 25.5,
+      "line_at_publish": 30.5
     },
     {
       "player": "Dion Prestia",
@@ -1067,7 +1122,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 20.0,
-      "avg_2025": 23.0
+      "avg_2025": 23.0,
+      "line_at_publish": 22.5
     },
     {
       "player": "Bailey Humphrey",
@@ -1086,7 +1142,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 16.0,
-      "avg_2025": 15.4
+      "avg_2025": 15.4,
+      "line_at_publish": 17.5
     },
     {
       "player": "Jordan Clark",
@@ -1105,7 +1162,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 23.8,
-      "avg_2025": 24.1
+      "avg_2025": 24.1,
+      "line_at_publish": 24.5
     },
     {
       "player": "Joel Freijah",
@@ -1124,7 +1182,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 20.5,
-      "avg_2025": 19.0
+      "avg_2025": 19.0,
+      "line_at_publish": 18.5
     },
     {
       "player": "Shai Bolton",
@@ -1143,7 +1202,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 22.5,
-      "avg_2025": 17.9
+      "avg_2025": 17.9,
+      "line_at_publish": 19.5
     },
     {
       "player": "Darcy Cameron",
@@ -1162,7 +1222,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 16.0,
-      "avg_2025": 17.6
+      "avg_2025": 17.6,
+      "line_at_publish": 17.5
     },
     {
       "player": "Andrew Brayshaw",
@@ -1181,7 +1242,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 22.2,
-      "avg_2025": 27.0
+      "avg_2025": 27.0,
+      "line_at_publish": 24.5
     },
     {
       "player": "Tom Powell",
@@ -1200,7 +1262,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 19.0,
-      "avg_2025": 23.0
+      "avg_2025": 23.0,
+      "line_at_publish": 18.5
     },
     {
       "player": "Cooper Lord",
@@ -1219,7 +1282,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 23.0,
-      "avg_2025": 14.0
+      "avg_2025": 14.0,
+      "line_at_publish": 19.5
     },
     {
       "player": "Patrick Lipinski",
@@ -1238,7 +1302,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 19.2,
-      "avg_2025": 17.2
+      "avg_2025": 17.2,
+      "line_at_publish": 19.5
     },
     {
       "player": "Matthew Kennedy",
@@ -1257,7 +1322,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 28.2,
-      "avg_2025": 23.2
+      "avg_2025": 23.2,
+      "line_at_publish": 26.5
     },
     {
       "player": "Ryley Sanders",
@@ -1276,7 +1342,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 24.8,
-      "avg_2025": 18.6
+      "avg_2025": 18.6,
+      "line_at_publish": 24.5
     },
     {
       "player": "Kane McAuliffe",
@@ -1295,7 +1362,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 18.3,
-      "avg_2025": 18.4
+      "avg_2025": 18.4,
+      "line_at_publish": 20.5
     },
     {
       "player": "Daniel Rioli",
@@ -1314,7 +1382,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 17.8,
-      "avg_2025": 18.6
+      "avg_2025": 18.6,
+      "line_at_publish": 19.5
     },
     {
       "player": "Jack Crisp",
@@ -1333,7 +1402,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 22.5,
-      "avg_2025": 20.0
+      "avg_2025": 20.0,
+      "line_at_publish": 21.5
     },
     {
       "player": "James Rowbottom",
@@ -1352,7 +1422,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 17.3,
-      "avg_2025": 16.0
+      "avg_2025": 16.0,
+      "line_at_publish": 18.5
     },
     {
       "player": "Wil Powell",
@@ -1371,7 +1442,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 17.7,
-      "avg_2025": 16.2
+      "avg_2025": 16.2,
+      "line_at_publish": 18.5
     },
     {
       "player": "Wayne Milera",
@@ -1390,7 +1462,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 25.5,
-      "avg_2025": 17.8
+      "avg_2025": 17.8,
+      "line_at_publish": 24.5
     },
     {
       "player": "Jayden Short",
@@ -1409,7 +1482,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 25.5,
-      "avg_2025": 21.2
+      "avg_2025": 21.2,
+      "line_at_publish": 25.5
     },
     {
       "player": "Bailey Williams",
@@ -1428,7 +1502,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 22.2,
-      "avg_2025": 19.7
+      "avg_2025": 19.7,
+      "line_at_publish": 20.5
     },
     {
       "player": "Jordan Dawson",
@@ -1447,7 +1522,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 23.8,
-      "avg_2025": 23.4
+      "avg_2025": 23.4,
+      "line_at_publish": 23.5
     },
     {
       "player": "Finn Callaghan",
@@ -1466,7 +1542,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 30.5,
-      "avg_2025": 28.4
+      "avg_2025": 28.4,
+      "line_at_publish": 26.5
     },
     {
       "player": "Keidean Coleman",
@@ -1485,7 +1562,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 18.3,
-      "avg_2025": 19.0
+      "avg_2025": 19.0,
+      "line_at_publish": 19.5
     },
     {
       "player": "Luke Parker",
@@ -1504,7 +1582,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 25.0,
-      "avg_2025": 23.3
+      "avg_2025": 23.3,
+      "line_at_publish": 25.5
     },
     {
       "player": "Kysaiah Pickett",
@@ -1523,7 +1602,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 23.8,
-      "avg_2025": 19.5
+      "avg_2025": 19.5,
+      "line_at_publish": 26.5
     },
     {
       "player": "Harvey Langford",
@@ -1542,7 +1622,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 15.5,
-      "avg_2025": 18.0
+      "avg_2025": 18.0,
+      "line_at_publish": 18.5
     },
     {
       "player": "Josh Dunkley",
@@ -1561,7 +1642,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 20.3,
-      "avg_2025": 24.6
+      "avg_2025": 24.6,
+      "line_at_publish": 21.5
     },
     {
       "player": "Jack Ross",
@@ -1580,7 +1662,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 21.7,
-      "avg_2025": 19.1
+      "avg_2025": 19.1,
+      "line_at_publish": 22.5
     },
     {
       "player": "Jack Ginnivan",
@@ -1599,7 +1682,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 21.0,
-      "avg_2025": 18.6
+      "avg_2025": 18.6,
+      "line_at_publish": 20.5
     },
     {
       "player": "Will Ashcroft",
@@ -1618,7 +1702,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 27.2,
-      "avg_2025": 27.1
+      "avg_2025": 27.1,
+      "line_at_publish": 29.5
     },
     {
       "player": "Zac Bailey",
@@ -1637,7 +1722,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 19.0,
-      "avg_2025": 20.0
+      "avg_2025": 20.0,
+      "line_at_publish": 19.5
     },
     {
       "player": "Bailey Smith",
@@ -1656,7 +1742,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 32.3,
-      "avg_2025": 31.3
+      "avg_2025": 31.3,
+      "line_at_publish": 33.5
     },
     {
       "player": "Hugo Garcia",
@@ -1675,7 +1762,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 19.8,
-      "avg_2025": 15.6
+      "avg_2025": 15.6,
+      "line_at_publish": 19.5
     },
     {
       "player": "Josh Rachele",
@@ -1694,7 +1782,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 23.0,
-      "avg_2025": 11.5
+      "avg_2025": 11.5,
+      "line_at_publish": 21.5
     },
     {
       "player": "Callum Mills",
@@ -1713,7 +1802,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 23.3,
-      "avg_2025": 23.8
+      "avg_2025": 23.8,
+      "line_at_publish": 24.5
     },
     {
       "player": "Jye Caldwell",
@@ -1732,7 +1822,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 20.8,
-      "avg_2025": 25.9
+      "avg_2025": 25.9,
+      "line_at_publish": 22.5
     },
     {
       "player": "Matt Roberts",
@@ -1751,7 +1842,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 19.3,
-      "avg_2025": 21.2
+      "avg_2025": 21.2,
+      "line_at_publish": 21.5
     },
     {
       "player": "Jarman Impey",
@@ -1770,7 +1862,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 22.5,
-      "avg_2025": 19.3
+      "avg_2025": 19.3,
+      "line_at_publish": 23.5
     },
     {
       "player": "Jaspa Fletcher",
@@ -1789,7 +1882,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 18.8,
-      "avg_2025": 21.3
+      "avg_2025": 21.3,
+      "line_at_publish": 21.5
     },
     {
       "player": "Riley Bice",
@@ -1808,7 +1902,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 22.3,
-      "avg_2025": 13.8
+      "avg_2025": 13.8,
+      "line_at_publish": 23.5
     },
     {
       "player": "Murphy Reid",
@@ -1827,7 +1922,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 23.3,
-      "avg_2025": 14.5
+      "avg_2025": 14.5,
+      "line_at_publish": 23.5
     },
     {
       "player": "Jy Simpkin",
@@ -1846,7 +1942,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 21.7,
-      "avg_2025": 22.1
+      "avg_2025": 22.1,
+      "line_at_publish": 22.5
     },
     {
       "player": "Dan Houston",
@@ -1865,7 +1962,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 24.8,
-      "avg_2025": 16.9
+      "avg_2025": 16.9,
+      "line_at_publish": 24.5
     },
     {
       "player": "Andrew McGrath",
@@ -1884,7 +1982,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 19.8,
-      "avg_2025": 22.7
+      "avg_2025": 22.7,
+      "line_at_publish": 21.5
     },
     {
       "player": "Justin McInerney",
@@ -1903,7 +2002,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 25.8,
-      "avg_2025": 21.5
+      "avg_2025": 21.5,
+      "line_at_publish": 25.5
     },
     {
       "player": "Jake Lever",
@@ -1922,7 +2022,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 15.7,
-      "avg_2025": 12.0
+      "avg_2025": 12.0,
+      "line_at_publish": 16.5
     },
     {
       "player": "Massimo D'Ambrosio",
@@ -1941,7 +2042,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 17.5,
-      "avg_2025": 18.2
+      "avg_2025": 18.2,
+      "line_at_publish": 18.5
     },
     {
       "player": "Josh Weddle",
@@ -1960,7 +2062,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 16.2,
-      "avg_2025": 16.1
+      "avg_2025": 16.1,
+      "line_at_publish": 16.5
     },
     {
       "player": "Nasiah Wanganeen-Milera",
@@ -1979,7 +2082,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 24.8,
-      "avg_2025": 29.9
+      "avg_2025": 29.9,
+      "line_at_publish": 28.5
     },
     {
       "player": "Sam Flanders",
@@ -1998,7 +2102,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 24.8,
-      "avg_2025": 18.7
+      "avg_2025": 18.7,
+      "line_at_publish": 24.5
     },
     {
       "player": "Tim Kelly",
@@ -2017,7 +2122,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 22.6,
-      "avg_2025": 17.6
+      "avg_2025": 17.6,
+      "line_at_publish": 21.5
     },
     {
       "player": "Bailey Dale",
@@ -2036,7 +2142,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 22.2,
-      "avg_2025": 27.0
+      "avg_2025": 27.0,
+      "line_at_publish": 23.5
     },
     {
       "player": "Jack Steele",
@@ -2055,7 +2162,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 24.8,
-      "avg_2025": 20.9
+      "avg_2025": 20.9,
+      "line_at_publish": 24.5
     },
     {
       "player": "Ed Richards",
@@ -2074,7 +2182,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 26.0,
-      "avg_2025": 25.8
+      "avg_2025": 25.8,
+      "line_at_publish": 25.5
     },
     {
       "player": "Kade Chandler",
@@ -2093,7 +2202,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 15.5,
-      "avg_2025": 14.6
+      "avg_2025": 14.6,
+      "line_at_publish": 16.5
     },
     {
       "player": "Lachie Neale",
@@ -2112,7 +2222,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 29.3,
-      "avg_2025": 26.8
+      "avg_2025": 26.8,
+      "line_at_publish": 28.5
     },
     {
       "player": "Levi Ashcroft",
@@ -2131,7 +2242,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 20.3,
-      "avg_2025": 19.1
+      "avg_2025": 19.1,
+      "line_at_publish": 20.5
     },
     {
       "player": "Oliver Dempsey",
@@ -2150,7 +2262,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 18.7,
-      "avg_2025": 17.0
+      "avg_2025": 17.0,
+      "line_at_publish": 18.5
     },
     {
       "player": "Harley Reid",
@@ -2169,7 +2282,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 22.2,
-      "avg_2025": 18.8
+      "avg_2025": 18.8,
+      "line_at_publish": 21.5
     },
     {
       "player": "Lachie Ash",
@@ -2188,7 +2302,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 30.3,
-      "avg_2025": 27.9
+      "avg_2025": 27.9,
+      "line_at_publish": 29.5
     },
     {
       "player": "Toby Greene",
@@ -2207,7 +2322,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 24.0,
-      "avg_2025": 16.5
+      "avg_2025": 16.5,
+      "line_at_publish": 21.5
     },
     {
       "player": "Jayden Laverde",
@@ -2226,7 +2342,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 17.5,
-      "avg_2025": 15.4
+      "avg_2025": 15.4,
+      "line_at_publish": 17.5
     },
     {
       "player": "Jacob Hopper",
@@ -2245,7 +2362,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 22.4,
-      "avg_2025": 26.4
+      "avg_2025": 26.4,
+      "line_at_publish": 23.5
     },
     {
       "player": "Bodhi Uwland",
@@ -2264,7 +2382,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 24.3,
-      "avg_2025": 16.0
+      "avg_2025": 16.0,
+      "line_at_publish": 23.5
     },
     {
       "player": "Sam Durham",
@@ -2283,7 +2402,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 18.0,
-      "avg_2025": 21.9
+      "avg_2025": 21.9,
+      "line_at_publish": 18.5
     },
     {
       "player": "Harvey Thomas",
@@ -2302,7 +2422,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 21.5,
-      "avg_2025": 11.6
+      "avg_2025": 11.6,
+      "line_at_publish": 20.5
     },
     {
       "player": "Chad Warner",
@@ -2321,7 +2442,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 22.3,
-      "avg_2025": 22.2
+      "avg_2025": 22.2,
+      "line_at_publish": 24.5
     },
     {
       "player": "Blake Hardwick",
@@ -2340,7 +2462,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 17.8,
-      "avg_2025": 14.7
+      "avg_2025": 14.7,
+      "line_at_publish": 18.5
     },
     {
       "player": "Caleb Serong",
@@ -2359,7 +2482,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 26.3,
-      "avg_2025": 27.4
+      "avg_2025": 27.4,
+      "line_at_publish": 28.5
     },
     {
       "player": "Luke Ryan",
@@ -2378,7 +2502,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 19.8,
-      "avg_2025": 20.8
+      "avg_2025": 20.8,
+      "line_at_publish": 21.5
     },
     {
       "player": "Tyler Sonsie",
@@ -2397,7 +2522,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 17.0,
-      "avg_2025": 15.2
+      "avg_2025": 15.2,
+      "line_at_publish": 18.5
     },
     {
       "player": "Max Holmes",
@@ -2416,7 +2542,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 29.5,
-      "avg_2025": 26.9
+      "avg_2025": 26.9,
+      "line_at_publish": 28.5
     },
     {
       "player": "Oliver Florent",
@@ -2435,7 +2562,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 21.8,
-      "avg_2025": 15.2
+      "avg_2025": 15.2,
+      "line_at_publish": 21.5
     },
     {
       "player": "Luke Davies-Uniacke",
@@ -2454,7 +2582,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 27.0,
-      "avg_2025": 24.7
+      "avg_2025": 24.7,
+      "line_at_publish": 26.5
     },
     {
       "player": "Joel Jeffrey",
@@ -2473,7 +2602,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 19.7,
-      "avg_2025": 18.8
+      "avg_2025": 18.8,
+      "line_at_publish": 19.5
     },
     {
       "player": "Liam Duggan",
@@ -2492,7 +2622,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 19.3,
-      "avg_2025": 20.2
+      "avg_2025": 20.2,
+      "line_at_publish": 20.5
     },
     {
       "player": "Lachie Whitfield",
@@ -2511,7 +2642,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 29.8,
-      "avg_2025": 28.7
+      "avg_2025": 28.7,
+      "line_at_publish": 29.5
     },
     {
       "player": "Harry Himmelberg",
@@ -2530,7 +2662,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 17.2,
-      "avg_2025": 18.5
+      "avg_2025": 18.5,
+      "line_at_publish": 17.5
     },
     {
       "player": "Touk Miller",
@@ -2549,7 +2682,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 26.3,
-      "avg_2025": 24.7
+      "avg_2025": 24.7,
+      "line_at_publish": 25.5
     },
     {
       "player": "Connor Macdonald",
@@ -2568,7 +2702,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 21.3,
-      "avg_2025": 14.9
+      "avg_2025": 14.9,
+      "line_at_publish": 20.5
     },
     {
       "player": "Archie Roberts",
@@ -2587,7 +2722,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 30.5,
-      "avg_2025": 24.5
+      "avg_2025": 24.5,
+      "line_at_publish": 32.5
     },
     {
       "player": "Zach Merrett",
@@ -2606,7 +2742,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 27.0,
-      "avg_2025": 27.8
+      "avg_2025": 27.8,
+      "line_at_publish": 29.5
     },
     {
       "player": "Kane Farrell",
@@ -2625,7 +2762,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 20.2,
-      "avg_2025": 20.3
+      "avg_2025": 20.3,
+      "line_at_publish": 20.5
     },
     {
       "player": "Jase Burgoyne",
@@ -2644,7 +2782,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 19.0,
-      "avg_2025": 19.2
+      "avg_2025": 19.2,
+      "line_at_publish": 19.5
     },
     {
       "player": "Josh Worrell",
@@ -2663,7 +2802,8 @@
       "filter_pass": false,
       "tier": "SKIP",
       "avg_2026": 25.7,
-      "avg_2025": 21.0
+      "avg_2025": 21.0,
+      "line_at_publish": 24.5
     }
   ]
 }

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Logo } from "@/components/Logo";
 
 export default function Footer() {
   return (
@@ -22,8 +21,11 @@ export default function Footer() {
 
           {/* Brand */}
           <div>
-            <div style={{ marginBottom: 8 }}>
-              <Logo size="sm" showText={true} />
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+              <img src="/logo.svg" alt="SportSphere HQ" width={32} height={32} />
+              <span style={{ fontSize: 13, fontWeight: 700, letterSpacing: "-0.02em", color: "#f0f0f0" }}>
+                Sport<span style={{ color: "#f97316" }}>Sphere</span> HQ
+              </span>
             </div>
             <p style={{ fontSize: 11, color: "#555", margin: 0, maxWidth: 200, lineHeight: 1.7 }}>
               AFL disposal analytics. Not financial advice.

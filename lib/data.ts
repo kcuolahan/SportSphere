@@ -22,6 +22,7 @@ export interface Pick {
   filter_pass: boolean
   avg_2025: number
   avg_2026: number
+  line_at_publish?: number
   // optional model-detail fields (present when exported from full pipeline)
   play_style?: string
   bet_score?: number

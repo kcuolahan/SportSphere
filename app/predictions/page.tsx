@@ -718,6 +718,24 @@ export default function PredictionsPage() {
                         );
                       })()}
 
+                      {/* Line tracker */}
+                      {pred.line_at_publish != null && (
+                        <div style={{
+                          display: "flex", alignItems: "center", gap: 8,
+                          marginBottom: 10, padding: "7px 12px",
+                          background: "#050505", border: "1px solid #111", borderRadius: 6,
+                          fontSize: 11, color: "#555",
+                        }}>
+                          <span style={{ color: "#444" }}>📌 Line when published:</span>
+                          <span style={{ color: "#888", fontWeight: 600 }}>{pred.line_at_publish}</span>
+                          {pred.bookie_line !== pred.line_at_publish && (
+                            <span style={{ color: pred.bookie_line > pred.line_at_publish ? "#22c55e" : "#ef4444", fontWeight: 700, marginLeft: 4 }}>
+                              → {pred.bookie_line} {pred.bookie_line > pred.line_at_publish ? "↑ Sharp money aligned ✓" : "↓ Line moved against"}
+                            </span>
+                          )}
+                        </div>
+                      )}
+
                       <div style={{ fontSize: 10, color: "#555", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>
                         Model Breakdown
                       </div>

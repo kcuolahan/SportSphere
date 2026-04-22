@@ -350,7 +350,7 @@ export default function LandingPage() {
             <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 500 }}>
               <thead>
                 <tr style={{ borderBottom: "1px solid #111" }}>
-                  {["Round", "Total Picks", "Overall"].map(h => (
+                  {["Round", "Total Picks", "Overall", "HC (Strong)", "Filtered"].map(h => (
                     <th key={h} style={{
                       padding: "10px 16px", fontSize: 11, color: "#666",
                       fontWeight: 600, textAlign: "left",
@@ -360,13 +360,26 @@ export default function LandingPage() {
                 </tr>
               </thead>
               <tbody>
-                {results.map((r, i) => (
-                  <tr key={i} style={{ borderBottom: "1px solid #0a0a0a" }}>
-                    <td style={{ padding: "14px 16px", fontSize: 14, fontWeight: 600, color: "#fff" }}>Round {r.round}</td>
-                    <td style={{ padding: "14px 16px", fontSize: 14, color: "#666" }}>{r.total_picks}</td>
-                    <td style={{ padding: "14px 16px", fontSize: 14, color: "#f0f0f0" }}>{r.win_rate}%</td>
-                  </tr>
-                ))}
+                {results.map((r, i) => {
+                  const rr = r as typeof r & { hc_picks?: number; hc_wins?: number; filtered_picks?: number; filtered_wins?: number };
+                  const hcRate = rr.hc_picks && rr.hc_wins ? `${((rr.hc_wins / rr.hc_picks) * 100).toFixed(0)}%` : "—";
+                  const filtRate = rr.filtered_picks && rr.filtered_wins ? `${((rr.filtered_wins / rr.filtered_picks) * 100).toFixed(0)}%` : "—";
+                  return (
+                    <tr key={i} style={{ borderBottom: "1px solid #0a0a0a" }}>
+                      <td style={{ padding: "14px 16px", fontSize: 14, fontWeight: 600, color: "#fff" }}>Round {r.round}</td>
+                      <td style={{ padding: "14px 16px", fontSize: 14, color: "#666" }}>{r.total_picks}</td>
+                      <td style={{ padding: "14px 16px", fontSize: 14, color: "#f0f0f0" }}>{r.win_rate}%</td>
+                      <td style={{ padding: "14px 16px", fontSize: 13, color: "#f97316" }}>
+                        {rr.hc_picks ? `${rr.hc_wins}/${rr.hc_picks}` : "—"}
+                        {rr.hc_picks ? <span style={{ color: "#555", marginLeft: 6, fontSize: 11 }}>{hcRate}</span> : null}
+                      </td>
+                      <td style={{ padding: "14px 16px", fontSize: 13, color: "#22c55e" }}>
+                        {rr.filtered_picks ? `${rr.filtered_wins}/${rr.filtered_picks}` : "—"}
+                        {rr.filtered_picks ? <span style={{ color: "#555", marginLeft: 6, fontSize: 11 }}>{filtRate}</span> : null}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

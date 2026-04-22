@@ -1,13 +1,43 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
-import { strongRate, filteredRate, totalPicks } from "@/lib/siteData";
+import { strongRate, filteredRate, totalPicks, strongPicks, filteredPicks, overallRate } from "@/lib/siteData";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const AUDIENCE_ID = process.env.RESEND_AUDIENCE_ID ?? "";
-const FROM = "SportSphere HQ <picks@sportspherehq.com>";
+const FROM_PRIMARY = "SportSphere HQ <picks@sportspherehq.com>";
+const FROM_FALLBACK = "SportSphere HQ <onboarding@resend.dev>";
 
 function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+}
+
+function buildEmailBody(): string {
+  return [
+    "Welcome to SportSphere HQ — Australia's sharpest AFL disposal model.",
+    "",
+    "You'll get Round picks in your inbox each Tuesday before games start.",
+    "",
+    "Season track record:",
+    `- HC tier: ${strongRate}% win rate (${strongPicks} picks)`,
+    `- Filtered: ${filteredRate}% win rate (${filteredPicks} picks)`,
+    `- Overall: ${overallRate}% (${totalPicks} picks)`,
+    "",
+    "Full analysis and picks: sportspherehq.com/predictions",
+    "",
+    "No spam. Unsubscribe anytime.",
+    "— SportSphere HQ",
+  ].join("\n");
+}
+
+async function sendEmail(from: string, to: string): Promise<{ error: { message: string } | null }> {
+  const result = await resend.emails.send({
+    from,
+    to,
+    subject: "You're on the SportSphere HQ list 🏈",
+    text: buildEmailBody(),
+  });
+  console.log(`Resend email result (from: ${from}):`, JSON.stringify(result));
+  return result;
 }
 
 export async function POST(req: NextRequest) {
@@ -30,7 +60,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    // 1. Add to audience list (if audience ID is configured)
+    // 1. Add to audience list (if configured)
     if (AUDIENCE_ID) {
       const contactResult = await resend.contacts.create({
         email,
@@ -40,28 +70,20 @@ export async function POST(req: NextRequest) {
       console.log("Resend contact result:", JSON.stringify(contactResult));
     }
 
-    // 2. Send confirmation email to subscriber
-    const emailResult = await resend.emails.send({
-      from: FROM,
-      to: email,
-      subject: "You're on the SportSphere HQ list",
-      text: [
-        "Welcome to SportSphere HQ — Australia's sharpest AFL disposal model.",
-        "",
-        "You'll get Round picks in your inbox each week before the games start.",
-        "",
-        `Model stats: ${strongRate}% HC win rate | ${filteredRate}% filtered win rate | ${totalPicks} picks tracked`,
-        "",
-        "We don't spam. One email per round, every Tuesday.",
-        "",
-        "— SportSphere HQ",
-        "https://sportspherehq.com",
-      ].join("\n"),
-    });
-    console.log("Resend email result:", JSON.stringify(emailResult));
+    // 2. Send confirmation — try verified domain, fall back to resend.dev
+    let emailResult = await sendEmail(FROM_PRIMARY, email);
 
     if (emailResult.error) {
-      console.error("Resend email error:", JSON.stringify(emailResult.error));
+      const msg = emailResult.error.message ?? "";
+      const isDomainError = msg.toLowerCase().includes("domain") || msg.toLowerCase().includes("not verified") || msg.toLowerCase().includes("sender");
+      if (isDomainError) {
+        console.warn("Primary domain failed, retrying with fallback:", msg);
+        emailResult = await sendEmail(FROM_FALLBACK, email);
+      }
+    }
+
+    if (emailResult.error) {
+      console.error("Resend email error (both attempts):", JSON.stringify(emailResult.error));
       return NextResponse.json({ error: `Email failed: ${emailResult.error.message}` }, { status: 500 });
     }
 
@@ -70,7 +92,6 @@ export async function POST(req: NextRequest) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("Subscribe error (full):", message);
 
-    // Resend returns a specific error for duplicate contacts
     if (message.includes("already exists") || message.includes("Contact already")) {
       return NextResponse.json({ success: true, note: "already_subscribed" });
     }
