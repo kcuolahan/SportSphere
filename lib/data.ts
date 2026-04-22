@@ -23,6 +23,13 @@ export interface Pick {
   avg_2025: number
   avg_2026: number
   line_at_publish?: number
+  // H2H / form fields (added by enrich_h2h.py after scraping)
+  h2h_vs_opponent?: Array<{ season: number; round: string; opponent: string; disposals: number; result?: string }>
+  h2h_avg?: number | null
+  h2h_sample?: number
+  h2h_vs_line?: string | null
+  recent_form?: number[]
+  recent_avg?: number | null
   // optional model-detail fields (present when exported from full pipeline)
   play_style?: string
   bet_score?: number

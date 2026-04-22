@@ -665,6 +665,85 @@ export default function PredictionsPage() {
                         <OppFactorText {...pred} />
                       </div>
 
+                      {/* H2H vs opponent */}
+                      {pred.h2h_vs_opponent && pred.h2h_vs_opponent.length > 0 && (
+                        <div style={{
+                          background: "#050505", border: "1px solid #1a1a1a",
+                          borderRadius: 6, padding: "10px 12px", marginBottom: 10,
+                        }}>
+                          <div style={{ fontSize: 10, color: "#555", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>
+                            H2H vs {pred.opponent} ({pred.h2h_sample} meetings)
+                          </div>
+                          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 6 }}>
+                            {pred.h2h_vs_opponent.slice(-6).map((g, idx) => {
+                              const aboveLine = g.disposals > pred.bookie_line;
+                              return (
+                                <div key={idx} style={{
+                                  background: aboveLine ? "rgba(34,197,94,0.1)" : "rgba(239,68,68,0.1)",
+                                  border: `1px solid ${aboveLine ? "#14532d" : "#450a0a"}`,
+                                  borderRadius: 5, padding: "5px 9px", textAlign: "center",
+                                }}>
+                                  <div style={{ fontSize: 14, fontWeight: 800, color: aboveLine ? "#4ade80" : "#f87171" }}>
+                                    {g.disposals}
+                                  </div>
+                                  <div style={{ fontSize: 9, color: "#555" }}>
+                                    {g.season} R{g.round?.replace(/\D/g, "")}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                          <div style={{ fontSize: 11, color: "#888" }}>
+                            Avg vs {pred.opponent}:{" "}
+                            <strong style={{ color: pred.h2h_vs_line === "OVER" ? "#4ade80" : pred.h2h_vs_line === "UNDER" ? "#f87171" : "#888" }}>
+                              {pred.h2h_avg}
+                            </strong>
+                            {" "}vs line {pred.bookie_line}
+                            {pred.h2h_vs_line === "OVER" && (
+                              <span style={{ color: "#4ade80", marginLeft: 8 }}>
+                                ✓ Avg above current line ({pred.h2h_sample ?? 0} meetings)
+                              </span>
+                            )}
+                            {pred.h2h_vs_line === "UNDER" && (
+                              <span style={{ color: "#f87171", marginLeft: 8 }}>✗ Avg below current line</span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Recent form */}
+                      {pred.recent_form && pred.recent_form.length > 0 && (
+                        <div style={{
+                          background: "#050505", border: "1px solid #1a1a1a",
+                          borderRadius: 6, padding: "10px 12px", marginBottom: 10,
+                        }}>
+                          <div style={{ fontSize: 10, color: "#555", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>
+                            Recent form (last {pred.recent_form.length} games)
+                          </div>
+                          <div style={{ display: "flex", gap: 5, alignItems: "center" }}>
+                            {pred.recent_form.map((d, idx) => {
+                              const aboveLine = d > pred.bookie_line;
+                              return (
+                                <div key={idx} style={{
+                                  background: aboveLine ? "rgba(34,197,94,0.08)" : "rgba(239,68,68,0.08)",
+                                  border: `1px solid ${aboveLine ? "#14532d40" : "#450a0a40"}`,
+                                  borderRadius: 4, padding: "4px 8px",
+                                  fontSize: 13, fontWeight: 700,
+                                  color: aboveLine ? "#4ade80" : "#f87171",
+                                }}>
+                                  {d}
+                                </div>
+                              );
+                            })}
+                            {pred.recent_avg != null && (
+                              <span style={{ fontSize: 11, color: "#555", marginLeft: 6 }}>
+                                avg {pred.recent_avg}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
                       {/* Venue alert */}
                       {VENUE_ALERTS[pred.venue] && (() => {
                         const alert = VENUE_ALERTS[pred.venue];
