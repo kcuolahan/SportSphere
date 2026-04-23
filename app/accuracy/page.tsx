@@ -431,29 +431,29 @@ export default function AccuracyPage() {
                 </div>
                 <div style={{ padding: "8px 8px" }}>
                   <div style={{ fontSize: 12, fontWeight: 600, color: "#e0e0e0", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.player}</div>
-                  <div style={{ fontSize: 9, color: "#555", marginTop: 1 }}>{p.team}</div>
+                  <div style={{ fontSize: 11, color: "#666", marginTop: 1 }}>{p.team}</div>
                 </div>
-                <div style={{ padding: "8px 8px", fontSize: 11, color: "#555" }}>R{p.round}</div>
+                <div style={{ padding: "8px 8px", fontSize: 12, color: "#888" }}>R{p.round}</div>
                 <div style={{ padding: "8px 8px" }}>
                   <span style={{
-                    fontSize: 9, fontWeight: 800,
+                    fontSize: 10, fontWeight: 800,
                     color: POS_COLORS[p.position] ?? "#888",
                     background: "#111", borderRadius: 3, padding: "1px 4px",
                   }}>{p.position}</span>
                 </div>
-                <div style={{ padding: "8px 8px", fontSize: 11, color: "#666" }}>{p.opponent ?? "—"}</div>
+                <div style={{ padding: "8px 8px", fontSize: 12, color: "#888" }}>{p.opponent ?? "—"}</div>
                 <div style={{ padding: "8px 8px", fontSize: 12, fontWeight: 600, color: "#888" }}>{line}</div>
                 <div className="col-hide-mobile" style={{ padding: "8px 8px", fontSize: 12, fontWeight: 600, color: "#f97316" }}>{p.predicted}</div>
                 <div className="col-hide-mobile" style={{ padding: "8px 8px", fontSize: 12, fontWeight: 600, color: edge >= 0 ? "#22c55e" : "#ef4444" }}>
                   {edge >= 0 ? "+" : ""}{edge}
                 </div>
-                <div style={{ padding: "8px 8px", fontSize: 11, color: "#888" }}>{p.edge_vol.toFixed(2)}</div>
+                <div style={{ padding: "8px 8px", fontSize: 12, color: "#888" }}>{p.edge_vol.toFixed(2)}</div>
                 <div className="col-hide-mobile" style={{ padding: "8px 8px" }}><TierBadge tier={tier} /></div>
-                <div style={{ padding: "8px 8px", fontSize: 11, fontWeight: 700, color: dir === "OVER" ? "#22c55e" : "#ef4444" }}>
+                <div style={{ padding: "8px 8px", fontSize: 12, fontWeight: 700, color: dir === "OVER" ? "#22c55e" : "#ef4444" }}>
                   {dir} {dir === "OVER" ? "⬆" : "⬇"}
                 </div>
                 <div style={{ padding: "8px 8px", fontSize: 13, fontWeight: 700, color: "#f0f0f0" }}>{p.actual}</div>
-                <div style={{ padding: "8px 8px", fontSize: 11, fontWeight: 800, color: isWin ? "#22c55e" : "#ef4444" }}>
+                <div style={{ padding: "8px 8px", fontSize: 12, fontWeight: 800, color: isWin ? "#22c55e" : "#ef4444" }}>
                   {isWin ? "✓" : "✗"} {p.result}
                 </div>
               </div>
@@ -482,7 +482,7 @@ export default function AccuracyPage() {
                   <Avatar name={p.player} team={p.team} />
                   <div>
                     <div style={{ fontSize: 17, fontWeight: 700, color: "#f0f0f0" }}>{p.player}</div>
-                    <div style={{ fontSize: 11, color: "#555", marginTop: 2 }}>{p.team} · {p.position} · Round {p.round}</div>
+                    <div style={{ fontSize: 13, fontWeight: 500, color: "#aaaaaa", marginTop: 2 }}>{p.team} · {p.position} · Round {p.round}</div>
                   </div>
                 </div>
                 <div style={{ borderRadius: 8, padding: "12px 14px", marginBottom: 18, background: isWin ? "rgba(34,197,94,0.08)" : "rgba(239,68,68,0.08)", border: `1px solid ${isWin ? "rgba(34,197,94,0.25)" : "rgba(239,68,68,0.25)"}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>

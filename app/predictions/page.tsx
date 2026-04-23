@@ -478,7 +478,7 @@ export default function PredictionsPage() {
                       <PlayerAvatar name={p.player} team={p.team} size={36} />
                       <div>
                         <div style={{ fontSize: 13, fontWeight: 700, color: "#f0f0f0" }}>{p.player}</div>
-                        <div style={{ fontSize: 11, color: "#666" }}>
+                        <div style={{ fontSize: 13, fontWeight: 500, color: "#aaaaaa" }}>
                           {p.team} vs {p.opponent} · {p.venue} · {p.position}
                         </div>
                       </div>
@@ -824,10 +824,10 @@ export default function PredictionsPage() {
                     {/* Player info */}
                     <div style={{ flex: 1, minWidth: 120 }}>
                       <div style={{ fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 2 }}>{pred.player}</div>
-                      <div style={{ fontSize: 12, color: "#aaa", marginBottom: 1 }}>
+                      <div style={{ fontSize: 13, fontWeight: 500, color: "#aaaaaa", marginBottom: 1 }}>
                         {pred.team} vs {pred.opponent}
                       </div>
-                      <div style={{ fontSize: 11, color: "#888" }}>
+                      <div style={{ fontSize: 13, fontWeight: 500, color: "#aaaaaa", letterSpacing: "0.02em" }}>
                         {pred.venue} · {pred.position}
                       </div>
                       {(team_news as TeamNewsEntry[]).some(n => n.affects_players.includes(pred.player)) && (

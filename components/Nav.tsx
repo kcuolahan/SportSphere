@@ -6,7 +6,6 @@ import { useState, useEffect } from "react";
 import { getCurrentPredictions } from "@/lib/data";
 import { supabase, signOut } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
-import { useTheme } from "@/lib/theme";
 
 const { round, season } = getCurrentPredictions();
 
@@ -34,7 +33,6 @@ export default function Nav() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const { theme, toggle: toggleTheme } = useTheme();
 
   useEffect(() => {
     if (!supabase) { setUser(null); return; }
@@ -82,8 +80,8 @@ export default function Nav() {
 
           {/* Left — Logo */}
           <Link href="/" style={{ textDecoration: "none", flexShrink: 0, display: "flex", alignItems: "center", gap: 8, marginRight: 8 }}>
-            <img src="/logo.svg" alt="SportSphere HQ" width={28} height={28} className="logo-image" />
-            <span className="nav-logo-text" style={{ fontSize: 14, fontWeight: 700, letterSpacing: "-0.02em", color: "#f0f0f0", lineHeight: 1, whiteSpace: "nowrap" }}>
+            <img src="/logo.svg" alt="SportSphere HQ" width={28} height={28} style={{ width: 28, height: 28, flexShrink: 0 }} />
+            <span className="nav-logo-label" style={{ fontSize: 15, fontWeight: 700, letterSpacing: "-0.02em", color: "#f0f0f0", lineHeight: 1, whiteSpace: "nowrap" }}>
               Sport<span style={{ color: "#f97316" }}>Sphere</span> HQ
             </span>
           </Link>
@@ -138,19 +136,6 @@ export default function Nav() {
                 R{round} · {season}
               </span>
             </div>
-
-            {/* Theme toggle */}
-            <button
-              onClick={toggleTheme}
-              title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-              style={{
-                background: "none", border: "1px solid #1f1f1f", borderRadius: 6,
-                padding: "5px 9px", cursor: "pointer", fontSize: 13, lineHeight: 1,
-                color: "#555",
-              }}
-            >
-              {theme === "dark" ? "☀" : "🌙"}
-            </button>
 
             {/* Auth */}
             {user ? (
@@ -278,6 +263,9 @@ export default function Nav() {
           .nav-right { gap: 8px !important; }
           .nav-hide-1024 { display: none !important; }
           .nav-hamburger { display: flex !important; }
+        }
+        @media (max-width: 768px) {
+          .nav-logo-label { display: none !important; }
         }
       `}</style>
     </>

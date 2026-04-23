@@ -377,7 +377,7 @@ export default function PlayersPage() {
                         </span>
                       )}
                     </div>
-                    <div style={{ fontSize: 11, color: "#666" }}>{getTeamName(p.team)} · {p.position} · {p.play_style}</div>
+                    <div style={{ fontSize: 13, fontWeight: 500, color: "#aaaaaa" }}>{getTeamName(p.team)} · {p.position} · {p.play_style}</div>
                   </div>
 
                   {/* Stats */}

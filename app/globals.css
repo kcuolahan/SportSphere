@@ -4,9 +4,8 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
-/* ── Theme variables ────────────────────────────────────────────────────────── */
-:root,
-:root[data-theme="dark"] {
+/* ── Theme variables (dark only) ─────────────────────────────────────────────── */
+:root {
   --bg-page: #000000;
   --bg-secondary: #080808;
   --bg-card: #0a0a0a;
@@ -19,34 +18,12 @@ html {
   --card-shadow: none;
 }
 
-:root[data-theme="light"] {
-  --bg-page: #f4f4f1;
-  --bg-secondary: #eaeae7;
-  --bg-card: #ffffff;
-  --bg-card-hover: #f5f5f3;
-  --text-primary: #111111;
-  --text-secondary: #444444;
-  --text-muted: #777777;
-  --border: #e0e0e0;
-  --accent: #f97316;
-  --card-shadow: 0 1px 4px rgba(0,0,0,0.08);
-}
-
 body {
-  background-color: var(--bg-page);
-  color: var(--text-primary);
+  background-color: #000000;
+  color: #f0f0f0;
   font-family: system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-/* Light mode logo adjustments */
-[data-theme="light"] .logo-image {
-  filter: invert(1);
-}
-[data-theme="light"] .nav-logo-text {
-  color: #111111 !important;
 }
 
 /* ── Global animations ──────────────────────────────────────────────────────── */
@@ -86,12 +63,6 @@ body {
   from { stroke-dashoffset: 226; }
 }
 
-/* ── Light mode page/card background overrides ──────────────────────────────── */
-[data-theme="light"] body,
-[data-theme="light"] .page-root {
-  background-color: var(--bg-page) !important;
-  color: var(--text-primary) !important;
-}
 
 /* ── Typography scale ────────────────────────────────────────────────────────── */
 .text-label {
