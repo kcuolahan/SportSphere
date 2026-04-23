@@ -278,7 +278,7 @@ export default function PredictionsPage() {
   }, []);
 
   function handleShare() {
-    const hcPicks = picks.filter((p: Pick) => p.enhanced_signal === "HC");
+    const hcPicks = picks.filter(isHCPick);
     const betPicks = picks.filter((p: Pick) => p.enhanced_signal === "BET");
     const fmt = (p: Pick) => `  ${p.player} ${p.direction} ${p.bookie_line} (E/V ${p.edge_vol.toFixed(2)})`;
     const text = [
@@ -297,14 +297,16 @@ export default function PredictionsPage() {
     });
   }
 
+  const isHCPick = (p: Pick) => p.enhanced_signal === "HC" || p.edge_vol >= 0.90;
+
   const filtered = picks.filter((p: Pick) => {
     if (filter === "ACTIONABLE") return p.filter_pass;
-    if (filter === "SHARP") return p.edge_vol >= 0.70 && p.edge_vol < 0.90;
-    if (filter === "HC") return p.enhanced_signal === "HC";
+    if (filter === "SHARP") return p.edge_vol >= 0.70 && p.edge_vol < 0.90 && !isHCPick(p);
+    if (filter === "HC") return isHCPick(p);
     return true;
   });
 
-  const hcCount = picks.filter((p: Pick) => p.enhanced_signal === "HC").length;
+  const hcCount = picks.filter(isHCPick).length;
   const betCount = picks.filter((p: Pick) => p.filter_pass).length;
   const overCount = filtered.filter((p: Pick) => p.direction === "OVER").length;
   const underCount = filtered.filter((p: Pick) => p.direction === "UNDER").length;
@@ -392,7 +394,7 @@ export default function PredictionsPage() {
 
         {/* SHARP picks section */}
         {(() => {
-          const sharpPicks = picks.filter((p: Pick) => p.edge_vol >= 0.70 && p.enhanced_signal !== "HC" && p.filter_pass);
+          const sharpPicks = picks.filter((p: Pick) => p.edge_vol >= 0.70 && p.edge_vol < 0.90 && !isHCPick(p) && p.filter_pass);
           if (sharpPicks.length === 0) return null;
           return (
             <div style={{
@@ -562,7 +564,7 @@ export default function PredictionsPage() {
         {view === "CARD" && (
           <div className="picks-card-view" style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {filtered.map((pred: Pick) => {
-              const isHC = pred.enhanced_signal === "HC";
+              const isHC = isHCPick(pred);
               const isBet = pred.enhanced_signal === "BET";
               const isOver = pred.direction === "OVER";
               const isExpanded = expanded === pred.player;
