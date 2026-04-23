@@ -8,6 +8,7 @@ import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { getCurrentPredictions, getAllResults, getResultStats, getSeasonSummary } from "@/lib/data";
 import { EmailSignup } from "@/components/EmailSignup";
 import { roundsLabel, currentSeason, currentRound } from "@/lib/siteData";
+import { TEAM_COLOURS } from "@/lib/teams";
 const predictions = getCurrentPredictions();
 const highImpactNews = (predictions.team_news ?? []).filter((n: { impact: string }) => n.impact === "HIGH");
 const results = getAllResults();
@@ -46,11 +47,13 @@ function TickerItem({ player, team, position, direction, bookie_line, edge_vol }
   player: string; team: string; position: string;
   direction: string; bookie_line: number; edge_vol: number;
 }) {
+  const teamColor = TEAM_COLOURS[team]?.primary ?? "#1a1a1a";
   return (
     <div style={{
       display: "inline-flex", alignItems: "center", gap: 10,
       padding: "8px 20px 8px 12px",
       background: "#0a0a0a", border: "1px solid #1a1a1a",
+      borderLeft: `3px solid ${teamColor}`,
       borderRadius: 8, marginRight: 12, flexShrink: 0,
     }}>
       <PlayerAvatar name={player} team={team} size={28} />

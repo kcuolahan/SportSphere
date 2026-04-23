@@ -4,6 +4,17 @@
   "generated_at": "2026-04-22T08:00:00",
   "verified_at": "2026-04-22T08:00:00",
   "team_news": [],
+  "fixtures": [
+    {"home": "SYD", "away": "WBD", "venue": "MRVL", "day": "Friday", "time": "7:50pm"},
+    {"home": "MEL", "away": "RIC", "venue": "MCG", "day": "Saturday", "time": "1:45pm"},
+    {"home": "GCS", "away": "HAW", "venue": "UTAS", "day": "Saturday", "time": "2:10pm"},
+    {"home": "COL", "away": "ESS", "venue": "MCG", "day": "Saturday", "time": "7:25pm"},
+    {"home": "GEE", "away": "PTA", "venue": "AO", "day": "Saturday", "time": "7:30pm"},
+    {"home": "CAR", "away": "FRE", "venue": "OS", "day": "Saturday", "time": "8:10pm"},
+    {"home": "STK", "away": "WCE", "venue": "MRVL", "day": "Sunday", "time": "1:10pm"},
+    {"home": "ADE", "away": "BRL", "venue": "G", "day": "Sunday", "time": "3:20pm"},
+    {"home": "NTH", "away": "GWS", "venue": "CGOM", "day": "Sunday", "time": "3:20pm"}
+  ],
   "picks": [
     {
       "player": "Zak Butters",

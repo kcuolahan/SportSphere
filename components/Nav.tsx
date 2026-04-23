@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { getCurrentPredictions } from "@/lib/data";
 import { supabase, signOut } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
+import { useTheme } from "@/lib/theme";
 
 const { round, season } = getCurrentPredictions();
 
@@ -24,6 +25,7 @@ export default function Nav() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const { theme, toggle: toggleTheme } = useTheme();
 
   useEffect(() => {
     if (!supabase) { setUser(null); return; }
@@ -112,6 +114,18 @@ export default function Nav() {
             <Link href="/faq" style={{ fontSize: 12, color: "#666", textDecoration: "none" }} className="nav-desktop">
               FAQ
             </Link>
+            <button
+              onClick={toggleTheme}
+              className="nav-desktop"
+              title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              style={{
+                background: "none", border: "1px solid #1f1f1f", borderRadius: 6,
+                padding: "5px 9px", cursor: "pointer", fontSize: 14, lineHeight: 1,
+                color: "#555",
+              }}
+            >
+              {theme === "dark" ? "☀" : "🌙"}
+            </button>
             {user ? (
               <div style={{ display: "flex", alignItems: "center", gap: 8 }} className="nav-desktop">
                 <span style={{ fontSize: 11, color: "#555", maxWidth: 120, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>

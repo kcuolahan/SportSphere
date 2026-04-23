@@ -4,17 +4,47 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
-:root {
+/* ── Theme variables ────────────────────────────────────────────────────────── */
+:root,
+:root[data-theme="dark"] {
+  --bg-primary: #000000;
+  --bg-secondary: #080808;
+  --bg-card: #0a0a0a;
+  --bg-card-hover: #0d0d0d;
+  --text-primary: #f0f0f0;
+  --text-secondary: #aaaaaa;
+  --text-muted: #666666;
+  --border-color: #111111;
+  --border-subtle: #1a1a1a;
+  --accent: #f97316;
+  --card-shadow: none;
   --background: #000000;
   --foreground: #f0f0f0;
 }
 
+:root[data-theme="light"] {
+  --bg-primary: #f7f7f5;
+  --bg-secondary: #eeeeec;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f5f5f3;
+  --text-primary: #111111;
+  --text-secondary: #444444;
+  --text-muted: #777777;
+  --border-color: #e0e0e0;
+  --border-subtle: #d0d0d0;
+  --accent: #f97316;
+  --card-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  --background: #f7f7f5;
+  --foreground: #111111;
+}
+
 body {
-  background: #000;
-  color: #f0f0f0;
+  background: var(--bg-primary);
+  color: var(--text-primary);
   font-family: system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 /* ── Global animations ──────────────────────────────────────────────────────── */
@@ -54,6 +84,43 @@ body {
   from { stroke-dashoffset: 226; }
 }
 
+/* ── Light mode page/card background overrides ──────────────────────────────── */
+[data-theme="light"] body,
+[data-theme="light"] .page-root {
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+/* ── Typography scale ────────────────────────────────────────────────────────── */
+.text-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.text-stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.text-player-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* ── Pick card hover effect ──────────────────────────────────────────────────── */
+.pick-card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  cursor: pointer;
+}
+.pick-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+
 /* ── HC badge pulse utility ─────────────────────────────────────────────────── */
 .badge-hc {
   animation: hcPulse 2.5s ease-in-out infinite;
@@ -61,7 +128,7 @@ body {
 
 /* ── Ticker track ───────────────────────────────────────────────────────────── */
 .ticker-track {
-  animation: ticker 40s linear infinite;
+  animation: ticker 48s linear infinite;
 }
 .ticker-track:hover {
   animation-play-state: paused;
@@ -121,6 +188,26 @@ body {
 @media (min-width: 701px) {
   .nav-desktop { display: flex !important; }
   .nav-mobile  { display: none !important; }
+}
+
+/* ── Mobile bottom navigation ───────────────────────────────────────────────── */
+.mobile-bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 200;
+  background: rgba(8, 8, 8, 0.96);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid #111;
+  height: 60px;
+  padding: 0 8px;
+  justify-content: space-around;
+  align-items: center;
+}
+@media (max-width: 700px) {
+  .mobile-bottom-nav { display: flex !important; }
+  /* Push page content above bottom nav */
+  body { padding-bottom: 60px; }
 }
 
 /* ── Accessibility ──────────────────────────────────────────────────────────── */

@@ -84,58 +84,41 @@ function PlayerDetail({ p }: { p: Player }) {
   const pick = predictions.picks.find(pk => pk.player === p.name);
   const slug = NAME_TO_SLUG.get(p.name);
 
-  // Median line edge analysis
   const median = p.median_disposals ?? p.avg_2026;
-  const pickLine = pick?.bookie_line;
-  const medianEdge = pickLine != null
-    ? pickLine > median ? "UNDER" : "OVER"
-    : null;
-  const medianDiff = pickLine != null ? Math.abs(pickLine - median).toFixed(1) : null;
+  const gamesAboveMedian = p.games_above_median ?? Math.round((p.over_rate ?? 0) * p.games_2026);
+  const aboveMedianPct = p.games_2026 > 0 ? Math.round(gamesAboveMedian / p.games_2026 * 100) : 0;
 
-  // Over rate label
-  const overRate = p.over_rate;
-  const overRatePct = overRate != null ? Math.round(overRate * 100) : null;
   const last5 = p.last_5 ?? [];
 
   return (
     <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid #111" }}>
 
-      {/* Median line insight — most prominent */}
+      {/* Disposal stats — median, range, above-median rate */}
       <div style={{
         background: "#0a0a0a", border: "1px solid #1f1f1f",
         borderRadius: 8, padding: "12px 14px", marginBottom: 12,
         display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12,
       }}>
         <div>
-          <div style={{ fontSize: 9, color: "#666", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Median Line</div>
+          <div style={{ fontSize: 9, color: "#aaa", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Median</div>
           <div style={{ fontSize: 20, fontWeight: 800, color: "#f0f0f0", lineHeight: 1 }}>{median.toFixed(1)}</div>
-          {pickLine != null && (
-            <div style={{ fontSize: 10, color: medianEdge === "UNDER" ? "#ef4444" : "#22c55e", marginTop: 3 }}>
-              Bookie {pickLine} → structural <strong>{medianEdge}</strong> edge ({medianDiff} away)
-            </div>
-          )}
+          <div style={{ fontSize: 10, color: "#666", marginTop: 3 }}>disp from {p.games_2026} games</div>
         </div>
         <div>
-          <div style={{ fontSize: 9, color: "#666", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Season Range</div>
-          <div style={{ fontSize: 13, fontWeight: 700, color: "#888" }}>
+          <div style={{ fontSize: 9, color: "#aaa", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Season Range</div>
+          <div style={{ fontSize: 14, fontWeight: 700 }}>
             <span style={{ color: "#ef4444" }}>{p.season_low ?? "—"}</span>
-            {" — "}
+            <span style={{ color: "#555", margin: "0 4px" }}>—</span>
             <span style={{ color: "#22c55e" }}>{p.season_high ?? "—"}</span>
           </div>
-          <div style={{ fontSize: 10, color: "#555", marginTop: 2 }}>Low — High ({p.games_2026}g)</div>
+          <div style={{ fontSize: 10, color: "#666", marginTop: 2 }}>Low — High this season</div>
         </div>
         <div>
-          <div style={{ fontSize: 9, color: "#666", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Over Avg Rate</div>
-          {overRatePct != null ? (
-            <>
-              <div style={{ fontSize: 20, fontWeight: 800, color: overRatePct >= 55 ? "#22c55e" : overRatePct >= 45 ? "#f97316" : "#ef4444", lineHeight: 1 }}>
-                {overRatePct}%
-              </div>
-              <div style={{ fontSize: 10, color: "#555", marginTop: 2 }}>games over season avg</div>
-            </>
-          ) : (
-            <div style={{ fontSize: 13, color: "#555" }}>—</div>
-          )}
+          <div style={{ fontSize: 9, color: "#aaa", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Above Median</div>
+          <div style={{ fontSize: 20, fontWeight: 800, color: aboveMedianPct >= 55 ? "#22c55e" : aboveMedianPct >= 45 ? "#f97316" : "#ef4444", lineHeight: 1 }}>
+            {aboveMedianPct}%
+          </div>
+          <div style={{ fontSize: 10, color: "#666", marginTop: 2 }}>{gamesAboveMedian}/{p.games_2026} games</div>
         </div>
       </div>
 

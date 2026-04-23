@@ -6,9 +6,9 @@ import Footer from "@/components/Footer";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { SignalBadge, ConfidenceBadge } from "@/components/ui/Badge";
 import { getCurrentPredictions, getAllResults, getTeamConcession } from "@/lib/data";
-import type { Pick, TeamNewsEntry, SuppressionScore } from "@/lib/data";
+import type { Pick, TeamNewsEntry, SuppressionScore, Fixture } from "@/lib/data";
 
-const { round, season, generated_at, team_news = [], verified_at } = getCurrentPredictions();
+const { round, season, generated_at, team_news = [], verified_at, fixtures = [] } = getCurrentPredictions();
 const picks = [...getCurrentPredictions().picks].sort((a, b) => b.edge_vol - a.edge_vol);
 
 // Look up results for the current round (if complete)
@@ -33,7 +33,31 @@ const VENUE_PERF: Record<string, number> = {
 };
 
 type FilterType = "ALL" | "ACTIONABLE" | "SHARP" | "HC";
-type ViewType = "CARD" | "TABLE";
+type ViewType = "CARD" | "TABLE" | "GAME";
+
+// ── Game grouping helpers ─────────────────────────────────────────────────────
+function gameKey(teamA: string, teamB: string) {
+  return [teamA, teamB].sort().join("_");
+}
+
+function findFixture(pick: Pick, fixtureList: Fixture[]): Fixture | null {
+  return fixtureList.find(f =>
+    (f.home === pick.team && f.away === pick.opponent) ||
+    (f.away === pick.team && f.home === pick.opponent)
+  ) ?? null;
+}
+
+const DAY_ORDER: Record<string, number> = { Friday: 0, Saturday: 1, Sunday: 2, Monday: 3 };
+
+function fixtureSort(a: Fixture, b: Fixture) {
+  const dayDiff = (DAY_ORDER[a.day] ?? 9) - (DAY_ORDER[b.day] ?? 9);
+  if (dayDiff !== 0) return dayDiff;
+  return a.time.localeCompare(b.time);
+}
+
+function calcCombinedOdds(count: number, single = 1.87): number {
+  return Math.round(Math.pow(single, count) * 100) / 100;
+}
 
 function Tooltip({ text }: { text: string }) {
   const [show, setShow] = useState(false);
@@ -269,6 +293,27 @@ export default function PredictionsPage() {
   const [expanded, setExpanded] = useState<string | null>(null);
   const [verifiedAgeWarn, setVerifiedAgeWarn] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
+  const [multiSelected, setMultiSelected] = useState<string[]>([]);
+  const [multiCopied, setMultiCopied] = useState(false);
+
+  function toggleMulti(player: string) {
+    setMultiSelected(prev =>
+      prev.includes(player) ? prev.filter(p => p !== player) : [...prev, player]
+    );
+  }
+
+  function copyMulti() {
+    const lines = multiSelected.map(name => {
+      const p = picks.find(pk => pk.player === name);
+      return p ? `${name} ${p.direction} ${p.bookie_line}` : name;
+    });
+    const odds = calcCombinedOdds(multiSelected.length);
+    const text = `${lines.join(" + ")} = $${odds}\n(${multiSelected.length}-leg multi @ $1.87 each)`;
+    navigator.clipboard.writeText(text).then(() => {
+      setMultiCopied(true);
+      setTimeout(() => setMultiCopied(false), 2000);
+    });
+  }
 
   useEffect(() => {
     if (verified_at) {
@@ -318,6 +363,13 @@ export default function PredictionsPage() {
   return (
     <div style={{ minHeight: "100vh", background: "#000", color: "#f0f0f0", fontFamily: "system-ui, -apple-system, sans-serif" }}>
       <Nav />
+
+      {/* Gradient header band */}
+      <div style={{
+        position: "fixed", top: 60, left: 0, right: 0, height: 120, zIndex: 0,
+        background: "linear-gradient(180deg, #1a0a00 0%, #000000 100%)",
+        pointerEvents: "none",
+      }} />
 
       <div style={{ maxWidth: 920, margin: "0 auto", padding: "84px 20px 60px" }}>
         <RoundCompleteBanner />
@@ -486,15 +538,15 @@ export default function PredictionsPage() {
             }}>
               {shareCopied ? "✓ Copied" : "Share"}
             </button>
-            {(["CARD", "TABLE"] as ViewType[]).map(v => (
-              <button key={v} onClick={() => setView(v)} style={{
+            {(["CARD", "TABLE", "GAME"] as ViewType[]).map(v => (
+              <button key={v} onClick={() => { setView(v); if (v !== "GAME") setMultiSelected([]); }} style={{
                 padding: "6px 12px", borderRadius: 6,
                 border: view === v ? "1px solid #f97316" : "1px solid #111",
                 background: view === v ? "#f9731615" : "#0a0a0a",
                 color: view === v ? "#f97316" : "#666",
                 fontSize: 10, fontWeight: 700, cursor: "pointer",
                 letterSpacing: "0.06em", textTransform: "uppercase",
-              }}>{v}</button>
+              }}>{v === "GAME" ? "BY GAME" : v}</button>
             ))}
           </div>
         </div>
@@ -560,9 +612,146 @@ export default function PredictionsPage() {
           </div>
         )}
 
+        {/* BY GAME VIEW */}
+        {view === "GAME" && (() => {
+          // Group filtered picks by game key
+          const groups: Record<string, { fixture: Fixture | null; picks: Pick[] }> = {};
+          for (const p of filtered) {
+            const key = gameKey(p.team, p.opponent);
+            if (!groups[key]) {
+              groups[key] = { fixture: findFixture(p, fixtures as Fixture[]), picks: [] };
+            }
+            groups[key].picks.push(p);
+          }
+          const sortedGroups = Object.entries(groups).sort(([, a], [, b]) => {
+            if (a.fixture && b.fixture) return fixtureSort(a.fixture, b.fixture);
+            if (a.fixture) return -1;
+            if (b.fixture) return 1;
+            return 0;
+          });
+
+          if (sortedGroups.length === 0) return (
+            <div style={{ textAlign: "center", padding: "48px 0" }}>
+              <div style={{ fontSize: 14, color: "#555", marginBottom: 12 }}>No picks match this filter.</div>
+              <button onClick={() => setFilter("ALL")} style={{ fontSize: 12, color: "#f97316", background: "none", border: "1px solid #f9731640", borderRadius: 6, padding: "6px 16px", cursor: "pointer" }}>
+                Clear filter →
+              </button>
+            </div>
+          );
+
+          return (
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              {sortedGroups.map(([key, group]) => {
+                const { fixture, picks: gPicks } = group;
+                const gamePicks_sorted = [...gPicks].sort((a, b) => b.edge_vol - a.edge_vol);
+                const homeTeam = fixture?.home ?? gPicks[0].team;
+                const awayTeam = fixture?.away ?? gPicks[0].opponent;
+                const gameMultiSelected = multiSelected.filter(n => gPicks.some(p => p.player === n));
+
+                return (
+                  <div key={key} style={{ background: "#080808", border: "1px solid #111", borderRadius: 12, overflow: "hidden" }}>
+                    {/* Game header */}
+                    <div style={{ padding: "12px 16px", borderBottom: "1px solid #111", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+                      <div>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: "#f0f0f0" }}>
+                          {homeTeam} vs {awayTeam}
+                        </div>
+                        {fixture && (
+                          <div style={{ fontSize: 11, color: "#666", marginTop: 2 }}>
+                            {fixture.venue} · {fixture.day} {fixture.time}
+                          </div>
+                        )}
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <span style={{ fontSize: 10, color: "#555" }}>{gPicks.length} pick{gPicks.length !== 1 ? "s" : ""}</span>
+                        <button
+                          onClick={() => {
+                            const allInGame = gPicks.map(p => p.player);
+                            const allSelected = allInGame.every(n => multiSelected.includes(n));
+                            if (allSelected) {
+                              setMultiSelected(prev => prev.filter(n => !allInGame.includes(n)));
+                            } else {
+                              setMultiSelected(prev => [...new Set([...prev, ...allInGame])]);
+                            }
+                          }}
+                          style={{
+                            fontSize: 10, fontWeight: 700, cursor: "pointer",
+                            background: gameMultiSelected.length > 0 ? "#f9731620" : "#0a0a0a",
+                            border: gameMultiSelected.length > 0 ? "1px solid #f9731640" : "1px solid #1a1a1a",
+                            borderRadius: 5, padding: "4px 10px",
+                            color: gameMultiSelected.length > 0 ? "#f97316" : "#555",
+                          }}
+                        >
+                          {gameMultiSelected.length > 0 ? `Multi (${gameMultiSelected.length})` : "Multi Builder"}
+                        </button>
+                      </div>
+                    </div>
+                    {/* Picks list for this game */}
+                    <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+                      {gamePicks_sorted.map((pred, idx) => {
+                        const isSelected = multiSelected.includes(pred.player);
+                        const isHCp = isHCPick(pred);
+                        return (
+                          <div key={pred.player} style={{
+                            padding: "12px 16px",
+                            borderBottom: idx < gamePicks_sorted.length - 1 ? "1px solid #0d0d0d" : "none",
+                            background: isSelected ? "rgba(249,115,22,0.06)" : isHCp ? "rgba(249,115,22,0.03)" : "transparent",
+                            display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap",
+                            cursor: "pointer",
+                          }}
+                            onClick={() => toggleMulti(pred.player)}
+                          >
+                            {/* Checkbox */}
+                            <div style={{
+                              width: 18, height: 18, borderRadius: 4, flexShrink: 0,
+                              border: isSelected ? "2px solid #f97316" : "2px solid #333",
+                              background: isSelected ? "#f97316" : "transparent",
+                              display: "flex", alignItems: "center", justifyContent: "center",
+                            }}>
+                              {isSelected && <span style={{ color: "#000", fontSize: 11, fontWeight: 800 }}>✓</span>}
+                            </div>
+                            <PlayerAvatar name={pred.player} team={pred.team} size={36} />
+                            <div style={{ flex: 1, minWidth: 120 }}>
+                              <div style={{ fontSize: 14, fontWeight: 700, color: "#f0f0f0" }}>{pred.player}</div>
+                              <div style={{ fontSize: 11, color: "#666" }}>{pred.position} · {pred.team}</div>
+                            </div>
+                            <div style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
+                              <div style={{ textAlign: "center" }}>
+                                <div style={{ fontSize: 10, color: "#555", textTransform: "uppercase" }}>Line</div>
+                                <div style={{ fontSize: 16, fontWeight: 700, color: "#f0f0f0" }}>{pred.bookie_line}</div>
+                              </div>
+                              <div style={{ textAlign: "center" }}>
+                                <div style={{ fontSize: 10, color: "#555", textTransform: "uppercase" }}>E/V</div>
+                                <div style={{ fontSize: 16, fontWeight: 700, color: "#60a5fa" }}>{pred.edge_vol.toFixed(2)}</div>
+                              </div>
+                              <div style={{ fontSize: 13, fontWeight: 800, color: pred.direction === "OVER" ? "#22c55e" : "#ef4444" }}>
+                                {pred.direction} {pred.direction === "OVER" ? "⬆" : "⬇"}
+                              </div>
+                              {isHCp && <span style={{ fontSize: 9, fontWeight: 800, color: "#000", background: "#f97316", borderRadius: 3, padding: "2px 6px" }}>HC</span>}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })()}
+
         {/* CARD VIEW */}
+        {view === "CARD" && filtered.length === 0 && (
+          <div style={{ textAlign: "center", padding: "48px 0" }}>
+            <div style={{ fontSize: 14, color: "#555", marginBottom: 12 }}>No picks match this filter.</div>
+            <button onClick={() => setFilter("ALL")} style={{ fontSize: 12, color: "#f97316", background: "none", border: "1px solid #f9731640", borderRadius: 6, padding: "6px 16px", cursor: "pointer" }}>
+              Clear filter →
+            </button>
+          </div>
+        )}
+
         {view === "CARD" && (
-          <div className="picks-card-view" style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <div className="picks-card-view" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {filtered.map((pred: Pick) => {
               const isHC = isHCPick(pred);
               const isBet = pred.enhanced_signal === "BET";
@@ -573,11 +762,13 @@ export default function PredictionsPage() {
                 <div
                   key={pred.player}
                   onClick={() => setExpanded(isExpanded ? null : pred.player)}
+                  className="pick-card"
                   style={{
-                    background: isHC ? "#0d0800" : "#080808",
-                    border: isHC ? "1px solid #f9731630" : "1px solid #111",
+                    background: isHC ? "rgba(249,115,22,0.05)" : "#080808",
+                    border: isHC ? "1px solid rgba(249,115,22,0.20)" : "1px solid #111",
+                    backdropFilter: isHC ? "blur(10px)" : "none",
                     borderRadius: 10,
-                    padding: "14px 16px",
+                    padding: "16px 20px",
                     cursor: "pointer",
                     position: "relative",
                     overflow: "hidden",
@@ -590,11 +781,11 @@ export default function PredictionsPage() {
 
                     {/* Player info */}
                     <div style={{ flex: 1, minWidth: 120 }}>
-                      <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 2 }}>{pred.player}</div>
-                      <div style={{ fontSize: 12, color: "#888", marginBottom: 1 }}>
+                      <div style={{ fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 2 }}>{pred.player}</div>
+                      <div style={{ fontSize: 12, color: "#aaa", marginBottom: 1 }}>
                         {pred.team} vs {pred.opponent}
                       </div>
-                      <div style={{ fontSize: 11, color: "#666" }}>
+                      <div style={{ fontSize: 11, color: "#888" }}>
                         {pred.venue} · {pred.position}
                       </div>
                       {(team_news as TeamNewsEntry[]).some(n => n.affects_players.includes(pred.player)) && (
@@ -626,25 +817,25 @@ export default function PredictionsPage() {
                     {/* Numbers */}
                     <div style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
                       <div style={{ textAlign: "center" }}>
-                        <div style={{ fontSize: 10, color: "#555", textTransform: "uppercase" }}>Line</div>
-                        <div style={{ fontSize: 15, fontWeight: 700, color: "#f0f0f0" }}>{pred.bookie_line}</div>
+                        <div style={{ fontSize: 10, color: "#aaa", textTransform: "uppercase" }}>Line</div>
+                        <div style={{ fontSize: 18, fontWeight: 700, color: "#f0f0f0" }}>{pred.bookie_line}</div>
                       </div>
                       <div style={{ textAlign: "center" }}>
-                        <div style={{ fontSize: 10, color: "#555", textTransform: "uppercase" }}>Model</div>
-                        <div style={{ fontSize: 15, fontWeight: 700, color: "#f97316" }}>{pred.predicted}</div>
+                        <div style={{ fontSize: 10, color: "#aaa", textTransform: "uppercase" }}>Model</div>
+                        <div style={{ fontSize: 18, fontWeight: 700, color: "#f97316" }}>{pred.predicted}</div>
                       </div>
                       <div style={{ textAlign: "center" }}>
-                        <div style={{ fontSize: 10, color: "#555", textTransform: "uppercase" }}>Edge</div>
-                        <div style={{ fontSize: 15, fontWeight: 700, color: pred.edge > 0 ? "#22c55e" : "#ef4444" }}>
+                        <div style={{ fontSize: 10, color: "#aaa", textTransform: "uppercase" }}>Edge</div>
+                        <div style={{ fontSize: 18, fontWeight: 700, color: pred.edge > 0 ? "#22c55e" : "#ef4444" }}>
                           {pred.edge > 0 ? "+" : ""}{pred.edge}
                         </div>
                       </div>
                       <div style={{ textAlign: "center" }}>
-                        <div style={{ fontSize: 10, color: "#555", textTransform: "uppercase" }}>
+                        <div style={{ fontSize: 10, color: "#aaa", textTransform: "uppercase" }}>
                           E/V
                           <Tooltip text="Edge/Vol = Edge ÷ Std Dev. Measures statistical significance. ≥ 0.50 = actionable, ≥ 0.90 = HIGH CONVICTION." />
                         </div>
-                        <div style={{ fontSize: 15, fontWeight: 700, color: "#60a5fa" }}>{pred.edge_vol.toFixed(2)}</div>
+                        <div style={{ fontSize: 18, fontWeight: 700, color: "#60a5fa" }}>{pred.edge_vol.toFixed(2)}</div>
                       </div>
                       {(() => {
                         const score = calcMatchupScore(pred);
@@ -908,6 +1099,64 @@ export default function PredictionsPage() {
           </p>
         </div>
       </div>
+
+      {/* Multi Builder floating tray */}
+      {multiSelected.length > 0 && (
+        <div style={{
+          position: "fixed", bottom: 16, left: "50%", transform: "translateX(-50%)",
+          zIndex: 500, background: "#0d0d0d", border: "1px solid #f9731640",
+          borderRadius: 12, padding: "14px 20px", boxShadow: "0 8px 32px rgba(0,0,0,0.6)",
+          minWidth: 340, maxWidth: "90vw",
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+            <span style={{ fontSize: 11, fontWeight: 700, color: "#f97316", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+              Multi Builder
+            </span>
+            <span style={{ fontSize: 11, color: "#555", marginLeft: "auto" }}>
+              {multiSelected.length} leg{multiSelected.length !== 1 ? "s" : ""} · $1.87 each
+            </span>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 4, marginBottom: 12 }}>
+            {multiSelected.map(name => {
+              const p = picks.find(pk => pk.player === name);
+              return (
+                <div key={name} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "#f0f0f0" }}>
+                  <span style={{ color: p?.direction === "OVER" ? "#22c55e" : "#ef4444", fontWeight: 700 }}>
+                    {p?.direction === "OVER" ? "⬆" : "⬇"}
+                  </span>
+                  <span style={{ flex: 1 }}>{name}</span>
+                  <span style={{ color: "#888" }}>{p?.direction} {p?.bookie_line}</span>
+                  <button onClick={() => toggleMulti(name)} style={{ background: "none", border: "none", color: "#444", cursor: "pointer", fontSize: 13, padding: "0 2px" }}>×</button>
+                </div>
+              );
+            })}
+          </div>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+            <div style={{ fontSize: 14, fontWeight: 800, color: "#f97316" }}>
+              Combined: ${calcCombinedOdds(multiSelected.length)}
+            </div>
+            <div style={{ display: "flex", gap: 6 }}>
+              <button
+                onClick={copyMulti}
+                style={{
+                  fontSize: 11, fontWeight: 700, cursor: "pointer",
+                  background: multiCopied ? "#052e16" : "#f97316",
+                  border: "none", borderRadius: 6, padding: "6px 14px",
+                  color: multiCopied ? "#4ade80" : "#000",
+                }}
+              >
+                {multiCopied ? "✓ Copied" : "Copy to clipboard"}
+              </button>
+              <button
+                onClick={() => setMultiSelected([])}
+                style={{ fontSize: 11, cursor: "pointer", background: "none", border: "1px solid #333", borderRadius: 6, padding: "6px 10px", color: "#555" }}
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>

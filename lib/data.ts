@@ -56,12 +56,21 @@ export interface TeamNewsEntry {
   affects_players: string[]
 }
 
+export interface Fixture {
+  home: string
+  away: string
+  venue: string
+  day: string
+  time: string
+}
+
 export interface PredictionsData {
   round: number
   season: number
   generated_at: string
   verified_at?: string
   team_news?: TeamNewsEntry[]
+  fixtures?: Fixture[]
   picks: Pick[]
 }
 
@@ -150,6 +159,7 @@ export interface Player {
   season_high?: number
   season_low?: number
   over_rate?: number
+  games_above_median?: number
   last_5?: number[]
 }
 
