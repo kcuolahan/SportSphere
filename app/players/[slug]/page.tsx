@@ -439,7 +439,7 @@ export default function PlayerProfilePage() {
         }}>
           <div style={{ display: "flex", gap: 20, alignItems: "flex-start", flexWrap: "wrap" }}>
             {/* Avatar */}
-            <PlayerAvatar name={player.fullName} team={player.team} size={96} imageUrl={player.imageUrl || undefined} />
+            <PlayerAvatar name={player.fullName} team={player.team} size={96} />
 
             {/* Identity */}
             <div style={{ flex: 1, minWidth: 200 }}>

@@ -351,7 +351,7 @@ export default function PredictionsPage() {
     return true;
   });
 
-  const hcCount = picks.filter(isHCPick).length;
+  const hcCount = picks.filter(p => (p.edge_vol ?? 0) >= 0.90).length;
   const betCount = picks.filter((p: Pick) => p.filter_pass).length;
   const overCount = filtered.filter((p: Pick) => p.direction === "OVER").length;
   const underCount = filtered.filter((p: Pick) => p.direction === "UNDER").length;
@@ -740,7 +740,7 @@ export default function PredictionsPage() {
           );
         })()}
 
-        {/* CARD VIEW */}
+        {/* CARD VIEW — grouped by game time */}
         {view === "CARD" && filtered.length === 0 && (
           <div style={{ textAlign: "center", padding: "48px 0" }}>
             <div style={{ fontSize: 14, color: "#555", marginBottom: 12 }}>No picks match this filter.</div>
@@ -750,9 +750,51 @@ export default function PredictionsPage() {
           </div>
         )}
 
-        {view === "CARD" && (
-          <div className="picks-card-view" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            {filtered.map((pred: Pick) => {
+        {view === "CARD" && (() => {
+          // Build game groups sorted by fixture time
+          const gameGroups: Record<string, { fixture: Fixture | null; picks: Pick[] }> = {};
+          for (const p of filtered) {
+            const key = gameKey(p.team, p.opponent);
+            if (!gameGroups[key]) {
+              gameGroups[key] = { fixture: findFixture(p, fixtures as Fixture[]), picks: [] };
+            }
+            gameGroups[key].picks.push(p);
+          }
+          const sortedGameGroups = Object.entries(gameGroups).sort(([, a], [, b]) => {
+            if (a.fixture && b.fixture) return fixtureSort(a.fixture, b.fixture);
+            if (a.fixture) return -1;
+            if (b.fixture) return 1;
+            return 0;
+          });
+
+          return (
+          <div className="picks-card-view" style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+            {sortedGameGroups.map(([key, group]) => {
+              const { fixture, picks: gPicks } = group;
+              const sortedGPicks = [...gPicks].sort((a, b) => b.edge_vol - a.edge_vol);
+
+              const dayAbbr = fixture ? fixture.day.slice(0, 3).toUpperCase() : null;
+              const dividerText = fixture
+                ? `${dayAbbr} ${fixture.time} · ${fixture.home} vs ${fixture.away} · ${fixture.venue}`
+                : `${gPicks[0].team} vs ${gPicks[0].opponent}`;
+
+              return (
+                <div key={key} style={{ marginBottom: 20 }}>
+                  {/* Game divider */}
+                  <div style={{
+                    display: "flex", alignItems: "center", gap: 8,
+                    marginBottom: 10, color: "#444",
+                  }}>
+                    <div style={{ flex: 1, height: 1, background: "#1a1a1a" }} />
+                    <span style={{ fontSize: 10, fontWeight: 600, color: "#555", letterSpacing: "0.06em", whiteSpace: "nowrap" }}>
+                      {dividerText}
+                    </span>
+                    <div style={{ flex: 1, height: 1, background: "#1a1a1a" }} />
+                  </div>
+
+                  {/* Picks for this game */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {sortedGPicks.map((pred: Pick) => {
               const isHC = isHCPick(pred);
               const isBet = pred.enhanced_signal === "BET";
               const isOver = pred.direction === "OVER";
@@ -1090,8 +1132,13 @@ export default function PredictionsPage() {
                 </div>
               );
             })}
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        )}
+          );
+        })()}
 
         <div style={{ marginTop: 24, textAlign: "center" }}>
           <p style={{ fontSize: 11, color: "#555", lineHeight: 1.8 }}>

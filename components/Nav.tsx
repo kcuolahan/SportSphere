@@ -10,15 +10,24 @@ import { useTheme } from "@/lib/theme";
 
 const { round, season } = getCurrentPredictions();
 
-const LINKS = [
+const CENTRE_LINKS = [
   { href: "/predictions", label: "Picks" },
   { href: "/accuracy", label: "Track Record" },
-  { href: "/insights", label: "Insights", isNew: true },
   { href: "/defence", label: "DvP" },
-  { href: "/simulator", label: "Simulator", isPro: true },
   { href: "/players", label: "Players" },
+  { href: "/model", label: "How It Works", hideUnder1280: true },
+];
+
+const RIGHT_LINKS = [
+  { href: "/insights", label: "Insights", hideUnder1280: true },
+  { href: "/simulator", label: "Simulator", isPro: true },
   { href: "/tracker", label: "Tracker" },
-  { href: "/model", label: "How It Works" },
+];
+
+const ALL_LINKS = [
+  ...CENTRE_LINKS,
+  ...RIGHT_LINKS,
+  { href: "/faq", label: "FAQ" },
 ];
 
 export default function Nav() {
@@ -36,6 +45,21 @@ export default function Nav() {
     return () => subscription.unsubscribe();
   }, []);
 
+  const linkStyle = (active: boolean) => ({
+    fontSize: 13,
+    fontWeight: active ? 600 : 400,
+    color: active ? "#f97316" : "#555",
+    textDecoration: "none" as const,
+    padding: "6px 10px",
+    borderRadius: 6,
+    borderBottom: active ? "1px solid #f97316" : "1px solid transparent",
+    transition: "color 0.15s",
+    display: "inline-flex" as const,
+    alignItems: "center" as const,
+    gap: 5,
+    whiteSpace: "nowrap" as const,
+  });
+
   return (
     <>
       <nav style={{
@@ -45,52 +69,55 @@ export default function Nav() {
         background: "rgba(0,0,0,0.92)",
         backdropFilter: "blur(12px)",
         borderBottom: "1px solid #111",
-        padding: "0 24px",
+        padding: "0 20px",
       }}>
         <div style={{
-          maxWidth: 1100,
+          maxWidth: 1200,
           margin: "0 auto",
           height: 60,
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
-          gap: 24,
+          gap: 16,
         }}>
 
-          {/* Logo */}
-          <Link href="/" style={{ textDecoration: "none", flexShrink: 0, display: "flex", alignItems: "center", gap: 8 }}>
-            <img src="/logo.svg" alt="SportSphere HQ" width={32} height={32} />
-            <span style={{ fontSize: 15, fontWeight: 700, letterSpacing: "-0.02em", color: "#f0f0f0", lineHeight: 1 }}>
+          {/* Left — Logo */}
+          <Link href="/" style={{ textDecoration: "none", flexShrink: 0, display: "flex", alignItems: "center", gap: 8, marginRight: 8 }}>
+            <img src="/logo.svg" alt="SportSphere HQ" width={28} height={28} className="logo-image" />
+            <span className="nav-logo-text" style={{ fontSize: 14, fontWeight: 700, letterSpacing: "-0.02em", color: "#f0f0f0", lineHeight: 1, whiteSpace: "nowrap" }}>
               Sport<span style={{ color: "#f97316" }}>Sphere</span> HQ
             </span>
           </Link>
 
-          {/* Desktop nav links */}
-          <div style={{ display: "flex", alignItems: "center", gap: 4, flex: 1 }} className="nav-desktop">
-            {LINKS.map(link => {
+          {/* Centre — Main nav links */}
+          <div className="nav-centre" style={{ display: "flex", alignItems: "center", gap: 2, flex: 1, justifyContent: "center" }}>
+            {CENTRE_LINKS.map(link => {
               const active = pathname === link.href;
               return (
-                <Link key={link.href} href={link.href} style={{
-                  fontSize: 13,
-                  fontWeight: active ? 600 : 400,
-                  color: active ? "#f97316" : "#555",
-                  textDecoration: "none",
-                  padding: "6px 12px",
-                  borderRadius: 6,
-                  borderBottom: active ? "1px solid #f97316" : "1px solid transparent",
-                  transition: "color 0.15s",
-                  display: "inline-flex", alignItems: "center", gap: 5,
-                }}>
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={link.hideUnder1280 ? "nav-hide-1280" : undefined}
+                  style={linkStyle(active)}
+                >
                   {link.label}
-                  {(link as { isNew?: boolean }).isNew && (
-                    <span style={{
-                      fontSize: 8, fontWeight: 800, color: "#000",
-                      background: "#f97316", borderRadius: 3,
-                      padding: "1px 4px", letterSpacing: "0.04em",
-                      lineHeight: 1.5,
-                    }}>NEW</span>
-                  )}
-                  {(link as { isPro?: boolean }).isPro && (
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* Right — Secondary links + controls */}
+          <div className="nav-right" style={{ display: "flex", alignItems: "center", gap: 4, flexShrink: 0 }}>
+            {RIGHT_LINKS.map(link => {
+              const active = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={link.hideUnder1280 ? "nav-hide-1280" : undefined}
+                  style={linkStyle(active)}
+                >
+                  {link.label}
+                  {link.isPro && (
                     <span style={{
                       fontSize: 8, fontWeight: 800, color: "#f97316",
                       background: "#f9731618", border: "1px solid #f9731640",
@@ -101,34 +128,34 @@ export default function Nav() {
                 </Link>
               );
             })}
-          </div>
 
-          {/* Right side */}
-          <div style={{ display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 6 }} className="nav-desktop">
+            <div style={{ width: 1, height: 16, background: "#1f1f1f", margin: "0 4px" }} />
+
+            {/* Round indicator */}
+            <div style={{ display: "flex", alignItems: "center", gap: 5 }} className="nav-hide-1024">
               <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e" }} />
-              <span style={{ fontSize: 11, color: "#777", letterSpacing: "0.04em" }}>
-                Round {round} · {season}
+              <span style={{ fontSize: 10, color: "#666", letterSpacing: "0.04em", whiteSpace: "nowrap" }}>
+                R{round} · {season}
               </span>
             </div>
-            <Link href="/faq" style={{ fontSize: 12, color: "#666", textDecoration: "none" }} className="nav-desktop">
-              FAQ
-            </Link>
+
+            {/* Theme toggle */}
             <button
               onClick={toggleTheme}
-              className="nav-desktop"
               title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
               style={{
                 background: "none", border: "1px solid #1f1f1f", borderRadius: 6,
-                padding: "5px 9px", cursor: "pointer", fontSize: 14, lineHeight: 1,
+                padding: "5px 9px", cursor: "pointer", fontSize: 13, lineHeight: 1,
                 color: "#555",
               }}
             >
               {theme === "dark" ? "☀" : "🌙"}
             </button>
+
+            {/* Auth */}
             {user ? (
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }} className="nav-desktop">
-                <span style={{ fontSize: 11, color: "#555", maxWidth: 120, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }} className="nav-hide-1024">
+                <span style={{ fontSize: 11, color: "#555", maxWidth: 100, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                   {user.email?.split("@")[0]}
                 </span>
                 <button
@@ -139,22 +166,22 @@ export default function Nav() {
                 </button>
               </div>
             ) : (
-              <Link href="/login" style={{ fontSize: 12, fontWeight: 600, color: "#f97316", textDecoration: "none", border: "1px solid #f9731640", borderRadius: 6, padding: "5px 12px" }} className="nav-desktop">
+              <Link href="/login" className="nav-hide-1024" style={{ fontSize: 12, fontWeight: 600, color: "#f97316", textDecoration: "none", border: "1px solid #f9731640", borderRadius: 6, padding: "5px 12px", whiteSpace: "nowrap" }}>
                 Sign In
               </Link>
             )}
 
-            {/* Hamburger */}
+            {/* Hamburger — mobile only (≤1024px) */}
             <button
               onClick={() => setMenuOpen(o => !o)}
-              className="nav-mobile"
+              className="nav-hamburger"
               style={{
                 background: "none",
                 border: "1px solid #1f1f1f",
                 borderRadius: 6,
                 padding: "6px 8px",
                 cursor: "pointer",
-                display: "flex",
+                display: "none",
                 flexDirection: "column",
                 gap: 4,
               }}
@@ -194,7 +221,7 @@ export default function Nav() {
               <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e" }} />
               <span style={{ fontSize: 11, color: "#777" }}>Round {round} · {season}</span>
             </div>
-            {LINKS.map(link => {
+            {ALL_LINKS.map(link => {
               const active = pathname === link.href;
               return (
                 <Link
@@ -208,29 +235,49 @@ export default function Nav() {
                     textDecoration: "none",
                     padding: "10px 0",
                     borderBottom: "1px solid #0a0a0a",
+                    display: "flex", alignItems: "center", gap: 6,
                   }}
                 >
                   {link.label}
+                  {(link as { isPro?: boolean }).isPro && (
+                    <span style={{
+                      fontSize: 8, fontWeight: 800, color: "#f97316",
+                      background: "#f9731618", border: "1px solid #f9731640",
+                      borderRadius: 3, padding: "1px 4px",
+                    }}>PRO</span>
+                  )}
                 </Link>
               );
             })}
-            <Link
-              href="/faq"
-              onClick={() => setMenuOpen(false)}
-              style={{ fontSize: 14, color: "#555", textDecoration: "none", padding: "10px 0", marginTop: 8 }}
-            >
-              FAQ
-            </Link>
+            {user ? (
+              <button
+                onClick={() => { signOut(); setMenuOpen(false); }}
+                style={{ fontSize: 13, color: "#555", background: "none", border: "1px solid #1f1f1f", borderRadius: 5, padding: "8px 0", cursor: "pointer", marginTop: 12, textAlign: "left" }}
+              >
+                Sign Out
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                onClick={() => setMenuOpen(false)}
+                style={{ fontSize: 14, color: "#f97316", textDecoration: "none", padding: "10px 0", marginTop: 8, fontWeight: 600 }}
+              >
+                Sign In
+              </Link>
+            )}
           </div>
         </div>
       )}
 
       <style>{`
-        .nav-desktop { display: flex !important; }
-        .nav-mobile { display: none !important; }
-        @media (max-width: 700px) {
-          .nav-desktop { display: none !important; }
-          .nav-mobile { display: flex !important; }
+        @media (max-width: 1280px) {
+          .nav-hide-1280 { display: none !important; }
+        }
+        @media (max-width: 1024px) {
+          .nav-centre { display: none !important; }
+          .nav-right { gap: 8px !important; }
+          .nav-hide-1024 { display: none !important; }
+          .nav-hamburger { display: flex !important; }
         }
       `}</style>
     </>
