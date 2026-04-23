@@ -14,7 +14,7 @@ const LINKS = [
   { href: "/accuracy", label: "Track Record" },
   { href: "/insights", label: "Insights", isNew: true },
   { href: "/defence", label: "DvP" },
-  { href: "/simulator", label: "Simulator", isNew: true },
+  { href: "/simulator", label: "Simulator", isPro: true },
   { href: "/players", label: "Players" },
   { href: "/tracker", label: "Tracker" },
   { href: "/model", label: "How It Works" },
@@ -87,6 +87,14 @@ export default function Nav() {
                       padding: "1px 4px", letterSpacing: "0.04em",
                       lineHeight: 1.5,
                     }}>NEW</span>
+                  )}
+                  {(link as { isPro?: boolean }).isPro && (
+                    <span style={{
+                      fontSize: 8, fontWeight: 800, color: "#f97316",
+                      background: "#f9731618", border: "1px solid #f9731640",
+                      borderRadius: 3, padding: "1px 4px", letterSpacing: "0.04em",
+                      lineHeight: 1.5,
+                    }}>PRO</span>
                   )}
                 </Link>
               );

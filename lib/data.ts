@@ -38,6 +38,14 @@ export interface Pick {
   opp_factor?: number
   team_style_index?: number
   cba_pct?: number
+  suppression_score?: SuppressionScore | null
+}
+
+export interface SuppressionScore {
+  level: 'STRONG' | 'MODERATE' | 'BOOST'
+  pct: number
+  recent_avg: number
+  h2h_avg: number
 }
 
 export interface TeamNewsEntry {

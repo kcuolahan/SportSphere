@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { SignalBadge, ConfidenceBadge } from "@/components/ui/Badge";
 import { getCurrentPredictions, getAllResults, getTeamConcession } from "@/lib/data";
-import type { Pick, TeamNewsEntry } from "@/lib/data";
+import type { Pick, TeamNewsEntry, SuppressionScore } from "@/lib/data";
 
 const { round, season, generated_at, team_news = [], verified_at } = getCurrentPredictions();
 const picks = [...getCurrentPredictions().picks].sort((a, b) => b.edge_vol - a.edge_vol);
@@ -603,6 +603,22 @@ export default function PredictionsPage() {
                           padding: "1px 6px", borderRadius: 3, letterSpacing: "0.05em",
                         }}>⚠ Team news — verify</div>
                       )}
+                      {pred.suppression_score && (() => {
+                        const s = pred.suppression_score as SuppressionScore;
+                        const isBoost = s.level === "BOOST";
+                        return (
+                          <div style={{
+                            display: "inline-block", marginTop: 3, marginLeft: 4,
+                            fontSize: 9, fontWeight: 700,
+                            color: isBoost ? "#4ade80" : s.level === "STRONG" ? "#f87171" : "#fb923c",
+                            background: isBoost ? "rgba(34,197,94,0.1)" : "rgba(239,68,68,0.1)",
+                            border: `1px solid ${isBoost ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)"}`,
+                            padding: "1px 6px", borderRadius: 3, letterSpacing: "0.05em",
+                          }}>
+                            {isBoost ? "BOOSTED" : `SUPPRESSED${s.level === "STRONG" ? " (STRONG)" : ""}`}
+                          </div>
+                        );
+                      })()}
                     </div>
 
                     {/* Numbers */}
@@ -656,6 +672,42 @@ export default function PredictionsPage() {
                       borderTop: "1px solid #111",
                       paddingLeft: isHC ? 8 : 0,
                     }}>
+                      {/* Suppression alert */}
+                      {pred.suppression_score && (pred.suppression_score as SuppressionScore).level !== "BOOST" && (() => {
+                        const s = pred.suppression_score as SuppressionScore;
+                        const isStrong = s.level === "STRONG";
+                        return (
+                          <div style={{
+                            background: isStrong ? "rgba(127,29,29,0.35)" : "rgba(28,10,0,0.4)",
+                            border: `1px solid ${isStrong ? "#7f1d1d" : "#78350f"}`,
+                            borderRadius: 6, padding: "10px 14px", marginBottom: 10,
+                          }}>
+                            <div style={{ fontSize: 12, fontWeight: 700, color: isStrong ? "#f87171" : "#fb923c", marginBottom: 4 }}>
+                              {isStrong ? "STRONG SUPPRESSION ALERT" : "MODERATE SUPPRESSION"} — Historically underperforms this opponent
+                            </div>
+                            <div style={{ fontSize: 11, color: "#888", lineHeight: 1.6 }}>
+                              {pred.player} averages {s.recent_avg} disposals (recent) but only {s.h2h_avg} vs {pred.opponent} ({s.pct.toFixed(1)}% below form). The line of {pred.bookie_line} may be priced off recent form — exercise caution on OVER direction.
+                            </div>
+                          </div>
+                        );
+                      })()}
+                      {pred.suppression_score && (pred.suppression_score as SuppressionScore).level === "BOOST" && (() => {
+                        const s = pred.suppression_score as SuppressionScore;
+                        return (
+                          <div style={{
+                            background: "rgba(5,46,22,0.35)", border: "1px solid #14532d",
+                            borderRadius: 6, padding: "10px 14px", marginBottom: 10,
+                          }}>
+                            <div style={{ fontSize: 12, fontWeight: 700, color: "#4ade80", marginBottom: 4 }}>
+                              BOOST DETECTED — Historically elevated vs this opponent
+                            </div>
+                            <div style={{ fontSize: 11, color: "#888", lineHeight: 1.6 }}>
+                              {pred.player} averages {s.h2h_avg} disposals vs {pred.opponent} — {Math.abs(s.pct).toFixed(1)}% above recent form ({s.recent_avg} avg). Favourable historical matchup.
+                            </div>
+                          </div>
+                        );
+                      })()}
+
                       {/* Opponent factor text */}
                       <div style={{
                         background: "#050505", border: "1px solid #111",

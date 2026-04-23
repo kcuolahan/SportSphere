@@ -7,11 +7,14 @@ import Footer from "@/components/Footer";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 import {
   DEFAULT_WEIGHTS, OPTIMISED_WEIGHTS,
-  simulateAllPicks, calcSimStats, calcOriginalStats,
-  type ModelWeights, type SimulatedPick, type SimStats, type RawHistoricalPick,
+  simulateAllPicks, calcSimStats, calcOriginalStats, simulatePick,
+  type ModelWeights, type SimulatedPick, type SimStats, type RawHistoricalPick, type RawInputs,
 } from "@/lib/model-engine";
 import resultsData from "@/data/results.json";
 import { roundsLabel, currentSeason } from "@/lib/siteData";
+import { getCurrentPredictions } from "@/lib/data";
+import type { Pick as CurrentPick } from "@/lib/data";
+import { useProAccess } from "@/lib/auth";
 
 // ── Synthesise raw_inputs for picks that don't have them ─────────────────────
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -30,7 +33,7 @@ function synthesizeRawInputs(p: any): import("@/lib/model-engine").RawInputs {
     cba_pct: 0.35,
     league_avg_cba: 0.35,
     play_style: "HYBRID",
-    condition: "Dry",
+    condition: p.condition ?? "Dry",
     expected_tog: 0.82,
     rules_boost: 1.02,
     current_round: p.round ?? 3,
@@ -77,6 +80,33 @@ const GRID = {
   play_style_sensitivity:[0.40, 0.50, 0.60, 0.70, 0.80, 0.90],
 };
 const TOTAL_COMBOS = Object.values(GRID).reduce((a, v) => a * v.length, 1);
+
+// ── Current round picks for This Week's Impact ────────────────────────────────
+const CURRENT_PREDICTIONS = getCurrentPredictions();
+const CURRENT_PICKS: CurrentPick[] = CURRENT_PREDICTIONS.picks.filter(p => p.filter_pass);
+
+function buildRawInputsFromCurrentPick(p: CurrentPick): RawInputs {
+  const line = p.bookie_line ?? 20;
+  const predicted = p.predicted ?? line;
+  const edgeVol = p.edge_vol ?? 0;
+  const absEdge = Math.abs(predicted - line);
+  const stdDev = p.std_dev ?? (edgeVol > 0 && absEdge > 0 ? absEdge / edgeVol : 4.5);
+  return {
+    avg_2025: p.avg_2025 ?? predicted,
+    avg_2026: p.avg_2026 ?? predicted,
+    opp_adjustment_factor: p.opp_factor ?? 1.0,
+    tog_rate: 0.82,
+    team_style_index: p.team_style_index ?? 0,
+    cba_pct: p.cba_pct ?? 0.35,
+    league_avg_cba: 0.35,
+    play_style: p.play_style ?? "HYBRID",
+    condition: p.condition ?? "Dry",
+    expected_tog: 0.82,
+    rules_boost: 1.02,
+    current_round: CURRENT_PREDICTIONS.round,
+    std_dev: Math.max(1.0, stdDev),
+  };
+}
 
 // ── Scenario presets ─────────────────────────────────────────────────────────
 const PRESET_DATA_OPTIMISED: ModelWeights = {
@@ -528,6 +558,77 @@ export default function SimulatorPage() {
     });
   }, []);
 
+  const isPro = useProAccess();
+
+  // This Week's Impact — current picks under current vs default weights
+  const thisWeekImpact = useMemo(() => {
+    return CURRENT_PICKS.map(p => {
+      const rawInputs = buildRawInputsFromCurrentPick(p);
+      const live = simulatePick(rawInputs, p.position, p.bookie_line, DEFAULT_WEIGHTS);
+      const sim = simulatePick(rawInputs, p.position, p.bookie_line, weights);
+      return {
+        player: p.player,
+        team: p.team,
+        position: p.position,
+        line: p.bookie_line,
+        livePredicted: live.predicted,
+        simPredicted: sim.predicted,
+        liveSignal: live.signal,
+        simSignal: sim.signal,
+        liveEdgeVol: live.edge_vol,
+        simEdgeVol: sim.edge_vol,
+        change: Math.round((sim.predicted - live.predicted) * 10) / 10,
+        signalChanged: sim.signal !== live.signal,
+      };
+    });
+  }, [weights]);
+
+  // Optimise for current round
+  const runR7Optimisation = useCallback(() => {
+    if (CURRENT_PICKS.length === 0) return;
+    setIsSearching(true);
+    setSearchProgress(0);
+    searchStartWeightsRef.current = { ...pendingWeights };
+
+    const combos: Partial<ModelWeights>[] = [];
+    for (const w25 of GRID.w_2025)
+      for (const opp of GRID.opp_sensitivity)
+        for (const tog of GRID.tog_sensitivity)
+          for (const stop of GRID.stop_multiplier_dry)
+            for (const thr of GRID.strong_threshold_mid)
+              for (const ps of GRID.play_style_sensitivity)
+                combos.push({
+                  w_2025: w25, w_2026: Math.round((1 - w25) * 100) / 100,
+                  opp_sensitivity: opp, tog_sensitivity: tog,
+                  stop_multiplier_dry: stop, strong_threshold_mid: thr,
+                  play_style_sensitivity: ps,
+                });
+
+    const CHUNK = 500;
+    let idx = 0;
+    let bestScore = -1;
+    let bestW: ModelWeights = { ...DEFAULT_WEIGHTS };
+    const snap = searchStartWeightsRef.current;
+
+    function processChunk() {
+      const end = Math.min(idx + CHUNK, combos.length);
+      for (; idx < end; idx++) {
+        const testW: ModelWeights = { ...DEFAULT_WEIGHTS, ...combos[idx] };
+        let score = 0;
+        for (const p of CURRENT_PICKS) {
+          const ri = buildRawInputsFromCurrentPick(p);
+          const result = simulatePick(ri, p.position, p.bookie_line, testW);
+          if (result.edge_vol >= testW.edge_vol_threshold) score += result.edge_vol;
+        }
+        if (score > bestScore) { bestScore = score; bestW = testW; }
+      }
+      setSearchProgress(Math.round(idx / combos.length * 100));
+      if (idx < combos.length) setTimeout(processChunk, 0);
+      else { setIsSearching(false); animateToWeights(bestW, snap); }
+    }
+    setTimeout(processChunk, 0);
+  }, [pendingWeights]);
+
   const w = pendingWeights;
 
   return (
@@ -684,30 +785,50 @@ export default function SimulatorPage() {
                 </button>
 
                 {/* Grid search button / progress */}
-                {isSearching ? (
-                  <div style={{ padding: "7px 12px", background: "#0a0a0a", border: "1px solid #1a1a1a", borderRadius: 6 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                      <span style={{ fontSize: 11, color: "#f97316" }}>Searching... {searchProgress}%</span>
-                      <span style={{ fontSize: 10, color: "#666" }}>
-                        {Math.round(searchProgress / 100 * TOTAL_COMBOS).toLocaleString()} / {TOTAL_COMBOS.toLocaleString()}
-                      </span>
+                <div style={{ position: "relative" }}>
+                  {isSearching ? (
+                    <div style={{ padding: "7px 12px", background: "#0a0a0a", border: "1px solid #1a1a1a", borderRadius: 6 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                        <span style={{ fontSize: 11, color: "#f97316" }}>Searching... {searchProgress}%</span>
+                        <span style={{ fontSize: 10, color: "#666" }}>
+                          {Math.round(searchProgress / 100 * TOTAL_COMBOS).toLocaleString()} / {TOTAL_COMBOS.toLocaleString()}
+                        </span>
+                      </div>
+                      <div style={{ height: 4, background: "#111", borderRadius: 2, overflow: "hidden" }}>
+                        <div style={{
+                          height: "100%", width: `${searchProgress}%`,
+                          background: "linear-gradient(90deg, #f97316, #fb923c)",
+                          borderRadius: 2, transition: "width 0.15s",
+                        }} />
+                      </div>
                     </div>
-                    <div style={{ height: 4, background: "#111", borderRadius: 2, overflow: "hidden" }}>
-                      <div style={{
-                        height: "100%", width: `${searchProgress}%`,
-                        background: "linear-gradient(90deg, #f97316, #fb923c)",
-                        borderRadius: 2, transition: "width 0.15s",
-                      }} />
-                    </div>
-                  </div>
-                ) : (
-                  <button onClick={runGridSearch} style={{
-                    background: "#0a0800", border: "1px solid #f9731640", borderRadius: 6,
-                    padding: "7px 12px", fontSize: 11, color: "#f97316", cursor: "pointer", textAlign: "left",
-                  }}>
-                    ⚡ Run Grid Search ({TOTAL_COMBOS.toLocaleString()} combos)
+                  ) : (
+                    <button onClick={isPro ? runGridSearch : undefined} style={{
+                      width: "100%", background: "#0a0800", border: "1px solid #f9731640", borderRadius: 6,
+                      padding: "7px 12px", fontSize: 11, color: "#f97316", cursor: isPro ? "pointer" : "default", textAlign: "left",
+                    }}>
+                      Run Grid Search ({TOTAL_COMBOS.toLocaleString()} combos)
+                      {!isPro && <span style={{ marginLeft: 6, fontSize: 8, color: "#f97316", background: "#f9731618", border: "1px solid #f9731440", borderRadius: 3, padding: "1px 4px" }}>PRO</span>}
+                    </button>
+                  )}
+                  {!isPro && !isSearching && <div style={{ position: "absolute", inset: 0, borderRadius: 6, backdropFilter: "blur(2px)", background: "rgba(0,0,0,0.4)", cursor: "not-allowed" }} onClick={() => alert("Pro feature — set ss_pro_access=1 in localStorage to enable")} />}
+                </div>
+
+                <div style={{ position: "relative" }}>
+                  <button
+                    onClick={isPro ? runR7Optimisation : () => alert("Pro feature — coming soon")}
+                    disabled={isSearching}
+                    style={{
+                      width: "100%", background: "#0a0800", border: "1px solid #f9731630", borderRadius: 6,
+                      padding: "7px 12px", fontSize: 11, color: "#f97316", cursor: "pointer", textAlign: "left",
+                      opacity: isSearching ? 0.4 : 1,
+                    }}
+                  >
+                    ⚡ Optimise for Round {CURRENT_PREDICTIONS.round}
+                    {!isPro && <span style={{ marginLeft: 6, fontSize: 8, color: "#f97316", background: "#f9731618", border: "1px solid #f9731440", borderRadius: 3, padding: "1px 4px" }}>PRO</span>}
                   </button>
-                )}
+                  {!isPro && <div style={{ position: "absolute", inset: 0, borderRadius: 6, backdropFilter: "blur(2px)", background: "rgba(0,0,0,0.4)", cursor: "not-allowed" }} onClick={() => alert("Pro feature — set ss_pro_access=1 in localStorage to enable")} />}
+                </div>
 
                 <button onClick={exportConfig} disabled={isSearching} style={{
                   background: "#0a0a0a", border: "1px solid #1a1a1a", borderRadius: 6,
@@ -716,12 +837,16 @@ export default function SimulatorPage() {
                 }}>
                   ↓ Export Configuration JSON
                 </button>
-                <button onClick={saveConfig} style={{
-                  background: "#0a0a0a", border: "1px solid #1a1a1a", borderRadius: 6,
-                  padding: "7px 12px", fontSize: 11, color: "#888", cursor: "pointer", textAlign: "left",
-                }}>
-                  💾 Save Config
-                </button>
+                <div style={{ position: "relative" }}>
+                  <button onClick={isPro ? saveConfig : undefined} style={{
+                    width: "100%", background: "#0a0a0a", border: "1px solid #1a1a1a", borderRadius: 6,
+                    padding: "7px 12px", fontSize: 11, color: "#888", cursor: isPro ? "pointer" : "default", textAlign: "left",
+                  }}>
+                    Save Config
+                    {!isPro && <span style={{ marginLeft: 6, fontSize: 8, color: "#f97316", background: "#f9731618", border: "1px solid #f9731440", borderRadius: 3, padding: "1px 4px" }}>PRO</span>}
+                  </button>
+                  {!isPro && <div style={{ position: "absolute", inset: 0, borderRadius: 6, backdropFilter: "blur(2px)", background: "rgba(0,0,0,0.4)", cursor: "not-allowed" }} onClick={() => alert("Pro feature — set ss_pro_access=1 in localStorage to enable")} />}
+                </div>
               </div>
 
               {/* Scenario presets */}
@@ -825,6 +950,81 @@ export default function SimulatorPage() {
             }}>
               <span style={{ color: "#f97316", fontWeight: 700 }}>Insight: </span>
               {insight}
+            </div>
+
+            {/* This Week's Impact */}
+            <div style={{ position: "relative", background: "#080808", border: "1px solid #111", borderRadius: 12, marginBottom: 16, overflow: "hidden" }}>
+              <div style={{ padding: "10px 14px", borderBottom: "1px solid #111", display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ fontSize: 10, fontWeight: 700, color: "#555", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                  This Week&apos;s Impact — Round {CURRENT_PREDICTIONS.round}
+                </span>
+                {!isPro && <span style={{ fontSize: 8, fontWeight: 800, color: "#f97316", background: "#f9731618", border: "1px solid #f9731440", borderRadius: 3, padding: "1px 5px", marginLeft: "auto" }}>PRO</span>}
+                {isPro && <span style={{ fontSize: 9, color: "#555", marginLeft: "auto" }}>{CURRENT_PICKS.length} picks</span>}
+              </div>
+              {isPro ? (
+                thisWeekImpact.length === 0 ? (
+                  <div style={{ padding: "16px 14px", fontSize: 12, color: "#555", textAlign: "center" }}>
+                    No current picks found. Run the full pipeline first.
+                  </div>
+                ) : (
+                  <>
+                    <div style={{
+                      display: "grid", gridTemplateColumns: "1.4fr 50px 70px 70px 60px 80px",
+                      gap: 4, padding: "8px 14px", borderBottom: "1px solid #111",
+                    }}>
+                      {["Player", "Line", "Live Model", "Simulated", "Change", "Signal"].map(h => (
+                        <span key={h} style={{ fontSize: 9, color: "#555", textTransform: "uppercase", letterSpacing: "0.05em" }}>{h}</span>
+                      ))}
+                    </div>
+                    {thisWeekImpact.map((p, i) => (
+                      <div key={i} style={{
+                        display: "grid", gridTemplateColumns: "1.4fr 50px 70px 70px 60px 80px",
+                        gap: 4, padding: "9px 14px", borderBottom: "1px solid #0a0a0a", alignItems: "center",
+                        background: p.signalChanged ? "rgba(249,115,22,0.05)" : "transparent",
+                      }}>
+                        <div>
+                          <div style={{ fontSize: 11, color: "#e0e0e0", fontWeight: 600 }}>{p.player}</div>
+                          <div style={{ fontSize: 9, color: "#555" }}>{p.position}</div>
+                        </div>
+                        <span style={{ fontSize: 11, color: "#555" }}>{p.line}</span>
+                        <span style={{ fontSize: 12, fontWeight: 600, color: "#888" }}>{p.livePredicted.toFixed(1)}</span>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: "#f97316" }}>{p.simPredicted.toFixed(1)}</span>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: p.change > 0 ? "#22c55e" : p.change < 0 ? "#ef4444" : "#555" }}>
+                          {p.change > 0 ? "+" : ""}{p.change}
+                        </span>
+                        <div>
+                          <span style={{ fontSize: 10, color: p.simSignal === "OVER" ? "#22c55e" : "#ef4444", fontWeight: 700 }}>
+                            {p.simSignal}
+                          </span>
+                          {p.signalChanged && (
+                            <span style={{ fontSize: 9, color: "#f97316", marginLeft: 4 }}>(!)</span>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                    <div style={{ padding: "8px 14px", fontSize: 9, color: "#555" }}>
+                      Signal changes (!) indicate your weights flip the OVER/UNDER direction vs the live model.
+                    </div>
+                  </>
+                )
+              ) : (
+                <div style={{ padding: "24px 14px", textAlign: "center" }}>
+                  <div style={{ fontSize: 12, color: "#555", marginBottom: 8 }}>See how current weights affect Round {CURRENT_PREDICTIONS.round} picks in real time.</div>
+                  <div style={{ fontSize: 11, color: "#444" }}>Pro feature — coming soon</div>
+                </div>
+              )}
+              {!isPro && (
+                <div style={{
+                  position: "absolute", inset: 0, backdropFilter: "blur(4px)",
+                  background: "rgba(0,0,0,0.55)", display: "flex", alignItems: "center", justifyContent: "center",
+                  cursor: "default",
+                }}>
+                  <div style={{ textAlign: "center" }}>
+                    <div style={{ fontSize: 12, fontWeight: 800, color: "#f97316", marginBottom: 4 }}>PRO FEATURE</div>
+                    <div style={{ fontSize: 10, color: "#666" }}>Live round impact analysis coming soon</div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Prediction Bias */}

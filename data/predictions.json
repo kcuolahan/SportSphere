@@ -64,7 +64,13 @@
       ],
       "h2h_avg": 18.0,
       "h2h_sample": 4,
-      "h2h_vs_line": "UNDER"
+      "h2h_vs_line": "UNDER",
+      "suppression_score": {
+        "level": "STRONG",
+        "pct": 44.4,
+        "recent_avg": 32.4,
+        "h2h_avg": 18.0
+      }
     },
     {
       "player": "Callum Wilkie",
@@ -118,7 +124,13 @@
       ],
       "h2h_avg": 20.0,
       "h2h_sample": 3,
-      "h2h_vs_line": "UNDER"
+      "h2h_vs_line": "UNDER",
+      "suppression_score": {
+        "level": "MODERATE",
+        "pct": 22.5,
+        "recent_avg": 25.8,
+        "h2h_avg": 20.0
+      }
     },
     {
       "player": "Nick Daicos",
@@ -172,7 +184,8 @@
       ],
       "h2h_avg": 29.7,
       "h2h_sample": 3,
-      "h2h_vs_line": "UNDER"
+      "h2h_vs_line": "UNDER",
+      "suppression_score": null
     },
     {
       "player": "Brodie Grundy",
@@ -226,7 +239,13 @@
       ],
       "h2h_avg": 17.7,
       "h2h_sample": 3,
-      "h2h_vs_line": "UNDER"
+      "h2h_vs_line": "UNDER",
+      "suppression_score": {
+        "level": "MODERATE",
+        "pct": 27.5,
+        "recent_avg": 24.4,
+        "h2h_avg": 17.7
+      }
     },
     {
       "player": "Patrick Dangerfield",
@@ -280,7 +299,8 @@
       ],
       "h2h_avg": 15.3,
       "h2h_sample": 3,
-      "h2h_vs_line": "UNDER"
+      "h2h_vs_line": "UNDER",
+      "suppression_score": null
     },
     {
       "player": "Luke Jackson",
@@ -327,7 +347,13 @@
       ],
       "h2h_avg": 24.0,
       "h2h_sample": 2,
-      "h2h_vs_line": "OVER"
+      "h2h_vs_line": "OVER",
+      "suppression_score": {
+        "level": "BOOST",
+        "pct": -23.7,
+        "recent_avg": 19.4,
+        "h2h_avg": 24.0
+      }
     },
     {
       "player": "Josh Daicos",
@@ -381,7 +407,8 @@
       ],
       "h2h_avg": 24.0,
       "h2h_sample": 3,
-      "h2h_vs_line": "UNDER"
+      "h2h_vs_line": "UNDER",
+      "suppression_score": null
     },
     {
       "player": "Miles Bergman",
@@ -435,7 +462,13 @@
       ],
       "h2h_avg": 16.3,
       "h2h_sample": 3,
-      "h2h_vs_line": "UNDER"
+      "h2h_vs_line": "UNDER",
+      "suppression_score": {
+        "level": "BOOST",
+        "pct": -25.4,
+        "recent_avg": 13.0,
+        "h2h_avg": 16.3
+      }
     },
     {
       "player": "Max Gawn",
@@ -482,7 +515,8 @@
       ],
       "h2h_avg": 24.0,
       "h2h_sample": 2,
-      "h2h_vs_line": "PUSH"
+      "h2h_vs_line": "PUSH",
+      "suppression_score": null
     },
     {
       "player": "Brayden Maynard",
@@ -536,7 +570,8 @@
       ],
       "h2h_avg": 17.7,
       "h2h_sample": 3,
-      "h2h_vs_line": "PUSH"
+      "h2h_vs_line": "PUSH",
+      "suppression_score": null
     },
     {
       "player": "James Peatling",
@@ -597,7 +632,8 @@
       ],
       "h2h_avg": 17.0,
       "h2h_sample": 4,
-      "h2h_vs_line": "UNDER"
+      "h2h_vs_line": "UNDER",
+      "suppression_score": null
     },
     {
       "player": "Willem Drew",
@@ -658,7 +694,13 @@
       ],
       "h2h_avg": 23.0,
       "h2h_sample": 4,
-      "h2h_vs_line": "OVER"
+      "h2h_vs_line": "OVER",
+      "suppression_score": {
+        "level": "BOOST",
+        "pct": -27.8,
+        "recent_avg": 18.0,
+        "h2h_avg": 23.0
+      }
     },
     {
       "player": "James Worpel",
@@ -719,7 +761,8 @@
       ],
       "h2h_avg": 21.5,
       "h2h_sample": 4,
-      "h2h_vs_line": "OVER"
+      "h2h_vs_line": "OVER",
+      "suppression_score": null
     },
     {
       "player": "Caleb Daniel",
@@ -773,7 +816,13 @@
       ],
       "h2h_avg": 16.0,
       "h2h_sample": 3,
-      "h2h_vs_line": "UNDER"
+      "h2h_vs_line": "UNDER",
+      "suppression_score": {
+        "level": "MODERATE",
+        "pct": 35.0,
+        "recent_avg": 24.6,
+        "h2h_avg": 16.0
+      }
     },
     {
       "player": "Luke McDonald",
@@ -805,7 +854,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Marcus Windhager",
@@ -852,7 +902,8 @@
       ],
       "h2h_avg": 19.0,
       "h2h_sample": 2,
-      "h2h_vs_line": "UNDER"
+      "h2h_vs_line": "UNDER",
+      "suppression_score": null
     },
     {
       "player": "Koltyn Tholstrup",
@@ -892,7 +943,13 @@
       ],
       "h2h_avg": 4.0,
       "h2h_sample": 1,
-      "h2h_vs_line": "UNDER"
+      "h2h_vs_line": "UNDER",
+      "suppression_score": {
+        "level": "STRONG",
+        "pct": 77.5,
+        "recent_avg": 17.8,
+        "h2h_avg": 4.0
+      }
     },
     {
       "player": "Jack Sinclair",
@@ -946,7 +1003,8 @@
       ],
       "h2h_avg": 30.7,
       "h2h_sample": 3,
-      "h2h_vs_line": "PUSH"
+      "h2h_vs_line": "PUSH",
+      "suppression_score": null
     },
     {
       "player": "Rory Laird",
@@ -1000,7 +1058,8 @@
       ],
       "h2h_avg": 26.7,
       "h2h_sample": 3,
-      "h2h_vs_line": "OVER"
+      "h2h_vs_line": "OVER",
+      "suppression_score": null
     },
     {
       "player": "Adam Cerra",
@@ -1040,7 +1099,8 @@
       ],
       "h2h_avg": 24.0,
       "h2h_sample": 1,
-      "h2h_vs_line": "PUSH"
+      "h2h_vs_line": "PUSH",
+      "suppression_score": null
     },
     {
       "player": "Tristan Xerri",
@@ -1087,7 +1147,13 @@
       ],
       "h2h_avg": 14.5,
       "h2h_sample": 2,
-      "h2h_vs_line": "UNDER"
+      "h2h_vs_line": "UNDER",
+      "suppression_score": {
+        "level": "MODERATE",
+        "pct": 31.6,
+        "recent_avg": 21.2,
+        "h2h_avg": 14.5
+      }
     },
     {
       "player": "Sam Lalor",
@@ -1113,7 +1179,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Dylan Stephens",
@@ -1160,7 +1227,13 @@
       ],
       "h2h_avg": 14.0,
       "h2h_sample": 2,
-      "h2h_vs_line": "UNDER"
+      "h2h_vs_line": "UNDER",
+      "suppression_score": {
+        "level": "STRONG",
+        "pct": 37.5,
+        "recent_avg": 22.4,
+        "h2h_avg": 14.0
+      }
     },
     {
       "player": "Bradley Hill",
@@ -1214,7 +1287,8 @@
       ],
       "h2h_avg": 19.3,
       "h2h_sample": 3,
-      "h2h_vs_line": "UNDER"
+      "h2h_vs_line": "UNDER",
+      "suppression_score": null
     },
     {
       "player": "Hayden Young",
@@ -1240,7 +1314,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Tom Stewart",
@@ -1266,7 +1341,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Nick Blakey",
@@ -1292,7 +1368,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Izak Rankine",
@@ -1318,7 +1395,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Ed Langdon",
@@ -1344,7 +1422,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Darcy Wilmot",
@@ -1370,7 +1449,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "George Wardlaw",
@@ -1396,7 +1476,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Jack Bowes",
@@ -1422,7 +1503,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Tom Sparrow",
@@ -1448,7 +1530,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Harry Perryman",
@@ -1474,7 +1557,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Tom Atkins",
@@ -1500,7 +1584,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Karl Amon",
@@ -1526,7 +1611,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Josh Ward",
@@ -1552,7 +1638,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Conor Nash",
@@ -1578,7 +1665,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Darcy Wilson",
@@ -1604,7 +1692,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Darcy Parish",
@@ -1630,7 +1719,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Zach Guthrie",
@@ -1656,7 +1746,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Nathan Broad",
@@ -1682,7 +1773,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Sam Walsh",
@@ -1708,7 +1800,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Patrick Cripps",
@@ -1734,7 +1827,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Harry Sheezel",
@@ -1760,7 +1854,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Lawson Humphries",
@@ -1786,7 +1881,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Josh Battle",
@@ -1812,7 +1908,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Ned Long",
@@ -1838,7 +1935,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Angus Sheldrick",
@@ -1864,7 +1962,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Tom McCartin",
@@ -1890,7 +1989,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Sam Berry",
@@ -1916,7 +2016,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Connor Idun",
@@ -1942,7 +2043,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Jai Newcombe",
@@ -1968,7 +2070,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Christian Petracca",
@@ -1994,7 +2097,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Clayton Oliver",
@@ -2020,7 +2124,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Dion Prestia",
@@ -2046,7 +2151,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Bailey Humphrey",
@@ -2072,7 +2178,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Jordan Clark",
@@ -2098,7 +2205,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Joel Freijah",
@@ -2124,7 +2232,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Shai Bolton",
@@ -2150,7 +2259,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Darcy Cameron",
@@ -2176,7 +2286,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Andrew Brayshaw",
@@ -2202,7 +2313,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Tom Powell",
@@ -2228,7 +2340,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Cooper Lord",
@@ -2254,7 +2367,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Patrick Lipinski",
@@ -2280,7 +2394,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Matthew Kennedy",
@@ -2306,7 +2421,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Ryley Sanders",
@@ -2332,7 +2448,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Kane McAuliffe",
@@ -2358,7 +2475,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Daniel Rioli",
@@ -2384,7 +2502,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Jack Crisp",
@@ -2410,7 +2529,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "James Rowbottom",
@@ -2436,7 +2556,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Wil Powell",
@@ -2462,7 +2583,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Wayne Milera",
@@ -2488,7 +2610,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Jayden Short",
@@ -2514,7 +2637,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Bailey Williams",
@@ -2540,7 +2664,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Jordan Dawson",
@@ -2566,7 +2691,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Finn Callaghan",
@@ -2592,7 +2718,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Keidean Coleman",
@@ -2618,7 +2745,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Luke Parker",
@@ -2644,7 +2772,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Kysaiah Pickett",
@@ -2670,7 +2799,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Harvey Langford",
@@ -2696,7 +2826,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Josh Dunkley",
@@ -2722,7 +2853,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Jack Ross",
@@ -2748,7 +2880,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Jack Ginnivan",
@@ -2774,7 +2907,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Will Ashcroft",
@@ -2800,7 +2934,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Zac Bailey",
@@ -2826,7 +2961,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Bailey Smith",
@@ -2852,7 +2988,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Hugo Garcia",
@@ -2878,7 +3015,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Josh Rachele",
@@ -2904,7 +3042,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Callum Mills",
@@ -2930,7 +3069,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Jye Caldwell",
@@ -2956,7 +3096,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Matt Roberts",
@@ -2982,7 +3123,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Jarman Impey",
@@ -3008,7 +3150,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Jaspa Fletcher",
@@ -3034,7 +3177,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Riley Bice",
@@ -3060,7 +3204,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Murphy Reid",
@@ -3086,7 +3231,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Jy Simpkin",
@@ -3112,7 +3258,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Dan Houston",
@@ -3138,7 +3285,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Andrew McGrath",
@@ -3164,7 +3312,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Justin McInerney",
@@ -3190,7 +3339,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Jake Lever",
@@ -3216,7 +3366,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Massimo D'Ambrosio",
@@ -3242,7 +3393,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Josh Weddle",
@@ -3268,7 +3420,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Nasiah Wanganeen-Milera",
@@ -3294,7 +3447,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Sam Flanders",
@@ -3320,7 +3474,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Tim Kelly",
@@ -3346,7 +3501,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Bailey Dale",
@@ -3372,7 +3528,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Jack Steele",
@@ -3398,7 +3555,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Ed Richards",
@@ -3424,7 +3582,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Kade Chandler",
@@ -3450,7 +3609,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Lachie Neale",
@@ -3476,7 +3636,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Levi Ashcroft",
@@ -3502,7 +3663,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Oliver Dempsey",
@@ -3528,7 +3690,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Harley Reid",
@@ -3554,7 +3717,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Lachie Ash",
@@ -3580,7 +3744,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Toby Greene",
@@ -3606,7 +3771,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Jayden Laverde",
@@ -3632,7 +3798,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Jacob Hopper",
@@ -3658,7 +3825,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Bodhi Uwland",
@@ -3684,7 +3852,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Sam Durham",
@@ -3710,7 +3879,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Harvey Thomas",
@@ -3736,7 +3906,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Chad Warner",
@@ -3762,7 +3933,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Blake Hardwick",
@@ -3788,7 +3960,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Caleb Serong",
@@ -3814,7 +3987,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Luke Ryan",
@@ -3840,7 +4014,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Tyler Sonsie",
@@ -3866,7 +4041,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Max Holmes",
@@ -3892,7 +4068,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Oliver Florent",
@@ -3918,7 +4095,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Luke Davies-Uniacke",
@@ -3944,7 +4122,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Joel Jeffrey",
@@ -3970,7 +4149,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Liam Duggan",
@@ -3996,7 +4176,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Lachie Whitfield",
@@ -4022,7 +4203,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Harry Himmelberg",
@@ -4048,7 +4230,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Touk Miller",
@@ -4074,7 +4257,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Connor Macdonald",
@@ -4100,7 +4284,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Archie Roberts",
@@ -4126,7 +4311,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Zach Merrett",
@@ -4152,7 +4338,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Kane Farrell",
@@ -4178,7 +4365,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Jase Burgoyne",
@@ -4204,7 +4392,8 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     },
     {
       "player": "Josh Worrell",
@@ -4230,8 +4419,9 @@
       "h2h_vs_opponent": [],
       "h2h_avg": null,
       "h2h_sample": 0,
-      "h2h_vs_line": null
+      "h2h_vs_line": null,
+      "suppression_score": null
     }
   ],
-  "h2h_enriched_at": "2026-04-23T09:58:55"
+  "h2h_enriched_at": "2026-04-23T10:17:23"
 }
