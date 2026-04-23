@@ -558,7 +558,7 @@ export default function SimulatorPage() {
     });
   }, []);
 
-  const isPro = useProAccess();
+  const { isPro } = useProAccess();
 
   // This Week's Impact — current picks under current vs default weights
   const thisWeekImpact = useMemo(() => {

@@ -21,12 +21,14 @@ const RIGHT_LINKS = [
   { href: "/insights", label: "Insights", hideUnder1280: true },
   { href: "/simulator", label: "Simulator", isPro: true },
   { href: "/tracker", label: "Tracker" },
+  { href: "/pricing", label: "Pricing" },
 ];
 
 const ALL_LINKS = [
   ...CENTRE_LINKS,
   ...RIGHT_LINKS,
   { href: "/faq", label: "FAQ" },
+  { href: "/login", label: "Sign In" },
 ];
 
 export default function Nav() {

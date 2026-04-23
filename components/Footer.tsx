@@ -52,6 +52,7 @@ export default function Footer() {
             <div>
               <div style={{ fontSize: 10, color: "#555", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10 }}>Info</div>
               {[
+                { href: "/pricing", label: "Pricing" },
                 { href: "/model", label: "How It Works" },
                 { href: "/faq", label: "FAQ" },
                 { href: "/about", label: "About" },
