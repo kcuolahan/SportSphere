@@ -294,7 +294,7 @@ function calcMatchupScore(pred: Pick): number {
 }
 
 export default function PredictionsPage() {
-  const { isPro, loading: proLoading } = useProAccess();
+  const { isPro, loading: proLoading, isLoggedIn } = useProAccess();
   const [paywallDismissed, setPaywallDismissed] = useState(false);
   const [filter, setFilter] = useState<FilterType>("ACTIONABLE");
   const [view, setView] = useState<ViewType>("CARD");
@@ -408,7 +408,8 @@ export default function PredictionsPage() {
 
   const isHCPick = (p: Pick) => p.enhanced_signal === "HC" || p.edge_vol >= 0.90;
 
-  const showPaywall = !proLoading && shouldShowProPrompt(isPro) && !paywallDismissed;
+  const showPaywall = !proLoading && isLoggedIn && !isPro && !paywallDismissed;
+  const showSignupCTA = !proLoading && !isLoggedIn;
   const freePicks = filterPicksForTier(picks, false);
   const tieredPicks = (proLoading || isPro) ? picks : freePicks;
 
@@ -484,6 +485,42 @@ export default function PredictionsPage() {
           />
         )}
         {showPaywall && <FreeTierPnLCard />}
+
+        {showSignupCTA && (
+          <div style={{
+            background: "#0a0a0a",
+            border: "1px solid rgba(249,115,22,0.2)",
+            borderRadius: 12,
+            padding: "32px",
+            textAlign: "center",
+            marginBottom: 20,
+          }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "#f97316", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 10 }}>
+              SportSphere HQ Pro
+            </div>
+            <h2 style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.02em", margin: "0 0 10px" }}>
+              Sign up to see all HC picks
+            </h2>
+            <p style={{ fontSize: 13, color: "#666", margin: "0 0 20px", lineHeight: 1.6 }}>
+              60.7% win rate · $6,400 gross profit over 3 months · Verified
+            </p>
+            <a
+              href="/auth/signup"
+              style={{
+                display: "inline-block",
+                background: "#f97316",
+                color: "#000",
+                borderRadius: 8,
+                padding: "12px 28px",
+                fontSize: 14,
+                fontWeight: 700,
+                textDecoration: "none",
+              }}
+            >
+              Get Started — $29/month
+            </a>
+          </div>
+        )}
 
         {/* Stats */}
         <div className="pick-stats-grid">

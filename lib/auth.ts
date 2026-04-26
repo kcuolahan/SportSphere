@@ -6,17 +6,20 @@ import { supabase } from "@/lib/supabase";
 export interface ProAccess {
   isPro: boolean;
   loading: boolean;
+  isLoggedIn: boolean;
 }
 
 export function useProAccess(): ProAccess {
   const [isPro, setIsPro] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     async function checkAccess() {
       if (!supabase) { setLoading(false); return; }
 
       const { data: { user } } = await supabase.auth.getUser();
+      setIsLoggedIn(!!user?.email);
       if (!user?.email) { setLoading(false); return; }
 
       const { data } = await supabase
@@ -36,5 +39,5 @@ export function useProAccess(): ProAccess {
     checkAccess();
   }, []);
 
-  return { isPro, loading };
+  return { isPro, loading, isLoggedIn };
 }
