@@ -11,14 +11,16 @@ const { round, season } = getCurrentPredictions();
 
 const CENTRE_LINKS = [
   { href: "/predictions", label: "Picks" },
+  { href: "/nba", label: "NBA", dim: true },
+  { href: "/nfl", label: "NFL", dim: true },
   { href: "/accuracy", label: "Track Record" },
   { href: "/defence", label: "DvP" },
   { href: "/players", label: "Players" },
-  { href: "/model", label: "How It Works", hideUnder1280: true },
+  { href: "/model", label: "How It Works" },
 ];
 
 const RIGHT_LINKS = [
-  { href: "/insights", label: "Insights", hideUnder1280: true },
+  { href: "/insights", label: "Insights" },
   { href: "/simulator", label: "Simulator", isPro: true },
   { href: "/tracker", label: "Tracker" },
 ];
@@ -91,12 +93,15 @@ export default function Nav() {
           <div className="nav-centre" style={{ display: "flex", alignItems: "center", gap: 2, flex: 1, justifyContent: "center" }}>
             {CENTRE_LINKS.map(link => {
               const active = pathname === link.href;
+              const isDim = (link as { dim?: boolean }).dim;
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={link.hideUnder1280 ? "nav-hide-1280" : undefined}
-                  style={linkStyle(active)}
+                  style={isDim
+                    ? { ...linkStyle(false), color: "#383838", fontSize: 11 }
+                    : linkStyle(active)
+                  }
                 >
                   {link.label}
                 </Link>
