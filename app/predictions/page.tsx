@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
@@ -11,6 +11,8 @@ import { useProAccess } from "@/lib/auth";
 import { filterPicksForTier, shouldShowProPrompt } from "@/lib/paywall";
 import { FreeTierPaywall } from "@/components/FreeTierPaywall";
 import { FreeTierPnLCard } from "@/components/FreeTierPnLCard";
+import livePicksData from "@/data/live-picks.json";
+import { roundResults as calcRoundResults } from "@/lib/results";
 
 const { round, season, generated_at, team_news = [], verified_at, fixtures = [] } = getCurrentPredictions();
 const picks = [...getCurrentPredictions().picks].sort((a, b) => b.edge_vol - a.edge_vol);
@@ -353,6 +355,12 @@ export default function PredictionsPage() {
   const showPaywall = !proLoading && shouldShowProPrompt(isPro) && !paywallDismissed;
   const freePicks = filterPicksForTier(picks, false);
   const tieredPicks = (proLoading || isPro) ? picks : freePicks;
+
+  const liveRoundStats = useMemo(() => {
+    const picksWithResults = livePicksData.picks.filter(p => p.result)
+    if (picksWithResults.length === 0) return null
+    return calcRoundResults(picksWithResults)
+  }, []);
 
   const filtered = (!proLoading && !isPro)
     ? tieredPicks
@@ -1161,6 +1169,38 @@ export default function PredictionsPage() {
           </div>
           );
         })()}
+
+        {/* Live round results summary */}
+        {liveRoundStats && (
+          <div style={{ marginTop: 40, paddingTop: 32, borderTop: "1px solid #111" }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "#f97316", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12 }}>
+              Live Results
+            </div>
+            <h3 style={{ fontSize: 20, fontWeight: 800, letterSpacing: "-0.02em", margin: "0 0 20px" }}>
+              Round {livePicksData.round} Results
+            </h3>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8 }}>
+              {[
+                { label: "Total Picks", value: liveRoundStats.totalBets, color: "#f0f0f0" },
+                { label: "Win Rate", value: `${(liveRoundStats.winRate * 100).toFixed(1)}%`, color: "#4ade80" },
+                { label: "Profit", value: `$${liveRoundStats.totalProfit.toLocaleString()}`, color: liveRoundStats.totalProfit >= 0 ? "#4ade80" : "#ef4444" },
+                { label: "ROI", value: `${liveRoundStats.roi.toFixed(1)}%`, color: liveRoundStats.roi >= 0 ? "#4ade80" : "#ef4444" },
+              ].map(s => (
+                <div key={s.label} style={{
+                  background: "#0a0a0a", border: "1px solid #111",
+                  borderRadius: 10, padding: "16px", textAlign: "center",
+                }}>
+                  <div style={{ fontSize: 9, fontWeight: 700, color: "#555", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 6 }}>
+                    {s.label}
+                  </div>
+                  <div style={{ fontSize: 22, fontWeight: 800, color: s.color, letterSpacing: "-0.02em" }}>
+                    {s.value}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div style={{ marginTop: 24, textAlign: "center" }}>
           <p style={{ fontSize: 11, color: "#555", lineHeight: 1.8 }}>

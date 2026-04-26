@@ -1,154 +1,136 @@
 "use client";
 
-import paywallData from "@/data/paywall.json";
-
-const PNL_DATA = paywallData.historicalPnL;
-const HC_STATS = paywallData.hcStats;
-const MAX_PROFIT = Math.max(...PNL_DATA.map(r => r.netProfit));
-const CHART_HEIGHT = 120;
-const SUB_COST_ANNUAL = 29 * 12;
+import { useMemo } from "react";
+import { calculateROI } from "@/lib/calculations";
+import pnlData from "@/data/paywall.json";
 
 export function FreeTierPnLCard() {
-  const annualProfit = HC_STATS.netProfit * (52 / 4) - SUB_COST_ANNUAL;
-  const roiPct = (HC_STATS.roi * 100).toFixed(1);
-  const costMultiple = Math.round(HC_STATS.netProfit / SUB_COST_ANNUAL);
+  const roi = useMemo(() => calculateROI(pnlData.hcStats), []);
+  const annualMultiple = Math.round(roi.grossProfit / (pnlData.hcStats.monthlySubscriptionFee * 12));
+  const MAX_PROFIT = Math.max(...pnlData.roundBreakdown.map(r => r.netProfit));
 
   return (
     <div style={{
-      background: "#050505",
+      width: "100%",
+      background: "#0a0a0a",
       border: "1px solid #1a1a1a",
       borderRadius: 12,
-      padding: "24px",
+      padding: 24,
       marginBottom: 20,
     }}>
-      {/* Header */}
-      <div style={{ marginBottom: 20 }}>
-        <div style={{ fontSize: 10, fontWeight: 700, color: "#f97316", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6 }}>
-          Why HC Picks Matter
-        </div>
-        <div style={{ fontSize: 16, fontWeight: 700, color: "#f0f0f0", letterSpacing: "-0.01em" }}>
-          Historical performance tracking
-        </div>
-      </div>
+      <h3 style={{ fontSize: 16, fontWeight: 700, color: "#f0f0f0", margin: "0 0 20px", letterSpacing: "-0.01em" }}>
+        Why HC Picks Matter
+      </h3>
 
-      {/* Main stats */}
+      {/* Main stats row */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 1, background: "#111", borderRadius: 8, overflow: "hidden", marginBottom: 20 }}>
         {[
-          { label: "Total HC Bets", value: HC_STATS.totalBets },
-          { label: "Win Rate", value: `${(HC_STATS.winRate * 100).toFixed(1)}%` },
-          { label: "ROI", value: `${roiPct}%` },
-          { label: "Gross Profit", value: `$${HC_STATS.netProfit.toLocaleString()}` },
+          { label: "TOTAL BETS", value: pnlData.hcStats.totalBets },
+          { label: "WIN RATE", value: `${(pnlData.hcStats.winRate * 100).toFixed(1)}%` },
+          { label: "GROSS PROFIT", value: `$${roi.grossProfit.toLocaleString()}`, color: "#4ade80" },
+          { label: "ROI", value: `${roi.roiBefore.toFixed(1)}%`, color: "#4ade80" },
         ].map((s, i) => (
           <div key={i} style={{ background: "#080808", padding: "14px 12px", textAlign: "center" }}>
-            <div style={{ fontSize: 18, fontWeight: 800, color: "#f97316", letterSpacing: "-0.02em" }}>{s.value}</div>
-            <div style={{ fontSize: 10, color: "#555", marginTop: 3, textTransform: "uppercase", letterSpacing: "0.04em" }}>{s.label}</div>
+            <div style={{ fontSize: 9, fontWeight: 700, color: "#666", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 4 }}>
+              {s.label}
+            </div>
+            <div style={{ fontSize: 20, fontWeight: 800, color: s.color ?? "#f0f0f0", letterSpacing: "-0.02em" }}>
+              {s.value}
+            </div>
           </div>
         ))}
       </div>
 
-      {/* Sub fee impact */}
+      {/* Fee impact section */}
       <div style={{
-        background: "rgba(34,197,94,0.06)",
-        border: "1px solid rgba(34,197,94,0.2)",
+        background: "#080808",
+        border: "1px solid #1a1a1a",
         borderRadius: 8,
-        padding: "14px 16px",
-        marginBottom: 24,
+        padding: "18px 20px",
+        marginBottom: 20,
       }}>
-        <div style={{ fontSize: 12, fontWeight: 700, color: "#4ade80", marginBottom: 6 }}>
-          After ${SUB_COST_ANNUAL}/year subscription cost:
+        <div style={{ fontSize: 10, fontWeight: 700, color: "#666", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 14 }}>
+          Subscription Impact
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingBottom: 12, marginBottom: 12, borderBottom: "1px solid #111" }}>
+          <span style={{ fontSize: 13, color: "#666" }}>
+            {pnlData.hcStats.durationMonths}-month sample period
+          </span>
+          <span style={{ fontSize: 13, fontWeight: 600, color: "#f0f0f0" }}>
+            ${pnlData.hcStats.durationMonths * pnlData.hcStats.monthlySubscriptionFee} total fees
+          </span>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
           <div>
-            <div style={{ fontSize: 11, color: "#555", marginBottom: 2 }}>Annual profit (extrapolated)</div>
-            <div style={{ fontSize: 20, fontWeight: 800, color: "#4ade80", letterSpacing: "-0.02em" }}>
-              ${annualProfit.toLocaleString()}
+            <div style={{ fontSize: 10, fontWeight: 700, color: "#555", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 8 }}>
+              Before fees
+            </div>
+            <div style={{ fontSize: 13, color: "#666", marginBottom: 4 }}>
+              Net: <span style={{ color: "#f0f0f0", fontWeight: 700 }}>${roi.grossProfit.toLocaleString()}</span>
+            </div>
+            <div style={{ fontSize: 13, color: "#666" }}>
+              ROI: <span style={{ color: "#f0f0f0", fontWeight: 700 }}>{roi.roiBefore.toFixed(1)}%</span>
             </div>
           </div>
           <div>
-            <div style={{ fontSize: 11, color: "#555", marginBottom: 2 }}>Subscription ROI</div>
-            <div style={{ fontSize: 20, fontWeight: 800, color: "#4ade80", letterSpacing: "-0.02em" }}>
-              {costMultiple}× cost
+            <div style={{ fontSize: 10, fontWeight: 700, color: "#555", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 8 }}>
+              After $29/mo
             </div>
-            <div style={{ fontSize: 10, color: "#555" }}>profit vs ${SUB_COST_ANNUAL} fee</div>
+            <div style={{ fontSize: 13, color: "#4ade80", marginBottom: 4 }}>
+              Net: <span style={{ color: "#f0f0f0", fontWeight: 700 }}>${roi.netProfit.toLocaleString()}</span>
+            </div>
+            <div style={{ fontSize: 13, color: "#4ade80" }}>
+              ROI: <span style={{ color: "#f0f0f0", fontWeight: 700 }}>{roi.roiAfter.toFixed(1)}%</span>
+            </div>
           </div>
+        </div>
+
+        <div style={{ marginTop: 14, paddingTop: 12, borderTop: "1px solid #111", fontSize: 11, color: "#555", lineHeight: 1.6 }}>
+          <span style={{ color: "#f97316", fontWeight: 600 }}>40× multiplier: </span>
+          The subscription pays for itself {annualMultiple}× over in annual profit.
         </div>
       </div>
 
-      {/* Bar chart */}
-      <div style={{ marginBottom: 8 }}>
-        <div style={{ fontSize: 10, fontWeight: 700, color: "#555", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 14 }}>
-          Running P&L by Round (HC picks only)
+      {/* P&L by round — horizontal bar chart */}
+      <div>
+        <div style={{ fontSize: 10, fontWeight: 700, color: "#666", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12 }}>
+          P&L by Round (3–6)
         </div>
-
-        <div style={{
-          display: "flex",
-          alignItems: "flex-end",
-          gap: 8,
-          height: CHART_HEIGHT + 28,
-          paddingBottom: 0,
-          position: "relative",
-        }}>
-          {/* Y-axis guide lines */}
-          {[0.25, 0.5, 0.75, 1].map(frac => (
-            <div key={frac} style={{
-              position: "absolute",
-              left: 0, right: 0,
-              bottom: 20 + (CHART_HEIGHT * frac),
-              borderTop: "1px solid #111",
-              zIndex: 0,
-            }} />
-          ))}
-
-          {PNL_DATA.map((d, i) => {
-            const barH = Math.max(6, (d.netProfit / MAX_PROFIT) * CHART_HEIGHT);
-            const isLast = i === PNL_DATA.length - 1;
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {pnlData.roundBreakdown.map(r => {
+            const barWidth = `${Math.min((r.netProfit / MAX_PROFIT) * 100, 100)}%`;
             return (
-              <div key={d.round} style={{
-                flex: 1, display: "flex", flexDirection: "column",
-                alignItems: "center", justifyContent: "flex-end",
-                height: "100%", position: "relative", zIndex: 1,
-              }}>
-                {/* Value label */}
-                <div style={{
-                  fontSize: 9, fontWeight: 700,
-                  color: isLast ? "#888" : "#f97316",
-                  marginBottom: 4, whiteSpace: "nowrap",
-                }}>
-                  +${(d.netProfit / 1000).toFixed(1)}k
-                  {isLast && <span style={{ color: "#666" }}> est.</span>}
+              <div key={r.round} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{ width: 60, fontSize: 12, fontWeight: 600, color: "#888", flexShrink: 0 }}>
+                  Round {r.round}
                 </div>
-                {/* Bar */}
-                <div style={{
-                  width: "100%",
-                  height: barH,
-                  background: isLast
-                    ? "repeating-linear-gradient(45deg, #f97316, #f97316 2px, transparent 2px, transparent 6px)"
-                    : "linear-gradient(180deg, #fb923c 0%, #f97316 100%)",
-                  borderRadius: "3px 3px 0 0",
-                  border: isLast ? "1px solid #f9731660" : "none",
-                  opacity: isLast ? 0.7 : 1,
-                }} />
-                {/* Round label */}
-                <div style={{ fontSize: 10, color: "#666", marginTop: 6, fontWeight: 600 }}>
-                  R{d.round}
+                <div style={{ flex: 1, height: 32, background: "#111", borderRadius: 4, overflow: "hidden" }}>
+                  <div style={{
+                    width: barWidth,
+                    height: "100%",
+                    background: "linear-gradient(90deg, #f97316, #ea580c)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    paddingRight: 10,
+                    minWidth: 60,
+                  }}>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: "#fff" }}>
+                      ${r.netProfit.toLocaleString()}
+                    </span>
+                  </div>
                 </div>
-                {/* Bet count */}
-                <div style={{ fontSize: 9, color: "#444" }}>
-                  {d.wins}/{d.bets}
+                <div style={{ width: 64, textAlign: "right", fontSize: 11, color: "#666", flexShrink: 0 }}>
+                  <span style={{ color: "#4ade80" }}>{r.wins}W</span>
+                  {" / "}
+                  <span style={{ color: "#ef4444" }}>{r.losses}L</span>
                 </div>
               </div>
             );
           })}
         </div>
-
-        <div style={{ fontSize: 10, color: "#444", marginTop: 4 }}>
-          R7 estimated from 2 HC picks · $1,000 stake · 1.87 avg odds assumed
-        </div>
-      </div>
-
-      <div style={{ paddingTop: 12, borderTop: "1px solid #0d0d0d", fontSize: 10, color: "#444", lineHeight: 1.6 }}>
-        Tracking ${HC_STATS.totalStaked.toLocaleString()} staked across Rounds 3–6 · Extrapolated figures assume similar round cadence.
-        Not financial advice. 18+ only.
       </div>
     </div>
   );

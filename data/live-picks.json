@@ -1,0 +1,33 @@
+{
+  "round": 7,
+  "picks": [
+    {
+      "id": "zb_over_23.5",
+      "playerName": "Zak Butters",
+      "team": "PTA",
+      "position": "MID",
+      "line": 23.5,
+      "prediction": "OVER",
+      "edgeVol": 1.17,
+      "tier": "HC",
+      "finalDisposals": null,
+      "result": null,
+      "profitLoss": null,
+      "odds": 1.87
+    },
+    {
+      "id": "cw_over_23.5",
+      "playerName": "Callum Wilkie",
+      "team": "STK",
+      "position": "DEF",
+      "line": 23.5,
+      "prediction": "OVER",
+      "edgeVol": 1.03,
+      "tier": "HC",
+      "finalDisposals": null,
+      "result": null,
+      "profitLoss": null,
+      "odds": 1.87
+    }
+  ]
+}
