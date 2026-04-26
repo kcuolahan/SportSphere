@@ -406,10 +406,10 @@ export default function PredictionsPage() {
 
   const isHCPick = (p: Pick) => p.enhanced_signal === "HC" || p.edge_vol >= 0.90;
 
-  const showPaywall = !proLoading && isLoggedIn && !isPro && !paywallDismissed;
-  const showSignupCTA = !proLoading && !isLoggedIn;
+  const showPaywall = false; // Temporarily disabled for Round 7 testing
+  const showSignupCTA = false; // Temporarily disabled for Round 7 testing
   const freePicks = filterPicksForTier(picks, false);
-  const tieredPicks = (proLoading || isPro) ? picks : freePicks;
+  const tieredPicks = picks; // Show all picks temporarily
 
   const liveRoundStats = useMemo(() => {
     const resolved = liveRows.filter(r => r.result);
