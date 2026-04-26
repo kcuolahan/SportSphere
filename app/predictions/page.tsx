@@ -491,21 +491,39 @@ export default function PredictionsPage() {
             <p style={{ fontSize: 13, color: "#666", margin: "0 0 20px", lineHeight: 1.6 }}>
               Upgrade to Pro to see all picks, use the simulator, and get real-time results.
             </p>
-            <a
-              href="/auth/payment"
-              style={{
-                display: "inline-block",
-                background: "#f97316",
-                color: "#000",
-                borderRadius: 8,
-                padding: "11px 24px",
-                fontSize: 14,
-                fontWeight: 700,
-                textDecoration: "none",
-              }}
-            >
-              Unlock All Picks — $29/month
-            </a>
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+              <a
+                href="/auth/payment"
+                style={{
+                  display: "inline-block",
+                  background: "#f97316",
+                  color: "#000",
+                  borderRadius: 8,
+                  padding: "11px 24px",
+                  fontSize: 14,
+                  fontWeight: 700,
+                  textDecoration: "none",
+                }}
+              >
+                Unlock All Picks — $29/month
+              </a>
+              <a
+                href="/auth/payment"
+                style={{
+                  display: "inline-block",
+                  background: "#0d0d0d",
+                  color: "#888",
+                  border: "1px solid #1f1f1f",
+                  borderRadius: 8,
+                  padding: "11px 20px",
+                  fontSize: 14,
+                  fontWeight: 600,
+                  textDecoration: "none",
+                }}
+              >
+                See Annual ROI →
+              </a>
+            </div>
           </div>
         )}
 
