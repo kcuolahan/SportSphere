@@ -64,3 +64,61 @@ export function calculatePickResult(
     margin: Math.abs(finalDisposals - line),
   }
 }
+
+// ── Supabase helpers ──────────────────────────────────────────────────────────
+
+import { createClient } from '@supabase/supabase-js'
+
+function getServiceClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  )
+}
+
+export async function getUnresolvedPicksFromSupabase() {
+  try {
+    const { data, error } = await getServiceClient()
+      .from('live_picks')
+      .select('*')
+      .is('result', null)
+      .order('created_at', { ascending: true })
+
+    if (error) {
+      console.error('Error fetching picks from Supabase:', error)
+      return []
+    }
+    return data ?? []
+  } catch (err) {
+    console.error('Supabase connection error:', err)
+    return []
+  }
+}
+
+export async function updatePickResultInSupabase(
+  pickId: string,
+  finalDisposals: number,
+  result: 'WIN' | 'LOSS',
+  profitLoss: number,
+) {
+  try {
+    const { error } = await getServiceClient()
+      .from('live_picks')
+      .update({
+        final_disposals: finalDisposals,
+        result,
+        profit_loss: profitLoss,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', pickId)
+
+    if (error) {
+      console.error(`Error updating pick ${pickId}:`, error)
+      return false
+    }
+    return true
+  } catch (err) {
+    console.error(`Supabase update error for pick ${pickId}:`, err)
+    return false
+  }
+}

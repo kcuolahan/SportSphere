@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import { createClient } from "@supabase/supabase-js";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
@@ -302,31 +303,61 @@ export default function PredictionsPage() {
   const [shareCopied, setShareCopied] = useState(false);
   const [multiSelected, setMultiSelected] = useState<string[]>([]);
   const [multiCopied, setMultiCopied] = useState(false);
-  const [livePicksData, setLivePicksData] = useState<{
+  const [liveRows, setLiveRows] = useState<Array<{
+    id: string;
     round: number;
-    picks: Array<{ playerName?: string; result: string | null; profitLoss: number | null }>;
-  } | null>(null);
+    player_name: string;
+    team: string;
+    position: string;
+    line: number;
+    prediction: string;
+    edge_vol: number;
+    tier: string;
+    odds: number;
+    final_disposals: number | null;
+    result: string | null;
+    profit_loss: number | null;
+  }>>([]);
 
   useEffect(() => {
-    const fetchLivePicks = async () => {
-      try {
-        const res = await fetch('/data/live-picks.json', { cache: 'no-store' });
-        if (res.ok) setLivePicksData(await res.json());
-      } catch {}
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    );
+
+    const fetchLiveRows = async () => {
+      const { data, error } = await supabase
+        .from('live_picks')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (!error && data) setLiveRows(data);
     };
 
-    fetchLivePicks();
+    fetchLiveRows();
 
+    // Real-time: refresh whenever any row in live_picks changes
+    const subscription = supabase
+      .channel('live_picks_changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'live_picks' }, () => {
+        fetchLiveRows();
+      })
+      .subscribe();
+
+    // Every 30s: trigger Squiggle fetch + Supabase write, then re-read
     const interval = setInterval(async () => {
       try {
-        await fetch('/api/auto-update-results');
-        await fetchLivePicks();
+        const res = await fetch('/api/auto-update-results');
+        const result = await res.json();
+        if (result.updated > 0) fetchLiveRows();
       } catch {
         console.log('Auto-update check complete');
       }
     }, 30000);
 
-    return () => clearInterval(interval);
+    return () => {
+      subscription.unsubscribe();
+      clearInterval(interval);
+    };
   }, []);
 
   function toggleMulti(player: string) {
@@ -382,11 +413,10 @@ export default function PredictionsPage() {
   const tieredPicks = (proLoading || isPro) ? picks : freePicks;
 
   const liveRoundStats = useMemo(() => {
-    if (!livePicksData) return null;
-    const picksWithResults = livePicksData.picks.filter(p => p.result);
-    if (picksWithResults.length === 0) return null;
-    return calcRoundResults(picksWithResults);
-  }, [livePicksData]);
+    const resolved = liveRows.filter(r => r.result);
+    if (resolved.length === 0) return null;
+    return calcRoundResults(resolved.map(r => ({ result: r.result, profitLoss: r.profit_loss })));
+  }, [liveRows]);
 
   const filtered = (!proLoading && !isPro)
     ? tieredPicks
@@ -1203,7 +1233,7 @@ export default function PredictionsPage() {
               Live Results
             </div>
             <h3 style={{ fontSize: 20, fontWeight: 800, letterSpacing: "-0.02em", margin: "0 0 20px" }}>
-              Round {livePicksData?.round} Results
+              Round {liveRows[0]?.round} Results
             </h3>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8 }}>
               {[

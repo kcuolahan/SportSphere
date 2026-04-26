@@ -1,65 +1,79 @@
-import { writeFile, readFile } from 'fs/promises'
-import { join } from 'path'
-import { getPlayerDisposals, calculatePickResult } from '@/lib/squiggle'
+import {
+  getUnresolvedPicksFromSupabase,
+  updatePickResultInSupabase,
+  getPlayerDisposals,
+  calculatePickResult,
+} from '@/lib/squiggle'
 
 export const runtime = 'nodejs'
 
 async function runUpdate() {
-  const picksPath = join(process.cwd(), 'public', 'data', 'live-picks.json')
-  const picksFile = await readFile(picksPath, 'utf-8')
-  const picksData = JSON.parse(picksFile)
+  const picks = await getUnresolvedPicksFromSupabase()
+
+  if (picks.length === 0) {
+    console.log('[Auto-Update] No unresolved picks found')
+    return { updated: 0, errors: 0, totalChecked: 0 }
+  }
 
   let updatedCount = 0
   let errorCount = 0
 
-  for (const pick of picksData.picks) {
-    if (pick.result) continue
-
+  for (const pick of picks) {
     try {
-      const disposals = await getPlayerDisposals(pick.playerName, pick.team, picksData.round)
+      console.log(`[Auto-Update] Processing ${pick.player_name} (${pick.team})...`)
 
-      if (disposals !== null) {
-        const resultData = calculatePickResult(
-          pick.prediction,
-          disposals,
-          pick.line,
-          pick.odds ?? 1.87,
-        )
+      const disposals = await getPlayerDisposals(pick.player_name, pick.team, pick.round)
 
-        pick.finalDisposals = resultData.finalDisposals
-        pick.result = resultData.result
-        pick.profitLoss = resultData.profitLoss
-        pick.updatedAt = new Date().toISOString()
+      if (disposals === null) {
+        console.log(`[Auto-Update] No data yet for ${pick.player_name}`)
+        continue
+      }
 
+      const resultData = calculatePickResult(
+        pick.prediction,
+        disposals,
+        pick.line,
+        pick.odds ?? 1.87,
+      )
+
+      const success = await updatePickResultInSupabase(
+        pick.id,
+        resultData.finalDisposals,
+        resultData.result as 'WIN' | 'LOSS',
+        resultData.profitLoss,
+      )
+
+      if (success) {
         updatedCount++
-        console.log(`[Auto-Update] ${pick.playerName}: ${resultData.result} (${disposals} vs ${pick.line})`)
+        console.log(`[Auto-Update] ✓ ${pick.player_name}: ${resultData.result} (${disposals} vs ${pick.line})`)
+      } else {
+        errorCount++
       }
     } catch (err) {
       errorCount++
-      console.error(`[Auto-Update] Error processing ${pick.playerName}:`, err)
+      console.error(`[Auto-Update] Error processing ${pick.player_name}:`, err)
     }
   }
 
-  await writeFile(picksPath, JSON.stringify(picksData, null, 2))
-  console.log(`[Auto-Update] Completed: ${updatedCount} updated, ${errorCount} errors`)
-
-  return { updated: updatedCount, errors: errorCount }
+  return { updated: updatedCount, errors: errorCount, totalChecked: picks.length }
 }
 
 export async function POST() {
   try {
-    console.log('[Auto-Update] Starting results update...', new Date().toISOString())
-    const { updated, errors } = await runUpdate()
+    console.log('[Auto-Update] Starting Supabase results update...', new Date().toISOString())
+    const { updated, errors, totalChecked } = await runUpdate()
+    console.log(`[Auto-Update] Completed: ${updated} updated, ${errors} errors`)
     return Response.json({
       status: 'success',
       updated,
       errors,
+      totalChecked,
       timestamp: new Date().toISOString(),
     })
   } catch (error) {
     console.error('[Auto-Update] Fatal error:', error)
     return Response.json(
-      { status: 'error', error: String(error) },
+      { status: 'error', error: String(error), timestamp: new Date().toISOString() },
       { status: 500 },
     )
   }
