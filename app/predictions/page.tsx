@@ -9,9 +9,7 @@ import { SignalBadge, ConfidenceBadge } from "@/components/ui/Badge";
 import { getCurrentPredictions, getAllResults, getTeamConcession } from "@/lib/data";
 import type { Pick, TeamNewsEntry, SuppressionScore, Fixture } from "@/lib/data";
 import { useProAccess } from "@/lib/auth";
-import { filterPicksForTier, shouldShowProPrompt } from "@/lib/paywall";
-import { FreeTierPaywall } from "@/components/FreeTierPaywall";
-import { FreeTierPnLCard } from "@/components/FreeTierPnLCard";
+import { filterPicksForTier } from "@/lib/paywall";
 import { roundResults as calcRoundResults } from "@/lib/results";
 
 const { round, season, generated_at, team_news = [], verified_at, fixtures = [] } = getCurrentPredictions();
@@ -477,14 +475,39 @@ export default function PredictionsPage() {
         <TeamNewsBanner news={team_news as TeamNewsEntry[]} />
 
         {showPaywall && (
-          <FreeTierPaywall
-            totalPicksAvailable={picks.length}
-            totalHCPicksAvailable={picks.filter(p => isHCPick(p)).length}
-            freePicks={freePicks}
-            onDismiss={() => setPaywallDismissed(true)}
-          />
+          <div style={{
+            background: "#0a0a0a",
+            border: "1px solid rgba(249,115,22,0.2)",
+            borderRadius: 12,
+            padding: "28px 32px",
+            marginBottom: 20,
+          }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "#f97316", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 10 }}>
+              Pro Only
+            </div>
+            <h3 style={{ fontSize: 20, fontWeight: 800, letterSpacing: "-0.02em", margin: "0 0 8px" }}>
+              You&apos;re viewing {freePicks.length} of {picks.filter(p => isHCPick(p)).length} HC picks available
+            </h3>
+            <p style={{ fontSize: 13, color: "#666", margin: "0 0 20px", lineHeight: 1.6 }}>
+              Upgrade to Pro to see all picks, use the simulator, and get real-time results.
+            </p>
+            <a
+              href="/auth/payment"
+              style={{
+                display: "inline-block",
+                background: "#f97316",
+                color: "#000",
+                borderRadius: 8,
+                padding: "11px 24px",
+                fontSize: 14,
+                fontWeight: 700,
+                textDecoration: "none",
+              }}
+            >
+              Unlock All Picks — $29/month
+            </a>
+          </div>
         )}
-        {showPaywall && <FreeTierPnLCard />}
 
         {showSignupCTA && (
           <div style={{
