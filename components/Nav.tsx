@@ -117,7 +117,7 @@ export default function Nav() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={link.hideUnder1280 ? "nav-hide-1280" : undefined}
+                  className={(link as any).hideUnder1280 ? "nav-hide-1280" : undefined}
                   style={linkStyle(active)}
                 >
                   {link.label}
