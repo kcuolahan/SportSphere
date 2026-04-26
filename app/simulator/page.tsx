@@ -558,7 +558,7 @@ export default function SimulatorPage() {
     });
   }, []);
 
-  const { isPro } = useProAccess();
+  const { isPro, loading: proLoading } = useProAccess();
 
   // This Week's Impact — current picks under current vs default weights
   const thisWeekImpact = useMemo(() => {
@@ -630,6 +630,46 @@ export default function SimulatorPage() {
   }, [pendingWeights]);
 
   const w = pendingWeights;
+
+  if (proLoading) return (
+    <div style={{ minHeight: "100vh", background: "#000", color: "#f0f0f0", fontFamily: "system-ui, -apple-system, sans-serif" }}>
+      <Nav />
+      <div style={{ maxWidth: 600, margin: "0 auto", padding: "160px 20px", textAlign: "center" }}>
+        <div style={{ fontSize: 12, color: "#555" }}>Loading...</div>
+      </div>
+      <Footer />
+    </div>
+  );
+
+  if (!isPro) return (
+    <div style={{ minHeight: "100vh", background: "#000", color: "#f0f0f0", fontFamily: "system-ui, -apple-system, sans-serif" }}>
+      <Nav />
+      <div style={{ maxWidth: 520, margin: "0 auto", padding: "140px 20px 60px", textAlign: "center" }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: "#f97316", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 16 }}>
+          Pro Feature
+        </div>
+        <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.02em", margin: "0 0 12px" }}>
+          Simulator Access — Pro Only
+        </h2>
+        <p style={{ fontSize: 14, color: "#666", lineHeight: 1.7, marginBottom: 32, maxWidth: 400, marginLeft: "auto", marginRight: "auto" }}>
+          Optimize model weights and run grid search across {TOTAL_COMBOS.toLocaleString()} parameter combinations with full historical backtesting.
+        </p>
+        <a href="/auth/signup" style={{
+          display: "inline-block",
+          background: "#f97316", color: "#000",
+          padding: "14px 32px", borderRadius: 8,
+          fontSize: 15, fontWeight: 700, textDecoration: "none",
+          marginBottom: 12,
+        }}>
+          Upgrade to Pro — $29/month
+        </a>
+        <div style={{ fontSize: 12, color: "#555", marginTop: 8 }}>
+          Cancel anytime. No lock-in.
+        </div>
+      </div>
+      <Footer />
+    </div>
+  );
 
   return (
     <div style={{ minHeight: "100vh", background: "#000", color: "#f0f0f0", fontFamily: "system-ui, -apple-system, sans-serif" }}>

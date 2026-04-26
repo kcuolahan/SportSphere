@@ -7,6 +7,10 @@ import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { SignalBadge, ConfidenceBadge } from "@/components/ui/Badge";
 import { getCurrentPredictions, getAllResults, getTeamConcession } from "@/lib/data";
 import type { Pick, TeamNewsEntry, SuppressionScore, Fixture } from "@/lib/data";
+import { useProAccess } from "@/lib/auth";
+import { filterPicksForTier, shouldShowProPrompt } from "@/lib/paywall";
+import { FreeTierPaywall } from "@/components/FreeTierPaywall";
+import { FreeTierPnLCard } from "@/components/FreeTierPnLCard";
 
 const { round, season, generated_at, team_news = [], verified_at, fixtures = [] } = getCurrentPredictions();
 const picks = [...getCurrentPredictions().picks].sort((a, b) => b.edge_vol - a.edge_vol);
@@ -288,6 +292,8 @@ function calcMatchupScore(pred: Pick): number {
 }
 
 export default function PredictionsPage() {
+  const { isPro, loading: proLoading } = useProAccess();
+  const [paywallDismissed, setPaywallDismissed] = useState(false);
   const [filter, setFilter] = useState<FilterType>("ACTIONABLE");
   const [view, setView] = useState<ViewType>("CARD");
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -344,12 +350,18 @@ export default function PredictionsPage() {
 
   const isHCPick = (p: Pick) => p.enhanced_signal === "HC" || p.edge_vol >= 0.90;
 
-  const filtered = picks.filter((p: Pick) => {
-    if (filter === "ACTIONABLE") return p.filter_pass;
-    if (filter === "SHARP") return p.edge_vol >= 0.70 && p.edge_vol < 0.90 && !isHCPick(p);
-    if (filter === "HC") return isHCPick(p);
-    return true;
-  });
+  const showPaywall = !proLoading && shouldShowProPrompt(isPro) && !paywallDismissed;
+  const freePicks = filterPicksForTier(picks, false);
+  const tieredPicks = (proLoading || isPro) ? picks : freePicks;
+
+  const filtered = (!proLoading && !isPro)
+    ? tieredPicks
+    : picks.filter((p: Pick) => {
+        if (filter === "ACTIONABLE") return p.filter_pass;
+        if (filter === "SHARP") return p.edge_vol >= 0.70 && p.edge_vol < 0.90 && !isHCPick(p);
+        if (filter === "HC") return isHCPick(p);
+        return true;
+      });
 
   const hcCount = picks.filter(p => (p.edge_vol ?? 0) >= 0.90).length;
   const betCount = picks.filter((p: Pick) => p.filter_pass).length;
@@ -398,6 +410,16 @@ export default function PredictionsPage() {
         </div>
 
         <TeamNewsBanner news={team_news as TeamNewsEntry[]} />
+
+        {showPaywall && (
+          <FreeTierPaywall
+            totalPicksAvailable={picks.length}
+            totalHCPicksAvailable={picks.filter(p => isHCPick(p)).length}
+            freePicks={freePicks}
+            onDismiss={() => setPaywallDismissed(true)}
+          />
+        )}
+        {showPaywall && <FreeTierPnLCard />}
 
         {/* Stats */}
         <div className="pick-stats-grid">
