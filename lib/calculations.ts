@@ -1,4 +1,4 @@
-interface PnLData {
+export interface PnLData {
   totalBets: number
   wins: number
   losses: number
