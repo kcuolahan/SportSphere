@@ -6,8 +6,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { getCurrentPredictions, getAllResults, getResultStats, getSeasonSummary } from "@/lib/data";
-import { EmailSignup } from "@/components/EmailSignup";
-import { roundsLabel, currentSeason, currentRound } from "@/lib/siteData";
+import { roundsLabel, currentSeason } from "@/lib/siteData";
 import { TEAM_COLOURS } from "@/lib/teams";
 const predictions = getCurrentPredictions();
 const highImpactNews = (predictions.team_news ?? []).filter((n: { impact: string }) => n.impact === "HIGH");
@@ -205,14 +204,29 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* ── EMAIL SIGNUP ── */}
+      {/* ── PRO CTA ── */}
       <div style={{
         borderTop: "1px solid #0d0d0d",
         background: "#030303",
         padding: "40px 24px",
       }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <EmailSignup round={currentRound} variant="hero" />
+        <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 24, flexWrap: "wrap" }}>
+          <div>
+            <div style={{ fontSize: 16, fontWeight: 700, color: "#f0f0f0", marginBottom: 4 }}>
+              Start Pro for $29/month
+            </div>
+            <div style={{ fontSize: 13, color: "#555" }}>
+              *No payment required for beta. Full access while we&apos;re live-testing.
+            </div>
+          </div>
+          <Link href="/auth/signup" style={{
+            background: "#f97316", color: "#000",
+            padding: "12px 24px", borderRadius: 8,
+            fontSize: 14, fontWeight: 700, textDecoration: "none",
+            whiteSpace: "nowrap", flexShrink: 0,
+          }}>
+            Get Started — Free Trial*
+          </Link>
         </div>
       </div>
 
