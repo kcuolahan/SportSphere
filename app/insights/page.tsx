@@ -1,8 +1,13 @@
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import results from "@/data/results.json";
 import teamStyleData from "@/data/team-style.json";
 import { totalPicks, strongRate, filteredRate, roundsLabel, currentSeason } from "@/lib/siteData";
+import { useProAccess } from "@/lib/auth";
 
 const analytics = (results as any).analytics;
 const teams = teamStyleData.teams;
@@ -31,12 +36,21 @@ function SectionBadge({ n }: { n: number }) {
 }
 
 export default function InsightsPage() {
+  const { isPro, loading } = useProAccess();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && !isPro) router.replace("/auth/payment");
+  }, [isPro, loading, router]);
+
   const { model_bias, by_condition, by_position_condition, by_confidence_condition } = analytics;
 
   const getPosCond = (pos: string, cond: string) =>
     by_position_condition.find((r: any) => r.position === pos && r.condition === cond);
 
   const teamStyleRows = [...teams].sort((a, b) => a.disposal_index - b.disposal_index);
+
+  if (loading || !isPro) return null;
 
   function getStyle(idx: number): { label: string; color: string; meaning: string } {
     if (idx <= -21) return { label: "TRANS", color: "#60a5fa", meaning: "Facing this team favours OVER — more open play disposals" };

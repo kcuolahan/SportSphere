@@ -1,21 +1,22 @@
 "use client";
 
 const ROUNDS_TRACKED = "3–7";
-const TOTAL_BETS = 31;
-const WIN_RATE = "64.5%";
-const GROSS_PROFIT_YTD = 37400;
+const TOTAL_BETS = 35;
+const WIN_RATE = "65.7%";
+const WIN_LOSS = "23W · 12L";
+const GROSS_PROFIT_YTD = 43010; // 23 wins × $1,870 return
 const NET_PROFIT_YTD = 6400;
 const PROJECTED_GROSS = 29440;
-const ANNUAL_FEE = 348;
-const NET_AFTER_SUB = 29092;
-const MULTIPLIER = 84;
+const ANNUAL_FEE = 174; // $29/month × 6 months
+const NET_AFTER_SUB = 29266;
+const MULTIPLIER = 168;
 
 const ROUND_PL = [
   { round: 3, profit: 2480, wins: 4, losses: 1 },
   { round: 4, profit: 220,  wins: 6, losses: 5 },
   { round: 5, profit: 4220, wins: 6, losses: 1 },
-  { round: 6, profit: 2400, wins: 4, losses: 4 },
-  { round: 7, profit: 980,  wins: 3, losses: 2 },
+  { round: 6, profit: -1390, wins: 3, losses: 4 },
+  { round: 7, profit: 870,  wins: 4, losses: 1 },
 ];
 const MAX_PROFIT = Math.max(...ROUND_PL.map(r => r.profit));
 
@@ -30,7 +31,7 @@ export function AnnualROIProof() {
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 1, background: "#111", borderRadius: 8, overflow: "hidden", marginBottom: 16 }}>
           {[
-            { label: "Total Bets",    value: TOTAL_BETS,                      color: "#f0f0f0" },
+            { label: "Total Bets",    value: `${TOTAL_BETS} (${WIN_LOSS})`,   color: "#f0f0f0" },
             { label: "Win Rate",      value: WIN_RATE,                         color: "#4ade80" },
             { label: "Gross Profit",  value: `$${GROSS_PROFIT_YTD.toLocaleString()}`, color: "#4ade80" },
             { label: "Net Profit",    value: `$${NET_PROFIT_YTD.toLocaleString()}`,   color: "#4ade80" },
@@ -85,7 +86,7 @@ export function AnnualROIProof() {
             <span style={{ fontWeight: 800, fontSize: 22, color: "#f0f0f0" }}>${PROJECTED_GROSS.toLocaleString()}</span>
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 13, padding: "10px 12px", background: "#0d0d0d", borderRadius: 6 }}>
-            <span style={{ color: "#666" }}>Annual subscription ($29 × 12)</span>
+            <span style={{ color: "#666" }}>AFL season access ($29 × 6 months)</span>
             <span style={{ fontWeight: 700, color: "#f0f0f0" }}>−${ANNUAL_FEE}</span>
           </div>
           <div style={{ height: 1, background: "#1a1a1a" }} />
@@ -101,7 +102,7 @@ export function AnnualROIProof() {
             {MULTIPLIER}×
           </div>
           <div style={{ fontSize: 12, color: "#888", marginTop: 8, lineHeight: 1.6 }}>
-            Your $348 annual subscription cost is recovered <strong style={{ color: "#f97316" }}>{MULTIPLIER} times over</strong> by year-end profits
+            Your $174 season subscription is recovered <strong style={{ color: "#f97316" }}>{MULTIPLIER} times over</strong> by year-end profits
           </div>
         </div>
       </div>
@@ -153,7 +154,7 @@ export function AnnualROIProof() {
       <div style={{ background: "#050505", border: "1px solid #111", borderRadius: 10, padding: "20px 24px", textAlign: "center" }}>
         <div style={{ fontSize: 15, fontWeight: 800, color: "#f0f0f0", marginBottom: 6 }}>The math is clear.</div>
         <div style={{ fontSize: 13, color: "#666", lineHeight: 1.7 }}>
-          A $348 annual investment returns ${NET_AFTER_SUB.toLocaleString()} in profits.{" "}
+          A $174 season investment returns ${NET_AFTER_SUB.toLocaleString()} in profits.{" "}
           Your subscription pays for itself{" "}
           <span style={{ color: "#f97316", fontWeight: 700 }}>{MULTIPLIER} times over</span>.
         </div>

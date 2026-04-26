@@ -5,17 +5,86 @@ import { createClient } from '@supabase/supabase-js'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import { PlayerAvatar } from '@/components/PlayerAvatar'
+import { useProAccess } from '@/lib/auth'
 
-const ROUND_DATA = [
-  { round: 3, pnl: 2500, wins: 4, losses: 1, isCurrent: false },
-  { round: 4, pnl: 200, wins: 6, losses: 5, isCurrent: false },
-  { round: 5, pnl: 4200, wins: 6, losses: 1, isCurrent: false },
-  { round: 6, pnl: 2400, wins: 3, losses: 4, isCurrent: false },
-  { round: 7, pnl: 900, wins: 1, losses: 0, isCurrent: true },
+// ── Bankroll line chart ────────────────────────────────────────────────────────
+const BANKROLL = [
+  { label: 'Start', value: 1000 },
+  { label: 'R3', value: 3480 },
+  { label: 'R4', value: 3700 },
+  { label: 'R5', value: 7920 },
+  { label: 'R6', value: 6530 },
+  { label: 'R7', value: 7400 },
+  { label: 'R8-24', value: 36840 },
 ]
 
-const MAX_PNL = 4200
+function BankrollChart() {
+  const W = 560, H = 200
+  const PL = 36, PR = 80, PT = 20, PB = 36
+  const cw = W - PL - PR  // 444
+  const ch = H - PT - PB  // 144
+  const n = BANKROLL.length
+  const minY = 0, maxY = 40000, range = maxY
 
+  const fx = (i: number) => PL + (i / (n - 1)) * cw
+  const fy = (v: number) => PT + (1 - (v - minY) / range) * ch
+
+  const actualPts = BANKROLL.slice(0, 6)
+  const actualPath = actualPts
+    .map((d, i) => `${i === 0 ? 'M' : 'L'}${fx(i).toFixed(1)},${fy(d.value).toFixed(1)}`)
+    .join(' ')
+  const projPath = `M${fx(5).toFixed(1)},${fy(BANKROLL[5].value).toFixed(1)} L${fx(6).toFixed(1)},${fy(BANKROLL[6].value).toFixed(1)}`
+
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', display: 'block', overflow: 'visible' }}>
+      {/* Y axis gridlines + labels */}
+      {[0, 10000, 20000, 30000, 40000].map(v => (
+        <g key={v}>
+          {v > 0 && <line x1={PL} y1={fy(v)} x2={W - PR} y2={fy(v)} stroke="#141414" strokeWidth={0.5} strokeDasharray="3,4" />}
+          <text x={PL - 5} y={fy(v) + 4} textAnchor="end" fontSize={8} fill="#444">
+            {v === 0 ? '$0' : `$${v / 1000}k`}
+          </text>
+        </g>
+      ))}
+
+      {/* X axis baseline */}
+      <line x1={PL} y1={fy(0)} x2={W - PR} y2={fy(0)} stroke="#1a1a1a" strokeWidth={0.5} />
+
+      {/* Actual line */}
+      <path d={actualPath} fill="none" stroke="#f97316" strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round" />
+
+      {/* Projected dashed line */}
+      <path d={projPath} fill="none" stroke="#f97316" strokeWidth={2} strokeDasharray="6,4" strokeOpacity={0.45} />
+
+      {/* Dots on actual points */}
+      {actualPts.map((d, i) => (
+        <circle key={i} cx={fx(i)} cy={fy(d.value)} r={4} fill="#f97316" stroke="#000" strokeWidth={1.5} />
+      ))}
+
+      {/* Projected dot (hollow) */}
+      <circle cx={fx(6)} cy={fy(BANKROLL[6].value)} r={4} fill="none" stroke="#f97316" strokeWidth={1.5} strokeOpacity={0.5} />
+
+      {/* Start annotation */}
+      <text x={fx(0)} y={fy(BANKROLL[0].value) - 9} textAnchor="middle" fontSize={9} fill="#888">$1,000</text>
+
+      {/* R7 annotation */}
+      <text x={fx(5)} y={fy(BANKROLL[5].value) - 9} textAnchor="middle" fontSize={9} fill="#f97316">$7,400</text>
+
+      {/* Projected annotation */}
+      <text x={fx(6) + 5} y={fy(BANKROLL[6].value) + 4} textAnchor="start" fontSize={11} fontWeight="bold" fill="#22c55e">$36,840</text>
+      <text x={fx(6) + 5} y={fy(BANKROLL[6].value) + 15} textAnchor="start" fontSize={8} fill="#555">projected</text>
+
+      {/* X axis labels */}
+      {BANKROLL.map((d, i) => (
+        <text key={i} x={fx(i)} y={H - 4} textAnchor="middle" fontSize={9} fill={i < 6 ? '#666' : '#444'}>
+          {d.label}
+        </text>
+      ))}
+    </svg>
+  )
+}
+
+// ── Pick card ──────────────────────────────────────────────────────────────────
 interface LivePick {
   id: string
   round: number
@@ -32,7 +101,60 @@ interface LivePick {
   profit_loss: number | null
 }
 
+function PickCard({ pick }: { pick: LivePick }) {
+  const isOver = pick.prediction === 'OVER'
+  const isWin = pick.result === 'WIN'
+  const isLoss = pick.result === 'LOSS'
+  const hasResult = pick.result !== null
+
+  return (
+    <div style={{
+      background: '#080808',
+      border: '1px solid rgba(249,115,22,0.15)',
+      borderLeft: '3px solid #f97316',
+      borderRadius: 10, padding: '16px 20px',
+      display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap',
+    }}>
+      <PlayerAvatar name={pick.player_name} team={pick.team} size={44} />
+      <div style={{ flex: 1, minWidth: 140 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+          <span style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>{pick.player_name}</span>
+          <span style={{ fontSize: 8, fontWeight: 800, color: '#000', background: '#f97316', borderRadius: 3, padding: '2px 6px', letterSpacing: '0.06em' }}>HC</span>
+        </div>
+        <div style={{ fontSize: 13, color: '#666' }}>{pick.position} · {pick.team}</div>
+      </div>
+      <div style={{ display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap' }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: 10, color: '#555', textTransform: 'uppercase', marginBottom: 2 }}>Trade Thesis</div>
+          <div style={{ fontSize: 15, fontWeight: 800, color: isOver ? '#22c55e' : '#ef4444' }}>
+            {pick.prediction} {isOver ? '⬆' : '⬇'} {pick.line}
+          </div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: 10, color: '#555', textTransform: 'uppercase', marginBottom: 2 }}>E/V</div>
+          <div style={{ fontSize: 15, fontWeight: 800, color: '#60a5fa' }}>{pick.edge_vol?.toFixed(2) ?? '—'}</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: 10, color: '#555', textTransform: 'uppercase', marginBottom: 2 }}>Status</div>
+          {!hasResult ? (
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#888' }}>
+              {pick.final_disposals !== null ? `${pick.final_disposals} disp` : 'Pending'}
+            </div>
+          ) : (
+            <div style={{ fontSize: 13, fontWeight: 800, color: isWin ? '#4ade80' : '#f87171' }}>
+              {isWin ? '✓ WIN' : isLoss ? '✗ LOSS' : pick.result}
+              {pick.final_disposals !== null && <span style={{ fontSize: 11, color: '#666', marginLeft: 4 }}>({pick.final_disposals})</span>}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── Main page ──────────────────────────────────────────────────────────────────
 export default function PredictionsPage() {
+  const { isPro, loading: proLoading } = useProAccess()
   const [hcPicks, setHcPicks] = useState<LivePick[]>([])
   const [loading, setLoading] = useState(true)
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
@@ -49,7 +171,7 @@ export default function PredictionsPage() {
         .select('*')
         .order('edge_vol', { ascending: false })
       if (!error && data) {
-        setHcPicks(data.filter(p => p.round === 7 && p.tier === 'HC'))
+        setHcPicks(data.filter((p: LivePick) => p.round === 7 && p.tier === 'HC'))
         setLastUpdated(new Date())
       }
       setLoading(false)
@@ -59,9 +181,7 @@ export default function PredictionsPage() {
 
     const subscription = supabase
       .channel('live_picks_changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'live_picks' }, () => {
-        fetchPicks()
-      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'live_picks' }, () => fetchPicks())
       .subscribe()
 
     const interval = setInterval(async () => {
@@ -72,11 +192,11 @@ export default function PredictionsPage() {
       } catch {}
     }, 30000)
 
-    return () => {
-      subscription.unsubscribe()
-      clearInterval(interval)
-    }
+    return () => { subscription.unsubscribe(); clearInterval(interval) }
   }, [])
+
+  const visiblePicks = (!proLoading && !isPro) ? hcPicks.slice(0, 1) : hcPicks
+  const lockedCount = (!proLoading && !isPro) ? Math.max(0, hcPicks.length - 1) : 0
 
   return (
     <div style={{ minHeight: '100vh', background: '#000', color: '#f0f0f0', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
@@ -85,19 +205,13 @@ export default function PredictionsPage() {
       <style>{`
         .hero-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
         .proj-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        .chart-wrap { overflow-x: auto; }
         @media (max-width: 640px) {
           .hero-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .proj-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
 
-      {/* Gradient band */}
-      <div style={{
-        position: 'fixed', top: 60, left: 0, right: 0, height: 120, zIndex: 0,
-        background: 'linear-gradient(180deg, #1a0a00 0%, #000000 100%)',
-        pointerEvents: 'none',
-      }} />
+      <div style={{ position: 'fixed', top: 60, left: 0, right: 0, height: 120, zIndex: 0, background: 'linear-gradient(180deg, #1a0a00 0%, #000000 100%)', pointerEvents: 'none' }} />
 
       <div style={{ maxWidth: 900, margin: '0 auto', padding: '84px 20px 60px', position: 'relative' }}>
 
@@ -115,33 +229,21 @@ export default function PredictionsPage() {
 
           <div className="hero-grid" style={{ marginBottom: 20 }}>
             {[
-              { label: 'Total Units Staked', value: '$31,000', color: '#f0f0f0' },
-              { label: 'Win Rate', value: '64.5%', sub: '20W · 11L', color: '#f97316' },
+              { label: 'Total Units Staked', value: '$35,000', color: '#f0f0f0' },
+              { label: 'Win Rate', value: '65.7%', sub: '23W · 12L', color: '#f97316' },
               { label: 'Gross P&L', value: '+$6,400', color: '#22c55e' },
-              { label: 'ROI', value: '20.6%', color: '#22c55e' },
+              { label: 'ROI', value: '18.3%', color: '#22c55e' },
             ].map(s => (
-              <div key={s.label} style={{
-                background: '#080808', border: '1px solid #111',
-                borderRadius: 12, padding: '20px 16px', textAlign: 'center',
-              }}>
-                <div style={{ fontSize: 32, fontWeight: 800, color: s.color, letterSpacing: '-0.02em', marginBottom: 4 }}>
-                  {s.value}
-                </div>
+              <div key={s.label} style={{ background: '#080808', border: '1px solid #111', borderRadius: 12, padding: '20px 16px', textAlign: 'center' }}>
+                <div style={{ fontSize: 32, fontWeight: 800, color: s.color, letterSpacing: '-0.02em', marginBottom: 4 }}>{s.value}</div>
                 {s.sub && <div style={{ fontSize: 11, color: '#555', marginBottom: 4 }}>{s.sub}</div>}
-                <div style={{ fontSize: 10, color: '#555', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                  {s.label}
-                </div>
+                <div style={{ fontSize: 10, color: '#555', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{s.label}</div>
               </div>
             ))}
           </div>
 
-          <div style={{
-            background: '#080808', border: '1px solid #1a1a1a',
-            borderRadius: 8, padding: '14px 18px',
-            fontSize: 13, color: '#666', lineHeight: 1.7,
-          }}>
-            Based on $1,000 flat stake per bet at 1.87 average odds.
-            All results verified against official game data.
+          <div style={{ background: '#080808', border: '1px solid #1a1a1a', borderRadius: 8, padding: '14px 18px', fontSize: 13, color: '#666', lineHeight: 1.7 }}>
+            Based on $1,000 flat stake per bet at 1.87 average odds. All results verified against official game data.
           </div>
         </section>
 
@@ -155,7 +257,6 @@ export default function PredictionsPage() {
           </h2>
 
           <div className="proj-grid" style={{ marginBottom: 20 }}>
-            {/* Left */}
             <div style={{ background: '#080808', border: '1px solid #111', borderRadius: 12, padding: '24px' }}>
               <div style={{ fontSize: 12, fontWeight: 700, color: '#888', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>
                 If This Pattern Holds
@@ -166,17 +267,13 @@ export default function PredictionsPage() {
                 { label: 'Projected ROI', value: '20.4%', color: '#22c55e' },
                 { label: 'Per-bet average', value: '$206' },
               ].map(r => (
-                <div key={r.label} style={{
-                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  padding: '10px 0', borderBottom: '1px solid #0d0d0d',
-                }}>
+                <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid #0d0d0d' }}>
                   <span style={{ fontSize: 13, color: '#666' }}>{r.label}</span>
                   <span style={{ fontSize: 14, fontWeight: 700, color: r.color ?? '#f0f0f0' }}>{r.value}</span>
                 </div>
               ))}
             </div>
 
-            {/* Right */}
             <div style={{ background: '#030f08', border: '1px solid #14532d', borderRadius: 12, padding: '24px' }}>
               <div style={{ fontSize: 12, fontWeight: 700, color: '#4ade80', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>
                 After $29/month AFL Season Access (6 months = $174)
@@ -187,10 +284,7 @@ export default function PredictionsPage() {
                 { label: 'Subscription multiple', value: '168x', color: '#4ade80' },
                 { label: 'Monthly break-even', value: '2 days' },
               ].map(r => (
-                <div key={r.label} style={{
-                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  padding: '10px 0', borderBottom: '1px solid #052e16',
-                }}>
+                <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid #052e16' }}>
                   <span style={{ fontSize: 13, color: '#4ade8099' }}>{r.label}</span>
                   <span style={{ fontSize: 14, fontWeight: 700, color: r.color ?? '#f0f0f0' }}>{r.value}</span>
                 </div>
@@ -198,96 +292,40 @@ export default function PredictionsPage() {
             </div>
           </div>
 
-          {/* 168x callout */}
-          <div style={{
-            background: 'linear-gradient(135deg, #030f08 0%, #071a0c 100%)',
-            border: '1px solid #22c55e40',
-            borderRadius: 12, padding: '32px',
-            textAlign: 'center',
-          }}>
-            <div style={{ fontSize: 'clamp(44px, 8vw, 72px)', fontWeight: 800, color: '#22c55e', letterSpacing: '-0.04em', lineHeight: 1, marginBottom: 12 }}>
-              168x
-            </div>
-            <p style={{ fontSize: 16, color: '#4ade80', margin: '0 0 8px', fontWeight: 600 }}>
-              Your $174 subscription is recovered 168 times over.
-            </p>
-            <p style={{ fontSize: 13, color: '#666', margin: 0 }}>
-              That&apos;s not marketing. That&apos;s math.
-            </p>
+          <div style={{ background: 'linear-gradient(135deg, #030f08 0%, #071a0c 100%)', border: '1px solid #22c55e40', borderRadius: 12, padding: '32px', textAlign: 'center' }}>
+            <div style={{ fontSize: 'clamp(44px, 8vw, 72px)', fontWeight: 800, color: '#22c55e', letterSpacing: '-0.04em', lineHeight: 1, marginBottom: 12 }}>168x</div>
+            <p style={{ fontSize: 16, color: '#4ade80', margin: '0 0 8px', fontWeight: 600 }}>Your $174 subscription is recovered 168 times over.</p>
+            <p style={{ fontSize: 13, color: '#666', margin: 0 }}>That&apos;s not marketing. That&apos;s math.</p>
           </div>
         </section>
 
-        {/* ── SECTION 3: P&L BY ROUND ── */}
+        {/* ── SECTION 3: BANKROLL LINE CHART ── */}
         <section style={{ marginBottom: 64 }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: '#f97316', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>
             Round by Round
           </div>
           <h2 style={{ fontSize: 'clamp(20px, 3vw, 28px)', fontWeight: 800, letterSpacing: '-0.02em', margin: '0 0 24px' }}>
-            P&L by Round ($1,000 per unit)
+            Bankroll Growth Starting from $1,000
           </h2>
 
           <div style={{ background: '#080808', border: '1px solid #111', borderRadius: 12, padding: '24px' }}>
-            <div className="chart-wrap">
+            <div style={{ overflowX: 'auto' }}>
               <div style={{ minWidth: 400 }}>
-                {ROUND_DATA.map(r => {
-                  const pct = Math.max(3, (r.pnl / MAX_PNL) * 90)
-                  return (
-                    <div key={r.round} style={{ marginBottom: 14 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <div style={{ width: 28, fontSize: 11, fontWeight: r.isCurrent ? 700 : 400, color: r.isCurrent ? '#f97316' : '#555', flexShrink: 0 }}>
-                          R{r.round}
-                        </div>
-                        <div style={{ flex: 1, height: 30, position: 'relative' }}>
-                          <div style={{
-                            height: '100%',
-                            width: `${pct}%`,
-                            background: r.isCurrent ? 'rgba(249,115,22,0.55)' : '#f97316',
-                            borderRadius: 4,
-                            border: r.isCurrent ? '1px solid #f97316' : 'none',
-                          }} />
-                        </div>
-                        <div style={{ width: 130, display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-                          <span style={{ fontSize: 14, fontWeight: 700, color: '#22c55e' }}>
-                            +${(r.pnl / 1000).toFixed(1)}k
-                          </span>
-                          <span style={{ fontSize: 11, color: '#555' }}>{r.wins}W-{r.losses}L</span>
-                          {r.isCurrent && (
-                            <span style={{
-                              fontSize: 8, fontWeight: 800, color: '#f97316',
-                              background: '#f9731618', border: '1px solid #f9731640',
-                              borderRadius: 3, padding: '1px 5px', letterSpacing: '0.04em',
-                            }}>
-                              LIVE
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  )
-                })}
-
-                {/* Projected R8-23 */}
-                <div style={{ marginTop: 6 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <div style={{ width: 28, fontSize: 11, color: '#444', flexShrink: 0 }}>R8+</div>
-                    <div style={{ flex: 1, height: 30, position: 'relative' }}>
-                      <div style={{
-                        height: '100%', width: '80%',
-                        background: 'rgba(249,115,22,0.12)',
-                        borderRadius: 4,
-                        border: '1px dashed #f9731430',
-                      }} />
-                    </div>
-                    <div style={{ width: 130, display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-                      <span style={{ fontSize: 14, fontWeight: 700, color: '#22c55e50' }}>+$16.8k</span>
-                      <span style={{ fontSize: 9, color: '#444', fontStyle: 'italic' }}>projected</span>
-                    </div>
-                  </div>
-                </div>
+                <BankrollChart />
               </div>
             </div>
-            <p style={{ fontSize: 10, color: '#444', margin: '16px 0 0', lineHeight: 1.6 }}>
-              R7 extrapolated from HC picks so far at $1,000/unit. R8–23 projected at current pace.
+            <div style={{ display: 'flex', gap: 20, marginTop: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <div style={{ width: 20, height: 2.5, background: '#f97316', borderRadius: 1 }} />
+                <span style={{ fontSize: 10, color: '#666' }}>Actual (R3–R7)</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <div style={{ width: 20, height: 0, borderTop: '2px dashed rgba(249,115,22,0.45)', borderRadius: 1 }} />
+                <span style={{ fontSize: 10, color: '#555' }}>Projected (R8–24)</span>
+              </div>
+            </div>
+            <p style={{ fontSize: 10, color: '#444', margin: '10px 0 0', lineHeight: 1.6 }}>
+              R7 extrapolated from HC picks confirmed so far at $1,000/unit. R8–24 projected at current pace.
             </p>
           </div>
         </section>
@@ -301,87 +339,41 @@ export default function PredictionsPage() {
             <h2 style={{ fontSize: 'clamp(20px, 3vw, 28px)', fontWeight: 800, letterSpacing: '-0.02em', margin: 0 }}>
               High Conviction Model Signals
             </h2>
-            <span style={{ fontSize: 11, color: '#555' }}>
-              Live results streamed real-time
-            </span>
+            <span style={{ fontSize: 11, color: '#555' }}>Live results streamed real-time</span>
           </div>
 
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '48px 0', fontSize: 13, color: '#555' }}>
-              Loading signals...
-            </div>
+            <div style={{ textAlign: 'center', padding: '48px 0', fontSize: 13, color: '#555' }}>Loading signals...</div>
           ) : hcPicks.length === 0 ? (
-            <div style={{
-              background: '#080808', border: '1px solid #111',
-              borderRadius: 12, padding: '48px', textAlign: 'center',
-            }}>
+            <div style={{ background: '#080808', border: '1px solid #111', borderRadius: 12, padding: '48px', textAlign: 'center' }}>
               <p style={{ fontSize: 14, color: '#555', margin: '0 0 8px' }}>No HC signals loaded yet for Round 7.</p>
               <p style={{ fontSize: 12, color: '#333', margin: 0 }}>Check back after picks are seeded.</p>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {hcPicks.map(pick => {
-                const isWin = pick.result === 'WIN'
-                const isLoss = pick.result === 'LOSS'
-                const hasResult = pick.result !== null
-                const isOver = pick.prediction === 'OVER'
+              {visiblePicks.map(pick => <PickCard key={pick.id} pick={pick} />)}
 
-                return (
-                  <div key={pick.id} style={{
-                    background: '#080808',
-                    border: '1px solid rgba(249,115,22,0.15)',
-                    borderLeft: '3px solid #f97316',
-                    borderRadius: 10, padding: '16px 20px',
-                    display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap',
-                  }}>
-                    <PlayerAvatar name={pick.player_name} team={pick.team} size={44} />
-
-                    <div style={{ flex: 1, minWidth: 140 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                        <span style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>{pick.player_name}</span>
-                        <span style={{
-                          fontSize: 8, fontWeight: 800, color: '#000',
-                          background: '#f97316', borderRadius: 3,
-                          padding: '2px 6px', letterSpacing: '0.06em',
-                        }}>HC</span>
-                      </div>
-                      <div style={{ fontSize: 13, color: '#666' }}>
-                        {pick.position} · {pick.team}
-                      </div>
-                    </div>
-
-                    <div style={{ display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap' }}>
-                      <div style={{ textAlign: 'center' }}>
-                        <div style={{ fontSize: 10, color: '#555', textTransform: 'uppercase', marginBottom: 2 }}>Trade Thesis</div>
-                        <div style={{ fontSize: 15, fontWeight: 800, color: isOver ? '#22c55e' : '#ef4444' }}>
-                          {pick.prediction} {isOver ? '⬆' : '⬇'} {pick.line}
-                        </div>
-                      </div>
-                      <div style={{ textAlign: 'center' }}>
-                        <div style={{ fontSize: 10, color: '#555', textTransform: 'uppercase', marginBottom: 2 }}>E/V</div>
-                        <div style={{ fontSize: 15, fontWeight: 800, color: '#60a5fa' }}>
-                          {pick.edge_vol?.toFixed(2) ?? '—'}
-                        </div>
-                      </div>
-                      <div style={{ textAlign: 'center' }}>
-                        <div style={{ fontSize: 10, color: '#555', textTransform: 'uppercase', marginBottom: 2 }}>Status</div>
-                        {!hasResult ? (
-                          <div style={{ fontSize: 13, fontWeight: 700, color: '#888' }}>
-                            {pick.final_disposals !== null ? `${pick.final_disposals} disp` : 'Pending'}
-                          </div>
-                        ) : (
-                          <div style={{ fontSize: 13, fontWeight: 800, color: isWin ? '#4ade80' : '#f87171' }}>
-                            {isWin ? '✓ WIN' : isLoss ? '✗ LOSS' : pick.result}
-                            {pick.final_disposals !== null && (
-                              <span style={{ fontSize: 11, color: '#666', marginLeft: 4 }}>({pick.final_disposals})</span>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </div>
+              {lockedCount > 0 && (
+                <div style={{
+                  background: '#0a0a0a', border: '1px solid rgba(249,115,22,0.2)',
+                  borderRadius: 12, padding: '28px 32px', textAlign: 'center',
+                }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: '#f97316', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 10 }}>
+                    Pro Only
                   </div>
-                )
-              })}
+                  <h3 style={{ fontSize: 18, fontWeight: 800, letterSpacing: '-0.02em', margin: '0 0 8px' }}>
+                    You&apos;re viewing 1 of {hcPicks.length} HC Model Signals
+                  </h3>
+                  <p style={{ fontSize: 13, color: '#666', margin: '0 0 20px', lineHeight: 1.6 }}>
+                    {lockedCount} more signal{lockedCount !== 1 ? 's' : ''} locked. Upgrade to Pro to see all picks, real-time results, and full analytics.
+                  </p>
+                  <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
+                    <a href="/auth/payment" style={{ display: 'inline-block', background: '#f97316', color: '#000', borderRadius: 8, padding: '11px 24px', fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
+                      Unlock All Signals — $29/month
+                    </a>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

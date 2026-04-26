@@ -5,6 +5,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import resultsData from "@/data/results.json";
 import { totalPicks, roundsLabel, currentSeason } from "@/lib/siteData";
+import { useProAccess } from "@/lib/auth";
 
 /* ── Types ─────────────────────────────────────────────────────────────────── */
 interface Pick {
@@ -277,6 +278,7 @@ function Pill({ label, active, onClick, activeColor }: { label: string; active: 
 
 /* ── Main page ──────────────────────────────────────────────────────────────── */
 export default function AccuracyPage() {
+  const { isPro, loading: proLoading } = useProAccess();
   const [roundFilter, setRoundFilter] = useState<number | "ALL">("ALL");
   const [posFilter, setPosFilter] = useState<"ALL" | "MID" | "DEF" | "FWD" | "RUCK">("ALL");
   const [tierFilter, setTierFilter] = useState<"ALL" | "HC" | "BET" | "SKIP">("ALL");
@@ -530,6 +532,35 @@ export default function AccuracyPage() {
         </div>
       </div>
       <Footer />
+
+      {/* Soft lock overlay for non-Pro users */}
+      {!proLoading && !isPro && (
+        <div style={{
+          position: "fixed", bottom: 0, left: 0, right: 0, height: "60vh",
+          background: "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.9) 40%, #000 60%)",
+          zIndex: 10, display: "flex", flexDirection: "column",
+          alignItems: "center", justifyContent: "flex-end", paddingBottom: 52,
+        }}>
+          <div style={{ textAlign: "center", maxWidth: 420, padding: "0 24px" }}>
+            <div style={{ fontSize: 10, color: "#f97316", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8, fontWeight: 700 }}>
+              Pro Feature
+            </div>
+            <div style={{ fontSize: 22, fontWeight: 800, color: "#f0f0f0", marginBottom: 8, letterSpacing: "-0.02em" }}>
+              Full Track Record
+            </div>
+            <div style={{ fontSize: 14, color: "#888", marginBottom: 24, lineHeight: 1.6 }}>
+              {totalPicks} verified picks, full P&L chart, sortable by any field.
+            </div>
+            <a href="/auth/payment" style={{
+              display: "inline-block", background: "#f97316", color: "#000",
+              fontWeight: 800, fontSize: 14, borderRadius: 8, padding: "12px 32px",
+              textDecoration: "none",
+            }}>
+              Upgrade to Pro — $29/month
+            </a>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

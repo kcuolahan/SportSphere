@@ -13,16 +13,16 @@ const CENTRE_LINKS = [
   { href: "/predictions", label: "Picks" },
   { href: "/nba", label: "NBA", dim: true },
   { href: "/nfl", label: "NFL", dim: true },
-  { href: "/accuracy", label: "Track Record" },
-  { href: "/defence", label: "DvP" },
   { href: "/players", label: "Players" },
   { href: "/model", label: "How It Works" },
 ];
 
 const RIGHT_LINKS = [
-  { href: "/insights", label: "Insights" },
+  { href: "/accuracy", label: "Track Record", isPro: true },
+  { href: "/defence", label: "DvP", isPro: true },
+  { href: "/insights", label: "Insights", isPro: true },
   { href: "/simulator", label: "Simulator", isPro: true },
-  { href: "/tracker", label: "Tracker" },
+  { href: "/tracker", label: "Tracker", isPro: true },
 ];
 
 const ALL_LINKS = [
