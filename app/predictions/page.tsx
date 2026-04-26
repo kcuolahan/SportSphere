@@ -11,7 +11,6 @@ import { useProAccess } from "@/lib/auth";
 import { filterPicksForTier, shouldShowProPrompt } from "@/lib/paywall";
 import { FreeTierPaywall } from "@/components/FreeTierPaywall";
 import { FreeTierPnLCard } from "@/components/FreeTierPnLCard";
-import livePicksData from "@/data/live-picks.json";
 import { roundResults as calcRoundResults } from "@/lib/results";
 
 const { round, season, generated_at, team_news = [], verified_at, fixtures = [] } = getCurrentPredictions();
@@ -303,6 +302,32 @@ export default function PredictionsPage() {
   const [shareCopied, setShareCopied] = useState(false);
   const [multiSelected, setMultiSelected] = useState<string[]>([]);
   const [multiCopied, setMultiCopied] = useState(false);
+  const [livePicksData, setLivePicksData] = useState<{
+    round: number;
+    picks: Array<{ playerName?: string; result: string | null; profitLoss: number | null }>;
+  } | null>(null);
+
+  useEffect(() => {
+    const fetchLivePicks = async () => {
+      try {
+        const res = await fetch('/data/live-picks.json', { cache: 'no-store' });
+        if (res.ok) setLivePicksData(await res.json());
+      } catch {}
+    };
+
+    fetchLivePicks();
+
+    const interval = setInterval(async () => {
+      try {
+        await fetch('/api/auto-update-results');
+        await fetchLivePicks();
+      } catch {
+        console.log('Auto-update check complete');
+      }
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   function toggleMulti(player: string) {
     setMultiSelected(prev =>
@@ -357,10 +382,11 @@ export default function PredictionsPage() {
   const tieredPicks = (proLoading || isPro) ? picks : freePicks;
 
   const liveRoundStats = useMemo(() => {
-    const picksWithResults = livePicksData.picks.filter(p => p.result)
-    if (picksWithResults.length === 0) return null
-    return calcRoundResults(picksWithResults)
-  }, []);
+    if (!livePicksData) return null;
+    const picksWithResults = livePicksData.picks.filter(p => p.result);
+    if (picksWithResults.length === 0) return null;
+    return calcRoundResults(picksWithResults);
+  }, [livePicksData]);
 
   const filtered = (!proLoading && !isPro)
     ? tieredPicks
@@ -1177,7 +1203,7 @@ export default function PredictionsPage() {
               Live Results
             </div>
             <h3 style={{ fontSize: 20, fontWeight: 800, letterSpacing: "-0.02em", margin: "0 0 20px" }}>
-              Round {livePicksData.round} Results
+              Round {livePicksData?.round} Results
             </h3>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8 }}>
               {[

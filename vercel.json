@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/auto-update-results",
+      "schedule": "*/30 19-23 * * 4,5,6,0"
+    }
+  ]
+}

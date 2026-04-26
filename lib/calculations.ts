@@ -22,6 +22,6 @@ export function calculateROI(data: PnLData) {
     roiBefore: roiBeforeFees,
     roiAfter: roiAfterFees,
     profitPerBet,
-    breakeven: data.totalFees,
+    breakeven: totalFees,
   }
 }
