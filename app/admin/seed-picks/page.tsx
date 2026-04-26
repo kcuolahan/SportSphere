@@ -1,210 +1,125 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-
-interface SeedResult {
-  status: string;
-  message: string;
-  picksCount: number;
-  picks: Array<{
-    player_name: string;
-    team: string;
-    position: string;
-    line: number;
-    prediction: string;
-    edge_vol: number;
-  }>;
-}
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function SeedPicksPage() {
-  const [file, setFile] = useState<File | null>(null);
-  const [round, setRound] = useState("7");
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<SeedResult | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+  const [file, setFile] = useState<File | null>(null)
+  const [round, setRound] = useState('7')
+  const [loading, setLoading] = useState(false)
+  const [result, setResult] = useState<any>(null)
+  const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!file) { setError("Please select a file"); return; }
-
-    setLoading(true);
-    setError(null);
-    setResult(null);
-
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!file) {
+      setError('Please select a file')
+      return
+    }
+    
+    setLoading(true)
+    setError(null)
+    setResult(null)
+    
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("round", round);
-
-      const response = await fetch("/api/upload-picks", { method: "POST", body: formData });
-      const data = await response.json();
-
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('round', round)
+      
+      const response = await fetch('/api/upload-picks', {
+        method: 'POST',
+        body: formData,
+      })
+      
+      const data = await response.json()
+      
       if (!response.ok) {
-        setError(data.error ?? "Upload failed");
-        return;
+        setError(data.error || 'Upload failed')
+        return
       }
-
-      setResult(data);
-      setFile(null);
-      setTimeout(() => router.push("/predictions"), 2500);
+      
+      setResult(data)
+      setFile(null)
+      
+      setTimeout(() => {
+        router.push('/predictions')
+      }, 2000)
+      
     } catch (err) {
-      setError(String(err));
+      setError(String(err))
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   }
 
   return (
-    <div style={{
-      minHeight: "100vh",
-      background: "#000",
-      color: "#f0f0f0",
-      fontFamily: "system-ui, -apple-system, sans-serif",
-      padding: "48px 24px",
-    }}>
-      <div style={{ maxWidth: 520, margin: "0 auto" }}>
-        {/* Header */}
-        <div style={{ marginBottom: 40 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: "#f97316", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 10 }}>
-            Admin
-          </div>
-          <h1 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 8px" }}>
-            Seed Round Picks
-          </h1>
-          <p style={{ fontSize: 13, color: "#555", margin: 0 }}>
-            Upload your Excel model file to auto-seed HC picks into Supabase.
-          </p>
-        </div>
-
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          {/* Round */}
+    <div className="min-h-screen bg-[#0a0a0a] text-white p-8">
+      <div className="max-w-md mx-auto">
+        <h1 className="text-2xl font-bold mb-8">Seed Round Picks</h1>
+        
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#666", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>
-              Round Number
-            </label>
+            <label className="block text-sm font-semibold mb-2">Round Number</label>
             <input
               type="number"
               value={round}
               onChange={(e) => setRound(e.target.value)}
+              className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded px-4 py-2 text-white"
               min="1"
-              max="27"
-              style={{
-                width: "100%",
-                background: "#0a0a0a",
-                border: "1px solid #1f1f1f",
-                borderRadius: 6,
-                padding: "10px 14px",
-                color: "#f0f0f0",
-                fontSize: 15,
-                fontWeight: 700,
-                boxSizing: "border-box",
-                outline: "none",
-              }}
+              max="24"
             />
           </div>
-
-          {/* File */}
+          
           <div>
-            <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#666", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>
-              Excel File (.xlsx)
-            </label>
+            <label className="block text-sm font-semibold mb-2">Excel File</label>
             <input
               type="file"
               accept=".xlsx,.xls"
-              onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-              style={{
-                width: "100%",
-                background: "#0a0a0a",
-                border: file ? "1px solid #f9731640" : "1px solid #1f1f1f",
-                borderRadius: 6,
-                padding: "10px 14px",
-                color: "#f0f0f0",
-                fontSize: 13,
-                boxSizing: "border-box",
-                cursor: "pointer",
-              }}
+              onChange={(e) => setFile(e.target.files?.[0] || null)}
+              className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded px-4 py-2 text-white"
             />
-            {file && (
-              <div style={{ fontSize: 11, color: "#f97316", marginTop: 6 }}>
-                ✓ {file.name} ({(file.size / 1024).toFixed(0)} KB)
-              </div>
-            )}
-            <p style={{ fontSize: 11, color: "#444", marginTop: 6 }}>
-              Must contain "Enhanced Picks" sheet · HC picks are rows where Signal includes HIGH CONVICTION
+            <p className="text-xs text-[#666] mt-2">
+              Must contain "Enhanced Picks" sheet with HC picks
             </p>
           </div>
-
-          {/* Error */}
+          
           {error && (
-            <div style={{
-              background: "rgba(239,68,68,0.08)",
-              border: "1px solid #7f1d1d",
-              borderRadius: 6,
-              padding: "14px 16px",
-            }}>
-              <p style={{ fontSize: 13, color: "#f87171", margin: 0 }}>{error}</p>
+            <div className="bg-red-500/10 border border-red-500 rounded p-4">
+              <p className="text-red-500 text-sm">{error}</p>
             </div>
           )}
-
-          {/* Success */}
+          
           {result && (
-            <div style={{
-              background: "rgba(34,197,94,0.06)",
-              border: "1px solid #14532d",
-              borderRadius: 6,
-              padding: "16px",
-            }}>
-              <p style={{ fontSize: 14, fontWeight: 700, color: "#4ade80", margin: "0 0 12px" }}>
-                ✓ {result.message}
+            <div className="bg-green-500/10 border border-green-500 rounded p-4">
+              <p className="text-green-500 text-sm font-semibold">✓ {result.message}</p>
+              <p className="text-green-500/70 text-xs mt-2">
+                Redirecting to predictions page...
               </p>
-              <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 12 }}>
-                {result.picks.map((p, i) => (
-                  <div key={i} style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    background: "#050505",
-                    borderRadius: 4,
-                    padding: "8px 10px",
-                    fontSize: 12,
-                  }}>
-                    <span style={{ color: "#f0f0f0", fontWeight: 600 }}>{p.player_name}</span>
-                    <span style={{ color: "#888" }}>{p.team} · {p.position}</span>
-                    <span style={{ color: p.prediction === "OVER" ? "#22c55e" : "#ef4444", fontWeight: 700 }}>
-                      {p.prediction} {p.line}
-                    </span>
-                    <span style={{ color: "#60a5fa", fontSize: 11 }}>E/V {p.edge_vol.toFixed(2)}</span>
-                  </div>
-                ))}
-              </div>
-              <p style={{ fontSize: 11, color: "#555", margin: 0 }}>Redirecting to predictions…</p>
+              
+              {result.picks && (
+                <div className="mt-4 space-y-2 max-h-48 overflow-y-auto">
+                  <p className="text-xs font-semibold text-green-500">Seeded picks:</p>
+                  {result.picks.map((pick: any, i: number) => (
+                    <p key={i} className="text-xs text-green-500/70">
+                      {pick.player_name} ({pick.team}) - {pick.prediction} {pick.line}
+                    </p>
+                  ))}
+                </div>
+              )}
             </div>
           )}
-
-          {/* Submit */}
+          
           <button
             type="submit"
             disabled={loading || !file}
-            style={{
-              width: "100%",
-              background: loading || !file ? "#111" : "#f97316",
-              color: loading || !file ? "#444" : "#000",
-              border: "none",
-              borderRadius: 8,
-              fontWeight: 800,
-              fontSize: 14,
-              padding: "14px",
-              cursor: loading || !file ? "not-allowed" : "pointer",
-              letterSpacing: "0.02em",
-              transition: "background 0.15s",
-            }}
+            className="w-full bg-[#f97316] hover:bg-[#ea580c] disabled:opacity-50 rounded font-bold py-3 px-4"
           >
-            {loading ? "Uploading…" : `Seed HC Picks → Round ${round}`}
+            {loading ? 'Uploading...' : 'Seed HC Picks'}
           </button>
         </form>
       </div>
     </div>
-  );
+  )
 }
