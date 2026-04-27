@@ -22,6 +22,16 @@ export default function NFLPage() {
           </p>
         </div>
 
+        <div className="bg-[#1a1a1a] border border-[#f97316]/20 rounded-lg p-8 mb-8 text-left">
+          <div className="text-[#f97316] text-xs font-bold uppercase tracking-wider mb-3">Fantasy Integration</div>
+          <p className="text-[#888] mb-3">
+            NFL data powers the SportSphere Fantasy platform - draft NFL players alongside AFL and NBA in one season-long cross-sport competition.
+          </p>
+          <Link href="/fantasy" className="text-[#f97316] hover:underline text-sm font-bold">
+            Learn about SportSphere Fantasy →
+          </Link>
+        </div>
+
         <Link
           href="/predictions"
           className="inline-block bg-[#f97316] hover:bg-[#ea580c] rounded font-bold py-3 px-8"

@@ -433,9 +433,9 @@ export default function PlayersPage() {
                       <div style={{ fontSize: 14, fontWeight: 700, color: "#666" }}>{p.avg_2025.toFixed(1)}</div>
                     </div>
                     <div style={{ textAlign: "center" }}>
-                      <div style={{ fontSize: 10, color: "#555", textTransform: "uppercase" }}>2026</div>
-                      <div style={{ fontSize: 14, fontWeight: 700, color: "#f97316" }}>
-                        {p.avg_2026.toFixed(1)} <TrendIcon p={p} />
+                      <div style={{ fontSize: 10, color: "#555", textTransform: "uppercase" }}>{(p.games_2026 ?? 0) === 0 ? "2025 Avg" : "2026"}</div>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: (p.games_2026 ?? 0) === 0 ? "#555" : "#f97316" }}>
+                        {((p.games_2026 ?? 0) === 0 ? p.avg_2025 : p.avg_2026).toFixed(1)} {(p.games_2026 ?? 0) > 0 && <TrendIcon p={p} />}
                       </div>
                     </div>
                     <div style={{ textAlign: "center" }}>

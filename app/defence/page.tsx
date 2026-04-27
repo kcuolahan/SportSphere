@@ -168,6 +168,7 @@ function HeatmapView({ teams, posFilter }: { teams: Team[]; posFilter: "ALL" | P
               <td style={{ padding: "10px 14px", fontSize: 12, fontWeight: 700, color: "#f0f0f0", whiteSpace: "nowrap" }}>{team.name}</td>
               {positions.map(pos => {
                 const posData = team.concedes_by_position[pos];
+                if (!posData) return <td key={pos} style={{ padding: "10px 18px", textAlign: "center" }}><div style={{ fontSize: 9, color: "#444" }}>-</div></td>;
                 const rank = RANKS[team.code]?.[pos] ?? 9;
                 const lowN = posData.games < 4;
                 const trend = getTrend(posData.vs_league, posData.games);
@@ -343,6 +344,7 @@ function DvPGate() {
                       </td>
                       {(["MID", "DEF", "FWD", "RUCK"] as Position[]).map(pos => {
                         const posData = team.concedes_by_position[pos];
+                        if (!posData) return <td key={pos} style={{ padding: "11px 14px" }}><span style={{ fontSize: 10, color: "#555" }}>-</span></td>;
                         return (
                           <td key={pos} style={{ padding: "11px 14px", background: heatColor(posData.vs_league, pos) }}>
                             <div style={{ fontSize: 13, fontWeight: 600, color: heatTextColor(posData.vs_league) }}>
@@ -405,8 +407,6 @@ export default function DefencePage() {
   const [showBestMatchups, setShowBestMatchups] = useState(false);
   const [showSubPosGuide, setShowSubPosGuide] = useState(false);
 
-  if (!proLoading && !isPro) return <ErrorBoundary><DvPGate /></ErrorBoundary>;
-
   const sorted = useMemo(() => {
     return [...TEAMS].sort((a, b) => {
       if (sortKey === "name") {
@@ -422,6 +422,8 @@ export default function DefencePage() {
     if (key === sortKey) setSortDesc(d => !d);
     else { setSortKey(key); setSortDesc(true); }
   }
+
+  if (!proLoading && !isPro) return <ErrorBoundary><DvPGate /></ErrorBoundary>;
 
   function SortHeader({ label, k }: { label: string; k: SortKey }) {
     const active = sortKey === k;

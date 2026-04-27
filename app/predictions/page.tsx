@@ -256,10 +256,10 @@ export default function PredictionsPage() {
             Verified Track Record
           </div>
           <h1 style={{ fontSize: 'clamp(32px, 6vw, 52px)', fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 12px', lineHeight: 1.1 }}>
-            The $1,000 Unit Thesis
+            What $1,000 per bet actually returned - Rounds 3 to 7
           </h1>
           <p style={{ fontSize: 18, color: '#888', margin: '0 0 36px', lineHeight: 1.5 }}>
-            {roundsTracked} rounds tracked. Real money. Verified results.
+            After {roundsTracked} rounds using $1,000 per bet, here is where you stand - after accounting for the $29/month SportSphere subscription.
           </p>
 
           <div className="hero-grid" style={{ marginBottom: 20 }}>
@@ -285,7 +285,7 @@ export default function PredictionsPage() {
           </div>
 
           <div style={{ background: '#080808', border: '1px solid #1a1a1a', borderRadius: 8, padding: '14px 18px', fontSize: 13, color: '#666', lineHeight: 1.7 }}>
-            Based on $1,000 flat stake per bet at 1.87 average odds. All results verified against official game data.
+            All results use $1,000 flat stake at 1.87 average decimal odds. Verified against official AFL game data each round.
           </div>
         </section>
 
@@ -295,13 +295,13 @@ export default function PredictionsPage() {
             The Maths
           </div>
           <h2 style={{ fontSize: 'clamp(22px, 4vw, 34px)', fontWeight: 800, letterSpacing: '-0.02em', margin: '0 0 28px' }}>
-            Extrapolated to Full Season ({stats.projections.totalRounds} Rounds)
+            If the model runs like this across {stats.projections.totalRounds} rounds
           </h2>
 
           <div className="proj-grid" style={{ marginBottom: 20 }}>
             <div style={{ background: '#080808', border: '1px solid #111', borderRadius: 12, padding: '24px' }}>
               <div style={{ fontSize: 12, fontWeight: 700, color: '#888', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>
-                If This Pattern Holds
+                At the same pace
               </div>
               {[
                 { label: 'Projected total bets', value: `~${projectedBets}` },
@@ -318,7 +318,7 @@ export default function PredictionsPage() {
 
             <div style={{ background: '#030f08', border: '1px solid #14532d', borderRadius: 12, padding: '24px' }}>
               <div style={{ fontSize: 12, fontWeight: 700, color: '#4ade80', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>
-                After ${stats.projections.monthlyFee}/month AFL Season Access ({stats.projections.seasonMonths} months = ${stats.projections.seasonFee})
+                After paying for SportSphere all season (${stats.projections.monthlyFee} x {stats.projections.seasonMonths} months = ${stats.projections.seasonFee})
               </div>
               {[
                 { label: 'Less subscription cost', value: `-$${stats.projections.seasonFee}`, color: '#f87171' },
@@ -339,9 +339,9 @@ export default function PredictionsPage() {
               {stats.projections.subscriptionMultiple}x
             </div>
             <p style={{ fontSize: 16, color: '#4ade80', margin: '0 0 8px', fontWeight: 600 }}>
-              Your ${stats.projections.seasonFee} AFL season subscription is recovered {stats.projections.subscriptionMultiple} times over.
+              Every dollar you spend on SportSphere returns {stats.projections.subscriptionMultiple}x in gross profit.
             </p>
-            <p style={{ fontSize: 13, color: '#666', margin: 0 }}>That&apos;s not marketing. That&apos;s math.</p>
+            <p style={{ fontSize: 13, color: '#666', margin: 0 }}>Based on verified results from Rounds 3 to 7, 2026 season.</p>
           </div>
         </section>
 
@@ -351,7 +351,7 @@ export default function PredictionsPage() {
             Round by Round
           </div>
           <h2 style={{ fontSize: 'clamp(20px, 3vw, 28px)', fontWeight: 800, letterSpacing: '-0.02em', margin: '0 0 24px' }}>
-            Bankroll Growth Starting from $1,000
+            Starting with $1,000: what the model returned each round
           </h2>
 
           <div style={{ background: '#080808', border: '1px solid #111', borderRadius: 12, padding: '24px' }}>
@@ -383,9 +383,9 @@ export default function PredictionsPage() {
           </div>
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
             <h2 style={{ fontSize: 'clamp(20px, 3vw, 28px)', fontWeight: 800, letterSpacing: '-0.02em', margin: 0 }}>
-              High Conviction Model Signals
+              This round's picks - HC tier only
             </h2>
-            <span style={{ fontSize: 11, color: '#555' }}>Live results streamed real-time</span>
+            <span style={{ fontSize: 11, color: '#555' }}>Results update automatically as games finish</span>
           </div>
 
           {loading ? (

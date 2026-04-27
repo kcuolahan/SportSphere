@@ -12,6 +12,7 @@ const CENTRE_LINKS = [
   { href: "/nfl", label: "NFL", dim: true },
   { href: "/players", label: "Players" },
   { href: "/model", label: "How It Works" },
+  { href: "/fantasy", label: "Fantasy", badge: "NEW" },
 ];
 
 const RIGHT_LINKS = [
@@ -117,6 +118,11 @@ export default function Nav() {
                   }
                 >
                   {link.label}
+                  {(link as { badge?: string }).badge && (
+                    <span style={{ fontSize: 8, fontWeight: 800, color: "#000", background: "#4ade80", borderRadius: 3, padding: "1px 4px", letterSpacing: "0.04em", lineHeight: 1.5, marginLeft: 3 }}>
+                      {(link as { badge: string }).badge}
+                    </span>
+                  )}
                 </Link>
               );
             })}
