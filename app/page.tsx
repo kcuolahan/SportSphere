@@ -399,18 +399,18 @@ export default function LandingPage() {
               Verified results
             </div>
             <h2 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 800, letterSpacing: "-0.03em", margin: 0 }}>
-              Public track record
+              HC Filtered Pick Performance
             </h2>
-            <p style={{ fontSize: 14, color: "#555", marginTop: 10, maxWidth: 480 }}>
-              Every prediction logged, every result tracked. No cherry picking.
+            <p style={{ fontSize: 14, color: "#555", marginTop: 10, maxWidth: 560 }}>
+              The tier we publish — HIGH CONVICTION only.
             </p>
           </div>
 
           <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 500 }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 420 }}>
               <thead>
                 <tr style={{ borderBottom: "1px solid #111" }}>
-                  {["Round", "Total Picks", "Overall", "HC (Strong)", "Filtered"].map(h => (
+                  {["Round", "HC Picks", "W", "L", "HC Win Rate", "Net P&L"].map(h => (
                     <th key={h} style={{
                       padding: "10px 16px", fontSize: 11, color: "#666",
                       fontWeight: 600, textAlign: "left",
@@ -420,29 +420,42 @@ export default function LandingPage() {
                 </tr>
               </thead>
               <tbody>
-                {results.map((r, i) => {
-                  const rr = r as typeof r & { hc_picks?: number; hc_wins?: number; filtered_picks?: number; filtered_wins?: number };
-                  const hcRate = rr.hc_picks && rr.hc_wins ? `${((rr.hc_wins / rr.hc_picks) * 100).toFixed(0)}%` : "—";
-                  const filtRate = rr.filtered_picks && rr.filtered_wins ? `${((rr.filtered_wins / rr.filtered_picks) * 100).toFixed(0)}%` : "—";
+                {[
+                  { round: 3,  picks: 14, wins: 12, losses: 2,  winRate: 85.7, netPL:  8440 },
+                  { round: 4,  picks: 19, wins: 9,  losses: 10, winRate: 47.4, netPL: -2170 },
+                  { round: 5,  picks: 12, wins: 8,  losses: 4,  winRate: 66.7, netPL:  2960 },
+                  { round: 6,  picks: 14, wins: 9,  losses: 5,  winRate: 64.3, netPL:  2830 },
+                  { round: 7,  picks: 12, wins: 10, losses: 2,  winRate: 83.3, netPL:  6700 },
+                ].map((r, i) => {
+                  const wrColor = r.winRate >= 65 ? "#4ade80" : r.winRate >= 50 ? "#f97316" : "#ef4444";
                   return (
                     <tr key={i} style={{ borderBottom: "1px solid #0a0a0a" }}>
-                      <td style={{ padding: "14px 16px", fontSize: 14, fontWeight: 600, color: "#fff" }}>Round {r.round}</td>
-                      <td style={{ padding: "14px 16px", fontSize: 14, color: "#666" }}>{r.total_picks}</td>
-                      <td style={{ padding: "14px 16px", fontSize: 14, color: "#f0f0f0" }}>{r.win_rate}%</td>
-                      <td style={{ padding: "14px 16px", fontSize: 13, color: "#f97316" }}>
-                        {rr.hc_picks ? `${rr.hc_wins}/${rr.hc_picks}` : "—"}
-                        {rr.hc_picks ? <span style={{ color: "#555", marginLeft: 6, fontSize: 11 }}>{hcRate}</span> : null}
-                      </td>
-                      <td style={{ padding: "14px 16px", fontSize: 13, color: "#22c55e" }}>
-                        {rr.filtered_picks ? `${rr.filtered_wins}/${rr.filtered_picks}` : "—"}
-                        {rr.filtered_picks ? <span style={{ color: "#555", marginLeft: 6, fontSize: 11 }}>{filtRate}</span> : null}
+                      <td style={{ padding: "14px 16px", fontSize: 14, fontWeight: 700, color: "#fff" }}>R{r.round}</td>
+                      <td style={{ padding: "14px 16px", fontSize: 13, color: "#888" }}>{r.picks}</td>
+                      <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 700, color: "#4ade80" }}>{r.wins}</td>
+                      <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 700, color: "#ef4444" }}>{r.losses}</td>
+                      <td style={{ padding: "14px 16px", fontSize: 14, fontWeight: 800, color: wrColor }}>{r.winRate}%</td>
+                      <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 700, color: r.netPL >= 0 ? "#4ade80" : "#ef4444" }}>
+                        {r.netPL >= 0 ? "+" : ""}${r.netPL.toLocaleString()}
                       </td>
                     </tr>
                   );
                 })}
+                <tr style={{ borderTop: "2px solid rgba(249,115,22,0.3)", background: "#0a0a0a" }}>
+                  <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 800, color: "#f97316" }}>TOTAL</td>
+                  <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 700, color: "#f0f0f0" }}>71</td>
+                  <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 800, color: "#4ade80" }}>48</td>
+                  <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 800, color: "#ef4444" }}>23</td>
+                  <td style={{ padding: "14px 16px", fontSize: 14, fontWeight: 800, color: "#4ade80" }}>67.6%</td>
+                  <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 800, color: "#4ade80" }}>+$18,760</td>
+                </tr>
               </tbody>
             </table>
           </div>
+          <p style={{ fontSize: 11, color: "#444", marginTop: 12, lineHeight: 1.7 }}>
+            HC = HIGH CONVICTION tier only (STRONG confidence + E/V ≥ 0.50).
+            This is the exact tier published to subscribers each week.
+          </p>
         </div>
       </div>
 

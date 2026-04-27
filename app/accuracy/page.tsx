@@ -1,688 +1,232 @@
 "use client";
 
-import { useState, useMemo } from "react";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import resultsData from "@/data/results.json";
-import { totalPicks, roundsLabel, currentSeason } from "@/lib/siteData";
 import { useProAccess } from "@/lib/auth";
-import { useStats, SportSphereStats } from "@/lib/useStats";
+import Link from "next/link";
 
-/* ── Types ─────────────────────────────────────────────────────────────────── */
-interface Pick {
-  player: string;
-  position: string;
-  team: string;
-  opponent?: string;
-  line?: number;
-  bookie_line?: number;
-  predicted: number;
-  actual: number;
-  signal?: string;
-  direction?: string;
-  confidence: string;
-  edge_vol: number;
-  result: "WIN" | "LOSS";
-  round: number;
+const ROUND_DATA = [
+  { round: 3,  picks: 14, wins: 12, losses: 2,  winRate: 85.7, netPL:  8440, bankroll:  9440 },
+  { round: 4,  picks: 19, wins: 9,  losses: 10, winRate: 47.4, netPL: -2170, bankroll:  7270 },
+  { round: 5,  picks: 12, wins: 8,  losses: 4,  winRate: 66.7, netPL:  2960, bankroll: 10230 },
+  { round: 6,  picks: 14, wins: 9,  losses: 5,  winRate: 64.3, netPL:  2830, bankroll: 13060 },
+  { round: 7,  picks: 12, wins: 10, losses: 2,  winRate: 83.3, netPL:  6700, bankroll: 19760 },
+];
+
+const POSITION_DATA = [
+  { position: "MID",  picks: 44, wins: 30, losses: 14, winRate: 68.2 },
+  { position: "DEF",  picks: 23, wins: 15, losses: 8,  winRate: 65.2 },
+  { position: "RUCK", picks: 4,  wins: 3,  losses: 1,  winRate: 75.0 },
+];
+
+function winRateColor(wr: number) {
+  if (wr >= 65) return "#4ade80";
+  if (wr >= 50) return "#f97316";
+  return "#ef4444";
 }
 
-/* ── Build picks exclusively from results.json ─────────────────────────────── */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const ALL_PICKS: Pick[] = resultsData.rounds.flatMap((r: any) =>
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  r.picks.map((p: any) => ({ ...p, round: r.round }))
-);
-
-const SS = resultsData.season_summary;
-const ROUNDS = [3, 4, 5, 6, 7] as const;
-const FLAT_ODDS = 1.90;
-
-/* ── Helpers ────────────────────────────────────────────────────────────────── */
-function getLine(p: Pick): number { return p.bookie_line ?? p.line ?? 0; }
-function getDir(p: Pick): string { return p.direction ?? p.signal ?? "OVER"; }
-function getEdge(p: Pick): number {
-  return Math.round((p.predicted - getLine(p)) * 10) / 10;
-}
-function getTier(ev: number): "HC" | "BET" | "SKIP" {
-  return ev >= 0.90 ? "HC" : ev >= 0.50 ? "BET" : "SKIP";
-}
-function initials(name: string): string {
-  return name.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
-}
-
-/* ── Avatar ─────────────────────────────────────────────────────────────────── */
-function Avatar({ name, team }: { name: string; team: string }) {
-  const TEAM_COLORS: Record<string, string> = {
-    ADE: "#002b5c", BRL: "#a8002a", CAR: "#0d1560", COL: "#1a1a1a",
-    ESS: "#cc2200", FRE: "#44003b", GEE: "#003087", GCS: "#cc0000",
-    GWS: "#ee6600", HAW: "#5a2a00", MEL: "#cc0000", NTH: "#003366",
-    PTA: "#004f9f", RIC: "#ffd200", STK: "#cc0000", SYD: "#cc0000",
-    WBD: "#014196", WCE: "#003087",
-  };
-  const bg = TEAM_COLORS[team] ?? "#222";
-  return (
-    <div style={{
-      width: 28, height: 28, borderRadius: "50%",
-      background: bg, display: "flex", alignItems: "center",
-      justifyContent: "center", fontSize: 9, fontWeight: 800,
-      color: "#fff", flexShrink: 0, letterSpacing: "0.02em",
-    }}>
-      {initials(name)}
-    </div>
-  );
-}
-
-/* ── Tier badge ─────────────────────────────────────────────────────────────── */
-function TierBadge({ tier }: { tier: "HC" | "BET" | "SKIP" }) {
-  const colors = { HC: { bg: "#f97316", color: "#000" }, BET: { bg: "#22c55e", color: "#000" }, SKIP: { bg: "#222", color: "#555" } };
-  const c = colors[tier];
-  return (
-    <span style={{ fontSize: 9, fontWeight: 800, padding: "2px 6px", borderRadius: 4, background: c.bg, color: c.color }}>
-      {tier}
-    </span>
-  );
-}
-
-/* ── Donut win-rate arc ─────────────────────────────────────────────────────── */
-function WinArc({ rate }: { rate: number }) {
-  const R = 20, C = 2 * Math.PI * R;
-  const color = rate >= 60 ? "#22c55e" : rate >= 52 ? "#f97316" : "#ef4444";
-  return (
-    <div style={{ position: "relative", width: 50, height: 50, flexShrink: 0 }}>
-      <svg width={50} height={50} viewBox="0 0 50 50" style={{ transform: "rotate(-90deg)" }}>
-        <circle cx={25} cy={25} r={R} fill="none" stroke="#1a1a1a" strokeWidth={4} />
-        <circle cx={25} cy={25} r={R} fill="none" stroke={color} strokeWidth={4}
-          strokeLinecap="round"
-          strokeDasharray={C}
-          strokeDashoffset={C - (rate / 100) * C}
-        />
-      </svg>
-      <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-        <span style={{ fontSize: 11, fontWeight: 800, color, lineHeight: 1 }}>{rate}%</span>
-      </div>
-    </div>
-  );
-}
-
-/* ── P&L chart ──────────────────────────────────────────────────────────────── */
-function PLChart({ picks }: { picks: Pick[] }) {
-  const bet = picks.filter(p => p.edge_vol >= 0.50 && p.position !== "FWD");
-  const hc = bet.filter(p => getTier(p.edge_vol) === "HC");
-
-  const betSeries = [0];
-  const hcSeries: number[] = [];
-  let hcCursor = 0;
-
-  bet.forEach(p => {
-    const gain = p.result === "WIN" ? FLAT_ODDS - 1 : -1;
-    betSeries.push(betSeries[betSeries.length - 1] + gain);
-  });
-  // build HC cumulative alongside full series
-  const hcSeriesFull = [0];
-  bet.forEach(p => {
-    const isHC = getTier(p.edge_vol) === "HC";
-    if (isHC) hcCursor += p.result === "WIN" ? FLAT_ODDS - 1 : -1;
-    hcSeriesFull.push(hcCursor);
-  });
-  void hcSeries; void hc;
-
-  const W = 800, H = 160, PL = 44, PR = 16, PT = 12, PB = 24;
-  const cw = W - PL - PR, ch = H - PT - PB;
-  const n = betSeries.length;
-  if (n < 2) return null;
-
-  const allVals = [...betSeries, ...hcSeriesFull];
-  const minY = Math.min(...allVals, -1);
-  const maxY = Math.max(...allVals, 1);
-  const range = maxY - minY || 1;
-
-  const fx = (i: number) => PL + (i / (n - 1)) * cw;
-  const fy = (v: number) => PT + (1 - (v - minY) / range) * ch;
-
-  const betPath = betSeries.map((v, i) => `${i === 0 ? "M" : "L"}${fx(i).toFixed(1)},${fy(v).toFixed(1)}`).join(" ");
-  const hcPath = hcSeriesFull.map((v, i) => `${i === 0 ? "M" : "L"}${fx(i).toFixed(1)},${fy(v).toFixed(1)}`).join(" ");
-  const zero = fy(0);
-
-  // Round tick marks
-  const roundTicks = ROUNDS.map(r => {
-    const idx = bet.findIndex((p, i) => i > 0 && bet[i - 1].round < r && p.round >= r);
-    return { r, x: idx >= 0 ? fx(idx) : null };
-  });
-
-  const finalBet = betSeries[betSeries.length - 1];
-  const finalHC = hcSeriesFull[hcSeriesFull.length - 1];
-
-  return (
-    <div style={{ background: "#080808", border: "1px solid #111", borderRadius: 12, padding: "16px", marginBottom: 20 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-        <span style={{ fontSize: 11, fontWeight: 700, color: "#555", textTransform: "uppercase", letterSpacing: "0.07em" }}>
-          Cumulative P&L — E/V ≥ 0.50 (flat $1 @ {FLAT_ODDS} odds)
-        </span>
-        <div style={{ display: "flex", gap: 14 }}>
-          {[{ color: "#f97316", label: `HC only (${finalHC >= 0 ? "+" : ""}${finalHC.toFixed(1)})` }, { color: "#888", label: `All filtered (${finalBet >= 0 ? "+" : ""}${finalBet.toFixed(1)})` }].map(l => (
-            <div key={l.label} style={{ display: "flex", alignItems: "center", gap: 5 }}>
-              <div style={{ width: 14, height: 2, background: l.color, borderRadius: 1 }} />
-              <span style={{ fontSize: 10, color: "#666" }}>{l.label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-      <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height: "auto", display: "block" }}>
-        {[minY, 0, maxY].map(v => (
-          <g key={v}>
-            <line x1={PL} y1={fy(v)} x2={W - PR} y2={fy(v)} stroke="#111" strokeWidth={v === 0 ? 1.5 : 0.5} strokeDasharray={v === 0 ? "0" : "3,3"} />
-            <text x={PL - 4} y={fy(v) + 4} fontSize={8} fill="#555" textAnchor="end">{v >= 0 ? "+" : ""}{v.toFixed(1)}</text>
-          </g>
-        ))}
-        {roundTicks.map(({ r, x }) => x !== null && (
-          <g key={r}>
-            <line x1={x} y1={PT} x2={x} y2={H - PB} stroke="#111" strokeWidth={0.5} strokeDasharray="2,4" />
-            <text x={x} y={H - 4} fontSize={8} fill="#555" textAnchor="middle">R{r}</text>
-          </g>
-        ))}
-        <path d={betPath} fill="none" stroke="#888" strokeWidth={1.5} />
-        <path d={hcPath} fill="none" stroke="#f97316" strokeWidth={2.5} strokeLinejoin="round" />
-        <text x={W - PR + 3} y={zero + 4} fontSize={8} fill="#666">0</text>
-        <circle cx={fx(n - 1)} cy={fy(betSeries[n - 1])} r={3} fill="#888" />
-        <circle cx={fx(hcSeriesFull.length - 1)} cy={fy(hcSeriesFull[hcSeriesFull.length - 1])} r={3} fill="#f97316" />
-      </svg>
-    </div>
-  );
-}
-
-/* ── Stats bar ──────────────────────────────────────────────────────────────── */
-function StatsBar({ picks }: { picks: Pick[] }) {
-  const wins = picks.filter(p => p.result === "WIN").length;
-  const losses = picks.length - wins;
-  const wr = picks.length ? Math.round(wins / picks.length * 1000) / 10 : 0;
-  const hcPicks = picks.filter(p => getTier(p.edge_vol) === "HC");
-  const hcWins = hcPicks.filter(p => p.result === "WIN").length;
-  const betPicks = picks.filter(p => getTier(p.edge_vol) === "BET");
-  const betWins = betPicks.filter(p => p.result === "WIN").length;
-  const roi = picks.length
-    ? Math.round(picks.reduce((a, p) => a + (p.result === "WIN" ? FLAT_ODDS - 1 : -1), 0) / picks.length * 1000) / 10
-    : 0;
-  const mae = picks.length
-    ? Math.round(picks.reduce((a, p) => a + Math.abs(p.predicted - p.actual), 0) / picks.length * 10) / 10
-    : 0;
-
-  const cells = [
-    { label: "Picks", value: String(picks.length), color: "#f0f0f0" },
-    { label: "W / L", value: `${wins} / ${losses}`, color: "#f0f0f0" },
-    { label: "HC", value: `${hcWins}/${hcPicks.length}${hcPicks.length ? ` (${Math.round(hcWins / hcPicks.length * 100)}%)` : ""}`, color: "#f97316" },
-    { label: "BET", value: `${betWins}/${betPicks.length}${betPicks.length ? ` (${Math.round(betWins / betPicks.length * 100)}%)` : ""}`, color: "#22c55e" },
-    { label: "ROI", value: `${roi >= 0 ? "+" : ""}${roi}%`, color: roi >= 0 ? "#22c55e" : "#ef4444" },
-    { label: "MAE", value: `${mae} disp`, color: "#f0f0f0" },
-  ];
-
-  return (
-    <div style={{ display: "flex", flexWrap: "wrap", background: "#080808", border: "1px solid #111", borderRadius: 12, overflow: "hidden", marginBottom: 20 }}>
-      <div style={{ flex: "0 0 auto", padding: "12px 16px", borderRight: "1px solid #111", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4 }}>
-        <div style={{ fontSize: 9, color: "#666", textTransform: "uppercase", letterSpacing: "0.08em" }}>Win Rate</div>
-        <WinArc rate={wr} />
-      </div>
-      {cells.map(({ label, value, color }, i) => (
-        <div key={label} style={{ flex: "1 1 80px", padding: "14px 16px", borderRight: i < cells.length - 1 ? "1px solid #111" : "none" }}>
-          <div style={{ fontSize: 9, color: "#666", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>{label}</div>
-          <div style={{ fontSize: 14, fontWeight: 700, color }}>{value}</div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-/* ── Live 2026 HC betting record ────────────────────────────────────────────── */
-function LiveSeasonStats({ stats }: { stats: SportSphereStats }) {
-  const firstRound = stats.byRound[0]?.round ?? 3;
-  const lastRound = stats.byRound[stats.byRound.length - 1]?.round ?? 7;
-
-  const summaryStats = [
-    { label: "Total HC Picks", value: String(stats.hc.totalPicks),              color: "#f0f0f0" },
-    { label: "Win Rate",       value: `${stats.hc.winRatePct}%`,                color: "#4ade80" },
-    { label: "Gross P&L",      value: `$${stats.hc.grossPL.toLocaleString()}`,  color: "#4ade80" },
-    { label: "ROI",            value: `${stats.hc.roiPct}%`,                    color: "#4ade80" },
-  ];
-
-  return (
-    <div style={{ marginBottom: 20 }}>
-      <div style={{ fontSize: 10, fontWeight: 700, color: "#f97316", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 12 }}>
-        2026 Live Betting Record · Rounds {firstRound}–{lastRound}
-      </div>
-
-      {/* Summary stats */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 1, background: "#111", borderRadius: 10, overflow: "hidden", marginBottom: 12 }}>
-        {summaryStats.map(s => (
-          <div key={s.label} style={{ background: "#080808", padding: "16px 12px", textAlign: "center" }}>
-            <div style={{ fontSize: 9, fontWeight: 700, color: "#555", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 6 }}>{s.label}</div>
-            <div style={{ fontSize: 22, fontWeight: 800, color: s.color, letterSpacing: "-0.02em" }}>{s.value}</div>
-          </div>
-        ))}
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-        {/* By position */}
-        <div style={{ background: "#080808", border: "1px solid #111", borderRadius: 10, overflow: "hidden" }}>
-          <div style={{ padding: "12px 16px", borderBottom: "1px solid #111", fontSize: 10, fontWeight: 700, color: "#555", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-            By Position
-          </div>
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr style={{ background: "#050505" }}>
-                {["Pos", "Picks", "W", "L", "Win Rate"].map(h => (
-                  <th key={h} style={{ padding: "8px 12px", fontSize: 9, fontWeight: 700, color: "#555", textTransform: "uppercase", letterSpacing: "0.07em", textAlign: h === "Pos" ? "left" : "right", borderBottom: "1px solid #0d0d0d" }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {stats.byPosition.map(r => (
-                <tr key={r.position}>
-                  <td style={{ padding: "10px 12px", fontSize: 12, fontWeight: 700, color: "#f97316" }}>{r.position}</td>
-                  <td style={{ padding: "10px 12px", fontSize: 12, color: "#888", textAlign: "right" }}>{r.picks}</td>
-                  <td style={{ padding: "10px 12px", fontSize: 12, color: "#4ade80", textAlign: "right" }}>{r.wins}</td>
-                  <td style={{ padding: "10px 12px", fontSize: 12, color: "#ef4444", textAlign: "right" }}>{r.losses}</td>
-                  <td style={{ padding: "10px 12px", fontSize: 12, fontWeight: 700, color: "#f0f0f0", textAlign: "right" }}>{r.winRatePct}%</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* By round */}
-        <div style={{ background: "#080808", border: "1px solid #111", borderRadius: 10, overflow: "hidden" }}>
-          <div style={{ padding: "12px 16px", borderBottom: "1px solid #111", fontSize: 10, fontWeight: 700, color: "#555", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-            By Round
-          </div>
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr style={{ background: "#050505" }}>
-                {["Rd", "Picks", "W", "L", "Win%", "Net P&L", "Bank"].map(h => (
-                  <th key={h} style={{ padding: "8px 10px", fontSize: 9, fontWeight: 700, color: "#555", textTransform: "uppercase", letterSpacing: "0.07em", textAlign: h === "Rd" ? "left" : "right", borderBottom: "1px solid #0d0d0d" }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {stats.byRound.map(r => {
-                const bankrollPt = stats.bankroll.find(b => b.label === `R${r.round}`);
-                const bankroll = bankrollPt?.value ?? 0;
-                const wrColor = r.winRatePct >= 65 ? "#4ade80" : r.winRatePct >= 50 ? "#f97316" : "#ef4444";
-                return (
-                  <tr key={r.round}>
-                    <td style={{ padding: "8px 10px", fontSize: 12, fontWeight: 700, color: "#888" }}>R{r.round}</td>
-                    <td style={{ padding: "8px 10px", fontSize: 12, color: "#666", textAlign: "right" }}>{r.picks}</td>
-                    <td style={{ padding: "8px 10px", fontSize: 12, color: "#4ade80", textAlign: "right" }}>{r.wins}</td>
-                    <td style={{ padding: "8px 10px", fontSize: 12, color: "#ef4444", textAlign: "right" }}>{r.losses}</td>
-                    <td style={{ padding: "8px 10px", fontSize: 12, fontWeight: 700, color: wrColor, textAlign: "right" }}>{r.winRatePct}%</td>
-                    <td style={{ padding: "8px 10px", fontSize: 12, fontWeight: 700, color: r.netPL >= 0 ? "#4ade80" : "#ef4444", textAlign: "right" }}>
-                      {r.netPL >= 0 ? "+" : ""}${Math.abs(r.netPL).toLocaleString()}
-                    </td>
-                    <td style={{ padding: "8px 10px", fontSize: 12, color: "#888", textAlign: "right" }}>${bankroll.toLocaleString()}</td>
-                  </tr>
-                );
-              })}
-              <tr style={{ borderTop: "1px solid #1a1a1a" }}>
-                <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#666" }}>TOT</td>
-                <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#666", textAlign: "right" }}>{stats.hc.totalPicks}</td>
-                <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#4ade80", textAlign: "right" }}>{stats.hc.wins}</td>
-                <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#ef4444", textAlign: "right" }}>{stats.hc.losses}</td>
-                <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#4ade80", textAlign: "right" }}>{stats.hc.winRatePct}%</td>
-                <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#4ade80", textAlign: "right" }}>+${stats.hc.grossPL.toLocaleString()}</td>
-                <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#f0f0f0", textAlign: "right" }}>${(1000 + stats.hc.grossPL).toLocaleString()}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div style={{ marginTop: 8, padding: "10px 14px", background: "#050505", border: "1px solid #111", borderRadius: 8, fontSize: 10, color: "#555", lineHeight: 1.7 }}>
-        All results verified against official AFL game data. $1,000 flat stake assumed at 1.87 average odds. Not financial advice.
-      </div>
-    </div>
-  );
-}
-
-/* ── Season summary header cards ────────────────────────────────────────────── */
-function SeasonSummary() {
-  return (
-    <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr", gap: 1, background: "#111", borderRadius: 12, overflow: "hidden", marginBottom: 20 }}>
-      {/* HC — largest */}
-      <div style={{ background: "#080808", padding: "24px 28px" }}>
-        <div style={{ fontSize: 10, color: "#f97316", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 700, marginBottom: 8 }}>
-          HC — HIGH CONVICTION (E/V ≥ 0.90)
-        </div>
-        <div style={{ fontSize: 44, fontWeight: 800, letterSpacing: "-0.04em", color: "#f97316", lineHeight: 1 }}>
-          {SS.strong_rate}%
-        </div>
-        <div style={{ fontSize: 13, color: "#888", marginTop: 8 }}>
-          {SS.strong_wins}W / {SS.strong_picks - SS.strong_wins}L · {SS.strong_picks} picks
-        </div>
-      </div>
-      {/* Filtered */}
-      <div style={{ background: "#080808", padding: "24px" }}>
-        <div style={{ fontSize: 10, color: "#666", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Filtered (E/V ≥ 0.50)</div>
-        <div style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.03em", color: "#22c55e" }}>{SS.filtered_rate}%</div>
-        <div style={{ fontSize: 11, color: "#555", marginTop: 6 }}>
-          {SS.filtered_wins}W / {SS.filtered_picks - SS.filtered_wins}L · {SS.filtered_picks} picks
-        </div>
-      </div>
-      {/* Overall */}
-      <div style={{ background: "#080808", padding: "24px" }}>
-        <div style={{ fontSize: 10, color: "#666", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Overall (all picks)</div>
-        <div style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.03em", color: "#f0f0f0" }}>{SS.overall_rate}%</div>
-        <div style={{ fontSize: 11, color: "#555", marginTop: 6 }}>{SS.total_picks} total picks · {roundsLabel}</div>
-      </div>
-    </div>
-  );
-}
-
-/* ── Filter pill button ─────────────────────────────────────────────────────── */
-function Pill({ label, active, onClick, activeColor }: { label: string; active: boolean; onClick: () => void; activeColor?: string }) {
-  const ac = activeColor ?? "#f97316";
-  return (
-    <button onClick={onClick} style={{
-      padding: "5px 10px", borderRadius: 5, fontSize: 10, fontWeight: 700,
-      cursor: "pointer", border: active ? `1px solid ${ac}` : "1px solid #111",
-      background: active ? ac : "#080808", color: active ? "#000" : "#555",
-    }}>{label}</button>
-  );
-}
-
-/* ── Main page ──────────────────────────────────────────────────────────────── */
 export default function AccuracyPage() {
-  const { isPro, loading: proLoading } = useProAccess();
-  const liveStats = useStats();
-  const [roundFilter, setRoundFilter] = useState<number | "ALL">("ALL");
-  const [posFilter, setPosFilter] = useState<"ALL" | "MID" | "DEF" | "FWD" | "RUCK">("ALL");
-  const [tierFilter, setTierFilter] = useState<"ALL" | "HC" | "BET" | "SKIP">("ALL");
-  const [resultFilter, setResultFilter] = useState<"ALL" | "WIN" | "LOSS">("ALL");
-  const [openPick, setOpenPick] = useState<Pick | null>(null);
-  const [sortKey, setSortKey] = useState<keyof Pick>("round");
-  const [sortAsc, setSortAsc] = useState(true);
+  const { isPro, loading: authLoading } = useProAccess();
 
-  const filtered = useMemo(() => {
-    let picks = ALL_PICKS;
-    if (roundFilter !== "ALL") picks = picks.filter(p => p.round === roundFilter);
-    if (posFilter !== "ALL") picks = picks.filter(p => p.position === posFilter);
-    if (tierFilter !== "ALL") picks = picks.filter(p => getTier(p.edge_vol) === tierFilter);
-    if (resultFilter !== "ALL") picks = picks.filter(p => p.result === resultFilter);
-    return [...picks].sort((a, b) => {
-      const av = a[sortKey], bv = b[sortKey];
-      const diff = typeof av === "number" && typeof bv === "number"
-        ? av - bv
-        : String(av ?? "").localeCompare(String(bv ?? ""));
-      return sortAsc ? diff : -diff;
-    });
-  }, [roundFilter, posFilter, tierFilter, resultFilter, sortKey, sortAsc]);
-
-  const displayedPicks = (!proLoading && !isPro) ? filtered.slice(0, 5) : filtered;
-
-  function toggleSort(key: keyof Pick) {
-    if (key === sortKey) setSortAsc(a => !a);
-    else { setSortKey(key); setSortAsc(true); }
-  }
-
-  const TIER_COLORS: Record<string, string> = { HC: "#f97316", BET: "#22c55e", SKIP: "#555" };
-  const GRID = "36px 1.4fr 40px 50px 60px 52px 52px 52px 52px 52px 50px 54px 62px";
-
-  function SortHeader({ label, sortField }: { label: string; sortField: keyof Pick }) {
-    const active = sortKey === sortField;
-    return (
-      <div onClick={() => toggleSort(sortField)} style={{
-        fontSize: 9, color: active ? "#f97316" : "#555",
-        textTransform: "uppercase", letterSpacing: "0.07em",
-        cursor: "pointer", userSelect: "none", padding: "9px 8px", whiteSpace: "nowrap",
-      }}>
-        {label}{active ? (sortAsc ? " ↑" : " ↓") : ""}
-      </div>
-    );
-  }
-
-  const POS_COLORS: Record<string, string> = { MID: "#f97316", DEF: "#3b82f6", FWD: "#22c55e", RUCK: "#a855f7" };
+  if (authLoading) return <div style={{ minHeight: "100vh", background: "#000" }} />;
 
   return (
     <div style={{ minHeight: "100vh", background: "#000", color: "#f0f0f0", fontFamily: "system-ui, -apple-system, sans-serif" }}>
       <Nav />
-      <div style={{ maxWidth: 1300, margin: "0 auto", padding: "84px 20px 60px" }}>
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: "84px 20px 60px" }}>
 
         {/* Header */}
-        <div style={{ marginBottom: 28 }}>
-          <div style={{ fontSize: 11, color: "#f97316", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 }}>
-            Verified Results
+        <div style={{ marginBottom: 40 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: "#f97316", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 10 }}>
+            Verified Track Record — HC Filtered Picks Only
           </div>
-          <h1 style={{ fontSize: "clamp(24px, 5vw, 40px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 8px" }}>
-            Track Record
+          <h1 style={{ fontSize: "clamp(28px, 5vw, 44px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 12px" }}>
+            Public Track Record
           </h1>
-          <p style={{ fontSize: 13, color: "#666", margin: 0, lineHeight: 1.7 }}>
-            {totalPicks} picks · {roundsLabel} · {currentSeason} season · verified vs Wheeloratings
+          <p style={{ fontSize: 14, color: "#777", maxWidth: 560, lineHeight: 1.7, margin: 0 }}>
+            Every HIGH CONVICTION pick logged. Every result verified against official AFL game data.
+            No cherry picking. No hidden losses. This is the only tier we publish and market.
           </p>
         </div>
 
-        {/* Live 2026 betting record */}
-        <LiveSeasonStats stats={liveStats} />
-
-        {/* Season summary */}
-        <SeasonSummary />
-
-        {/* P&L chart */}
-        <PLChart picks={ALL_PICKS} />
-
-        {/* Filters */}
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 16, alignItems: "center" }}>
-          <div style={{ display: "flex", gap: 4 }}>
-            <Pill label="All Rds" active={roundFilter === "ALL"} onClick={() => setRoundFilter("ALL")} />
-            {ROUNDS.map(r => <Pill key={r} label={`R${r}`} active={roundFilter === r} onClick={() => setRoundFilter(r)} />)}
-          </div>
-          <div style={{ width: 1, height: 20, background: "#111" }} />
-          <div style={{ display: "flex", gap: 4 }}>
-            {(["ALL", "MID", "DEF", "FWD", "RUCK"] as const).map(p => (
-              <Pill key={p} label={p} active={posFilter === p} onClick={() => setPosFilter(p)} />
-            ))}
-          </div>
-          <div style={{ width: 1, height: 20, background: "#111" }} />
-          <div style={{ display: "flex", gap: 4 }}>
-            {(["ALL", "HC", "BET", "SKIP"] as const).map(t => (
-              <Pill key={t} label={t} active={tierFilter === t} onClick={() => setTierFilter(t)} activeColor={TIER_COLORS[t]} />
-            ))}
-          </div>
-          <div style={{ width: 1, height: 20, background: "#111" }} />
-          <div style={{ display: "flex", gap: 4 }}>
-            {(["ALL", "WIN", "LOSS"] as const).map(r => (
-              <Pill key={r} label={r} active={resultFilter === r} onClick={() => setResultFilter(r)} activeColor={r === "WIN" ? "#22c55e" : r === "LOSS" ? "#ef4444" : undefined} />
-            ))}
-          </div>
-          <span style={{ marginLeft: "auto", fontSize: 11, color: "#555" }}>{filtered.length} picks</span>
+        {/* Summary stats */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12, marginBottom: 32 }}>
+          {[
+            { label: "HC Win Rate",   value: "67.6%",      sub: "48W / 23L",        color: "#4ade80" },
+            { label: "Total HC Picks", value: "71",         sub: "R3–R7 · 2026",     color: "#f0f0f0" },
+            { label: "Gross P&L",     value: "+$18,760",   sub: "$1k flat stake",    color: "#4ade80" },
+            { label: "ROI",           value: "26.4%",      sub: "1.87 avg odds",     color: "#f97316" },
+          ].map((s, i) => (
+            <div key={i} style={{ background: "#080808", border: "1px solid #1a1a1a", borderRadius: 10, padding: "20px" }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "#555", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>{s.label}</div>
+              <div style={{ fontSize: 28, fontWeight: 800, color: s.color, letterSpacing: "-0.02em" }}>{s.value}</div>
+              <div style={{ fontSize: 11, color: "#555", marginTop: 4 }}>{s.sub}</div>
+            </div>
+          ))}
         </div>
 
-        {/* Stats bar */}
-        <StatsBar picks={filtered} />
-
-        {/* Table */}
-        <div style={{ position: "relative" }}>
-        <div style={{ background: "#080808", border: "1px solid #111", borderRadius: 12, overflow: "hidden" }}>
-          {/* Header row */}
-          <div className="track-row" style={{ display: "grid", gridTemplateColumns: GRID, borderBottom: "1px solid #111", background: "#050505" }}>
-            <div style={{ padding: "9px 8px" }} />
-            <SortHeader label="Player" sortField="player" />
-            <SortHeader label="Rd" sortField="round" />
-            <div style={{ padding: "9px 8px", fontSize: 9, color: "#555", textTransform: "uppercase", letterSpacing: "0.07em" }}>Pos</div>
-            <SortHeader label="vs" sortField="opponent" />
-            <SortHeader label="Line" sortField="line" />
-            <div className="col-hide-mobile"><SortHeader label="Model" sortField="predicted" /></div>
-            <div className="col-hide-mobile"><SortHeader label="Edge" sortField="predicted" /></div>
-            <SortHeader label="E/V" sortField="edge_vol" />
-            <div className="col-hide-mobile" style={{ padding: "9px 8px", fontSize: 9, color: "#555", textTransform: "uppercase", letterSpacing: "0.07em" }}>Tier</div>
-            <div style={{ padding: "9px 8px", fontSize: 9, color: "#555", textTransform: "uppercase", letterSpacing: "0.07em" }}>Dir</div>
-            <SortHeader label="Actual" sortField="actual" />
-            <SortHeader label="Result" sortField="result" />
+        {/* What this shows */}
+        <div style={{ background: "#080808", border: "1px solid rgba(249,115,22,0.2)", borderRadius: 10, padding: "20px 24px", marginBottom: 36, display: "flex", gap: 14, alignItems: "flex-start" }}>
+          <div style={{ fontSize: 18, color: "#f97316", flexShrink: 0, lineHeight: 1 }}>ℹ</div>
+          <div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: "#f0f0f0", marginBottom: 6 }}>What this track record shows</div>
+            <p style={{ fontSize: 13, color: "#777", margin: 0, lineHeight: 1.7 }}>
+              These results cover only our HIGH CONVICTION (HC) filtered picks — the tier published to subscribers each week.
+              HC picks require both STRONG model confidence AND Edge/Vol ≥ 0.50. The full model generates ~150 predictions
+              per round across all tiers; we publish and track only the HC filtered subset. This is the most transparent way
+              to show real-world performance of the picks we actually recommend.
+            </p>
           </div>
+        </div>
 
-          {filtered.length === 0 && (
-            <div style={{ padding: "48px 20px", textAlign: "center" }}>
-              <div style={{ fontSize: 14, color: "#555", marginBottom: 12 }}>No picks match these filters.</div>
-              <button onClick={() => { setRoundFilter("ALL"); setPosFilter("ALL"); setTierFilter("ALL"); setResultFilter("ALL"); }}
-                style={{ background: "#f97316", border: "none", borderRadius: 6, padding: "8px 16px", fontSize: 11, fontWeight: 700, cursor: "pointer", color: "#000" }}>
-                Reset Filters
-              </button>
+        {/* Round by round table */}
+        <section style={{ marginBottom: 40 }}>
+          <h2 style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.02em", margin: "0 0 20px" }}>Round by Round</h2>
+          <div style={{ background: "#080808", border: "1px solid #1a1a1a", borderRadius: 12, overflow: "hidden" }}>
+            <div style={{ overflowX: "auto" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 520 }}>
+                <thead>
+                  <tr style={{ background: "#050505" }}>
+                    {["Round", "Picks", "W", "L", "Win Rate", "Net P&L", "Bankroll"].map(h => (
+                      <th key={h} style={{ padding: "12px 16px", fontSize: 10, fontWeight: 700, color: "#555", textTransform: "uppercase", letterSpacing: "0.07em", textAlign: "left", borderBottom: "1px solid #1a1a1a" }}>
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {ROUND_DATA.map((row, i) => (
+                    <tr key={i} style={{ borderTop: "1px solid #0d0d0d" }}>
+                      <td style={{ padding: "14px 16px", fontSize: 14, fontWeight: 700, color: "#fff" }}>R{row.round}</td>
+                      <td style={{ padding: "14px 16px", fontSize: 13, color: "#888" }}>{row.picks}</td>
+                      <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 700, color: "#4ade80" }}>{row.wins}</td>
+                      <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 700, color: "#ef4444" }}>{row.losses}</td>
+                      <td style={{ padding: "14px 16px" }}>
+                        <span style={{ fontSize: 16, fontWeight: 800, color: winRateColor(row.winRate) }}>{row.winRate}%</span>
+                      </td>
+                      <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 700, color: row.netPL >= 0 ? "#4ade80" : "#ef4444" }}>
+                        {row.netPL >= 0 ? "+" : ""}${row.netPL.toLocaleString()}
+                      </td>
+                      <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 700, color: "#f0f0f0" }}>
+                        ${row.bankroll.toLocaleString()}
+                      </td>
+                    </tr>
+                  ))}
+                  {/* Totals row */}
+                  <tr style={{ borderTop: "2px solid rgba(249,115,22,0.3)", background: "#050505" }}>
+                    <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 800, color: "#f97316" }}>TOTAL</td>
+                    <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 700, color: "#f0f0f0" }}>71</td>
+                    <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 800, color: "#4ade80" }}>48</td>
+                    <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 800, color: "#ef4444" }}>23</td>
+                    <td style={{ padding: "14px 16px" }}>
+                      <span style={{ fontSize: 16, fontWeight: 800, color: "#4ade80" }}>67.6%</span>
+                    </td>
+                    <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 800, color: "#4ade80" }}>+$18,760</td>
+                    <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 800, color: "#f0f0f0" }}>$19,760</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <p style={{ fontSize: 11, color: "#444", marginTop: 10, lineHeight: 1.6 }}>
+            R4 shows a losing round — included for full transparency.
+            $1,000 flat stake assumed. 1.87 average odds.
+          </p>
+        </section>
+
+        {/* Position breakdown — Pro gate */}
+        <section style={{ marginBottom: 40 }}>
+          <h2 style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.02em", margin: "0 0 20px" }}>By Position</h2>
+
+          {isPro ? (
+            <div style={{ background: "#080808", border: "1px solid #1a1a1a", borderRadius: 12, overflow: "hidden" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                <thead>
+                  <tr style={{ background: "#050505" }}>
+                    {["Position", "Picks", "W", "L", "Win Rate"].map(h => (
+                      <th key={h} style={{ padding: "12px 16px", fontSize: 10, fontWeight: 700, color: "#555", textTransform: "uppercase", letterSpacing: "0.07em", textAlign: "left", borderBottom: "1px solid #1a1a1a" }}>
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {POSITION_DATA.map((row, i) => (
+                    <tr key={i} style={{ borderTop: "1px solid #0d0d0d" }}>
+                      <td style={{ padding: "14px 16px", fontSize: 14, fontWeight: 700, color: "#f97316" }}>{row.position}</td>
+                      <td style={{ padding: "14px 16px", fontSize: 13, color: "#888" }}>{row.picks}</td>
+                      <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 700, color: "#4ade80" }}>{row.wins}</td>
+                      <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 700, color: "#ef4444" }}>{row.losses}</td>
+                      <td style={{ padding: "14px 16px" }}>
+                        <span style={{ fontSize: 16, fontWeight: 800, color: winRateColor(row.winRate) }}>{row.winRate}%</span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div style={{ position: "relative" }}>
+              <div style={{ background: "#080808", border: "1px solid #1a1a1a", borderRadius: 12, overflow: "hidden", filter: "blur(4px)", pointerEvents: "none", userSelect: "none" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                  <tbody>
+                    {POSITION_DATA.map((row, i) => (
+                      <tr key={i} style={{ borderTop: "1px solid #0d0d0d" }}>
+                        <td style={{ padding: "14px 16px", fontSize: 13 }}>████</td>
+                        <td style={{ padding: "14px 16px", fontSize: 13 }}>██</td>
+                        <td style={{ padding: "14px 16px", fontSize: 13 }}>██</td>
+                        <td style={{ padding: "14px 16px", fontSize: 13 }}>██</td>
+                        <td style={{ padding: "14px 16px", fontSize: 13 }}>████</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div style={{ textAlign: "center", background: "rgba(0,0,0,0.85)", borderRadius: 10, padding: "24px 32px", border: "1px solid #1a1a1a" }}>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: "#f0f0f0", marginBottom: 6 }}>Position breakdown — Pro only</div>
+                  <p style={{ fontSize: 12, color: "#555", margin: "0 0 16px", lineHeight: 1.6 }}>Win rates by MID, DEF and RUCK position</p>
+                  <Link href="/auth/payment" style={{ display: "inline-block", background: "#f97316", color: "#000", fontWeight: 700, fontSize: 13, padding: "10px 24px", borderRadius: 6, textDecoration: "none" }}>
+                    Unlock Pro — $29/month
+                  </Link>
+                </div>
+              </div>
             </div>
           )}
+        </section>
 
-          {displayedPicks.map((p, idx) => {
-            const line = getLine(p);
-            const dir = getDir(p);
-            const edge = getEdge(p);
-            const tier = getTier(p.edge_vol);
-            const isWin = p.result === "WIN";
-            return (
-              <div
-                key={`${p.player}-${p.round}-${idx}`}
-                className="track-row"
-                onClick={() => setOpenPick(openPick?.player === p.player && openPick?.round === p.round && openPick === p ? null : p)}
-                style={{
-                  display: "grid", gridTemplateColumns: GRID,
-                  borderBottom: "1px solid #0a0a0a", alignItems: "center",
-                  background: isWin ? "rgba(34,197,94,0.02)" : "transparent",
-                  cursor: "pointer",
-                }}
-                onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.03)")}
-                onMouseLeave={e => (e.currentTarget.style.background = isWin ? "rgba(34,197,94,0.02)" : "transparent")}
-              >
-                <div style={{ padding: "8px 8px", display: "flex", justifyContent: "center" }}>
-                  <Avatar name={p.player} team={p.team} />
+        {/* Methodology */}
+        <section style={{ marginBottom: 32 }}>
+          <div style={{ background: "#080808", border: "1px solid #1a1a1a", borderRadius: 10, padding: "20px 24px" }}>
+            <h3 style={{ fontSize: 14, fontWeight: 700, color: "#888", textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 14px" }}>Methodology</h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              {[
+                "All picks generated by the SportSphere six-factor weighted model",
+                "Only STRONG confidence tier picks with Edge/Vol ≥ 0.50 are published",
+                "Results verified against official AFL game data (Wheeloratings)",
+                "$1,000 flat stake assumed per pick at 1.87 average decimal odds",
+                "Win = actual disposals meet or exceed the line in the predicted direction",
+                "Loss = actual disposals miss the line in the predicted direction",
+                "No picks excluded retrospectively — all results published including losses",
+              ].map((item, i) => (
+                <div key={i} style={{ fontSize: 13, color: "#666", display: "flex", gap: 8, alignItems: "flex-start" }}>
+                  <span style={{ color: "#333", flexShrink: 0 }}>•</span>
+                  {item}
                 </div>
-                <div style={{ padding: "8px 8px" }}>
-                  <div style={{ fontSize: 12, fontWeight: 600, color: "#e0e0e0", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.player}</div>
-                  <div style={{ fontSize: 11, color: "#666", marginTop: 1 }}>{p.team}</div>
-                </div>
-                <div style={{ padding: "8px 8px", fontSize: 12, color: "#888" }}>R{p.round}</div>
-                <div style={{ padding: "8px 8px" }}>
-                  <span style={{
-                    fontSize: 10, fontWeight: 800,
-                    color: POS_COLORS[p.position] ?? "#888",
-                    background: "#111", borderRadius: 3, padding: "1px 4px",
-                  }}>{p.position}</span>
-                </div>
-                <div style={{ padding: "8px 8px", fontSize: 12, color: "#888" }}>{p.opponent ?? "—"}</div>
-                <div style={{ padding: "8px 8px", fontSize: 12, fontWeight: 600, color: "#888" }}>{line}</div>
-                <div className="col-hide-mobile" style={{ padding: "8px 8px", fontSize: 12, fontWeight: 600, color: "#f97316" }}>{p.predicted}</div>
-                <div className="col-hide-mobile" style={{ padding: "8px 8px", fontSize: 12, fontWeight: 600, color: edge >= 0 ? "#22c55e" : "#ef4444" }}>
-                  {edge >= 0 ? "+" : ""}{edge}
-                </div>
-                <div style={{ padding: "8px 8px", fontSize: 12, color: "#888" }}>{p.edge_vol.toFixed(2)}</div>
-                <div className="col-hide-mobile" style={{ padding: "8px 8px" }}><TierBadge tier={tier} /></div>
-                <div style={{ padding: "8px 8px", fontSize: 12, fontWeight: 700, color: dir === "OVER" ? "#22c55e" : "#ef4444" }}>
-                  {dir} {dir === "OVER" ? "⬆" : "⬇"}
-                </div>
-                <div style={{ padding: "8px 8px", fontSize: 13, fontWeight: 700, color: "#f0f0f0" }}>{p.actual}</div>
-                <div style={{ padding: "8px 8px", fontSize: 12, fontWeight: 800, color: isWin ? "#22c55e" : "#ef4444" }}>
-                  {isWin ? "✓" : "✗"} {p.result}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Soft lock overlay — free users see 5 rows then blur */}
-        {!proLoading && !isPro && filtered.length > 0 && (
-          <div style={{
-            position: "absolute", bottom: 0, left: 0, right: 0,
-            height: 300,
-            background: "linear-gradient(to bottom, transparent 0%, #000 55%)",
-            borderRadius: "0 0 12px 12px",
-            display: "flex", flexDirection: "column",
-            alignItems: "center", justifyContent: "flex-end",
-            paddingBottom: 28,
-          }}>
-            <div style={{ textAlign: "center", maxWidth: 380, padding: "0 20px" }}>
-              <div style={{ fontSize: 10, color: "#f97316", textTransform: "uppercase", letterSpacing: "0.12em", fontWeight: 700, marginBottom: 8 }}>
-                Pro Feature
-              </div>
-              <div style={{ fontSize: 20, fontWeight: 800, color: "#f0f0f0", marginBottom: 10, letterSpacing: "-0.02em" }}>
-                Unlock Full Track Record
-              </div>
-              <div style={{ fontSize: 13, color: "#777", marginBottom: 20, lineHeight: 1.6 }}>
-                {totalPicks} verified picks — full P&L history, sortable by any field.
-              </div>
-              <a href="/auth/payment" style={{
-                display: "inline-block", background: "#f97316", color: "#000",
-                fontWeight: 800, fontSize: 14, borderRadius: 8, padding: "12px 32px",
-                textDecoration: "none",
-              }}>
-                Unlock Full Track Record
-              </a>
+              ))}
             </div>
           </div>
-        )}
-        </div>
-
-        {/* Detail drawer */}
-        {openPick && (() => {
-          const p = openPick;
-          const line = getLine(p);
-          const dir = getDir(p);
-          const edge = getEdge(p);
-          const tier = getTier(p.edge_vol);
-          const isWin = p.result === "WIN";
-          return (
-            <>
-              <div onClick={() => setOpenPick(null)} style={{ position: "fixed", inset: 0, zIndex: 300, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)" }} />
-              <div style={{
-                position: "fixed", top: 0, right: 0, bottom: 0, zIndex: 400,
-                width: 360, maxWidth: "90vw", background: "#0a0a0a",
-                borderLeft: "1px solid #1a1a1a", overflowY: "auto", padding: 24,
-              }}>
-                <button onClick={() => setOpenPick(null)} style={{ position: "absolute", top: 16, right: 16, background: "none", border: "none", color: "#555", cursor: "pointer", fontSize: 18 }}>✕</button>
-                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
-                  <Avatar name={p.player} team={p.team} />
-                  <div>
-                    <div style={{ fontSize: 17, fontWeight: 700, color: "#f0f0f0" }}>{p.player}</div>
-                    <div style={{ fontSize: 13, fontWeight: 500, color: "#aaaaaa", marginTop: 2 }}>{p.team} · {p.position} · Round {p.round}</div>
-                  </div>
-                </div>
-                <div style={{ borderRadius: 8, padding: "12px 14px", marginBottom: 18, background: isWin ? "rgba(34,197,94,0.08)" : "rgba(239,68,68,0.08)", border: `1px solid ${isWin ? "rgba(34,197,94,0.25)" : "rgba(239,68,68,0.25)"}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                  <span style={{ fontSize: 20, fontWeight: 800, color: isWin ? "#22c55e" : "#ef4444" }}>{isWin ? "✓ WIN" : "✗ LOSS"}</span>
-                  <TierBadge tier={tier} />
-                </div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 18 }}>
-                  {[
-                    { label: "Line", value: line },
-                    { label: "Actual", value: p.actual },
-                    { label: "Model", value: p.predicted },
-                    { label: "Edge", value: `${edge >= 0 ? "+" : ""}${edge}` },
-                    { label: "E/V", value: p.edge_vol.toFixed(3) },
-                    { label: "Direction", value: dir },
-                  ].map(({ label, value }) => (
-                    <div key={label} style={{ background: "#111", borderRadius: 6, padding: "10px 12px" }}>
-                      <div style={{ fontSize: 10, color: "#666", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>{label}</div>
-                      <div style={{ fontSize: 16, fontWeight: 700, color: "#888" }}>{value}</div>
-                    </div>
-                  ))}
-                </div>
-                {p.opponent && (
-                  <div style={{ background: "#111", borderRadius: 8, padding: "12px 14px", marginBottom: 16 }}>
-                    <div style={{ fontSize: 10, color: "#666", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>Context</div>
-                    <div style={{ display: "flex", justifyContent: "space-between" }}>
-                      <span style={{ fontSize: 12, color: "#555" }}>Opponent</span>
-                      <span style={{ fontSize: 12, color: "#888" }}>{p.opponent}</span>
-                    </div>
-                  </div>
-                )}
-                <div style={{ padding: "10px 14px", background: "#080808", border: "1px solid #1a1a1a", borderRadius: 8, fontSize: 11, color: "#555" }}>
-                  Verified against Wheeloratings actual disposals
-                </div>
-                <button onClick={() => setOpenPick(null)} style={{ width: "100%", background: "none", border: "1px solid #1a1a1a", borderRadius: 8, padding: "8px", fontSize: 11, color: "#555", cursor: "pointer", marginTop: 8 }}>Close</button>
-              </div>
-            </>
-          );
-        })()}
+        </section>
 
         {/* Disclaimer */}
-        <div style={{ marginTop: 24, padding: "14px 18px", background: "#080808", border: "1px solid #111", borderRadius: 10 }}>
-          <div style={{ fontSize: 10, color: "#555", lineHeight: 1.8 }}>
-            <strong style={{ color: "#666" }}>Disclaimer:</strong> SportSphere HQ provides analytical data only. Nothing here is financial or betting advice. Past model performance does not guarantee future results. You must be 18+ to bet. National Gambling Helpline: <strong style={{ color: "#666" }}>1800 858 858</strong>
-          </div>
-        </div>
+        <p style={{ fontSize: 11, color: "#444", textAlign: "center", lineHeight: 1.7 }}>
+          Past performance does not guarantee future results.
+          Analytics only — not financial or betting advice. 18+ only.
+          Please gamble responsibly. Call{" "}
+          <a href="tel:1800858858" style={{ color: "#555" }}>1800 858 858</a>.
+        </p>
       </div>
       <Footer />
-
     </div>
   );
 }

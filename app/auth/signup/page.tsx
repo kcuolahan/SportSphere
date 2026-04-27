@@ -6,6 +6,14 @@ import { useRouter } from "next/navigation";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { signUp } from "@/lib/supabase";
+import { createClient } from "@supabase/supabase-js";
+
+function generateReferralCode(): string {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code = "";
+  for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  return code;
+}
 
 export default function SignupPage() {
   const router = useRouter();
@@ -21,6 +29,17 @@ export default function SignupPage() {
     setLoading(true);
     const { error: err } = await signUp(email, password);
     if (err) { setLoading(false); setError(err.message); return; }
+
+    try {
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      );
+      await supabase
+        .from("user_profiles")
+        .update({ referral_code: generateReferralCode() })
+        .eq("email", email);
+    } catch {}
 
     const referralCode = typeof window !== "undefined" ? sessionStorage.getItem("referral_code") : null;
     if (referralCode) {

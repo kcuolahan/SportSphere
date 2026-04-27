@@ -164,6 +164,54 @@ export default function DashboardPage() {
               </section>
             )}
 
+            {/* Quick stats */}
+            {isPro && (
+              <section style={{ marginBottom: 32 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
+                  {[
+                    { label: "Rounds Active", value: "5", sub: "R3–R7 tracked" },
+                    { label: "HC Picks This Season", value: "71", sub: "48W · 23L" },
+                    { label: "HC Win Rate", value: "67.6%", sub: "2026 season" },
+                  ].map(s => (
+                    <div key={s.label} style={{ background: "#080808", border: "1px solid #1a1a1a", borderRadius: 10, padding: "16px", textAlign: "center" }}>
+                      <div style={{ fontSize: 22, fontWeight: 800, color: "#f97316", letterSpacing: "-0.02em" }}>{s.value}</div>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: "#555", textTransform: "uppercase", letterSpacing: "0.06em", marginTop: 4 }}>{s.label}</div>
+                      <div style={{ fontSize: 10, color: "#444", marginTop: 2 }}>{s.sub}</div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Referral widget */}
+            <section style={{ marginBottom: 32 }}>
+              <div style={{ background: "#080808", border: "1px solid #1a1a1a", borderRadius: 12, padding: "20px 24px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>Referral Program</div>
+                  <Link href="/referral" style={{ fontSize: 11, color: "#f97316", textDecoration: "none", fontWeight: 600 }}>Full dashboard →</Link>
+                </div>
+                <div style={{ fontSize: 13, color: "#666", marginBottom: 14, lineHeight: 1.6 }}>
+                  Earn 1 free month for every friend who subscribes.
+                  {profile?.referral_count ? ` You've referred ${profile.referral_count} friend${profile.referral_count !== 1 ? "s" : ""}.` : ""}
+                </div>
+                {referralUrl ? (
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <div style={{ flex: 1, padding: "9px 12px", background: "#0a0a0a", border: "1px solid #1a1a1a", borderRadius: 6, fontSize: 11, color: "#555", fontFamily: "monospace", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {referralUrl}
+                    </div>
+                    <button
+                      onClick={copyReferral}
+                      style={{ padding: "9px 16px", background: copied ? "#14532d" : "#1a1a1a", border: "1px solid", borderColor: copied ? "#14532d" : "#2a2a2a", borderRadius: 6, color: copied ? "#4ade80" : "#888", fontSize: 11, fontWeight: 700, cursor: "pointer", flexShrink: 0 }}
+                    >
+                      {copied ? "Copied!" : "Copy"}
+                    </button>
+                  </div>
+                ) : (
+                  <Link href="/referral" style={{ fontSize: 13, color: "#f97316", textDecoration: "none", fontWeight: 600 }}>Get your referral link →</Link>
+                )}
+              </div>
+            </section>
+
             {/* Account info */}
             <section>
               <div style={{ background: "#080808", border: "1px solid #1a1a1a", borderRadius: 12, padding: "24px 28px" }}>
@@ -172,6 +220,11 @@ export default function DashboardPage() {
                   { label: "Email", value: profile?.email ?? "—" },
                   { label: "Member since", value: profile?.created_at ? new Date(profile.created_at).toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" }) : "—" },
                   { label: "Plan", value: isPro ? "Pro" : "Free" },
+                  ...(isPro ? [
+                    { label: "Status", value: "Active" },
+                    { label: "Next billing", value: proUntil ? proUntil.toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" }) : "—" },
+                    { label: "Season ends", value: "September 2026" },
+                  ] : []),
                 ].map(row => (
                   <div key={row.label} style={{ display: "flex", justifyContent: "space-between", padding: "10px 0", borderBottom: "1px solid #0d0d0d" }}>
                     <span style={{ fontSize: 13, color: "#555" }}>{row.label}</span>
