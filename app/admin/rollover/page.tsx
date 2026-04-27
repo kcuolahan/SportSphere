@@ -29,6 +29,7 @@ function RolloverContent() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [messageOk, setMessageOk] = useState(true);
+  const [activateEmail, setActivateEmail] = useState("");
 
   useEffect(() => {
     if (!authed) return;
@@ -325,6 +326,48 @@ function RolloverContent() {
           <button onClick={handleSendDigest} disabled={loading} style={btnNeutral}>
             {loading ? "Sending..." : "Send Results Digest"}
           </button>
+        </div>
+
+        {/* Emergency Pro Activation */}
+        <div style={{ background: "#0d0d0d", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 12, padding: "24px", marginBottom: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
+            <div style={{ background: "#ef4444", color: "#fff", fontWeight: 800, fontSize: 12, width: 28, height: 28, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>!</div>
+            <div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: "#f87171" }}>Emergency: Manual Pro Activation</div>
+              <div style={{ fontSize: 12, color: "#555", marginTop: 2 }}>Use if Stripe webhook fails and user has paid but not been activated.</div>
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: 10 }}>
+            <input
+              type="email"
+              placeholder="user@email.com"
+              value={activateEmail}
+              onChange={e => setActivateEmail(e.target.value)}
+              style={{ ...inputStyle, flex: 1 }}
+            />
+            <button
+              onClick={async () => {
+                if (!activateEmail) return;
+                const res = await fetch('/api/admin/activate-pro', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ email: activateEmail, secret: ADMIN_PW }),
+                });
+                const data = await res.json();
+                if (data.success) {
+                  setMessage('Pro activated for ' + activateEmail);
+                  setMessageOk(true);
+                  setActivateEmail('');
+                } else {
+                  setMessage('Activation failed: ' + (data.error ?? 'unknown'));
+                  setMessageOk(false);
+                }
+              }}
+              style={{ padding: "10px 18px", background: "#ef4444", border: "none", borderRadius: 6, color: "#fff", fontWeight: 700, fontSize: 13, cursor: "pointer", whiteSpace: "nowrap" }}
+            >
+              Activate Pro
+            </button>
+          </div>
         </div>
 
         {/* Quick links */}

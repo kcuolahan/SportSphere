@@ -46,6 +46,11 @@ async function sendWelcomeEmail(email: string) {
 }
 
 export async function POST(req: Request) {
+  console.log("=== STRIPE WEBHOOK CALLED ===");
+  console.log("Has signature:", !!req.headers.get("stripe-signature"));
+  console.log("Has webhook secret:", !!process.env.STRIPE_WEBHOOK_SECRET);
+  console.log("Webhook secret prefix:", process.env.STRIPE_WEBHOOK_SECRET?.substring(0, 10));
+
   const body = await req.text();
   const sig = req.headers.get("stripe-signature");
 

@@ -1,4 +1,5 @@
 'use client'
+import { useState } from 'react'
 import Link from 'next/link'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
@@ -31,14 +32,27 @@ const XP_RULES = {
 }
 
 export default function FantasyPage() {
+  const [waitlistEmail, setWaitlistEmail] = useState('')
+  const [waitlistDone, setWaitlistDone] = useState(false)
+
+  function handleWaitlist() {
+    if (!waitlistEmail.includes('@')) return
+    setWaitlistDone(true)
+  }
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <Nav />
 
+      {/* Coming soon banner — below fixed nav */}
+      <div style={{ marginTop: 60 }} className="bg-[#f97316] text-black py-3 text-center font-black text-sm uppercase tracking-widest">
+        Coming 2027 Season &mdash; Join the waitlist below
+      </div>
+
       {/* Hero */}
-      <div className="max-w-5xl mx-auto px-4 pt-28 pb-20 text-center">
+      <div className="max-w-5xl mx-auto px-4 pt-16 pb-20 text-center">
         <div className="inline-flex items-center gap-2 bg-[#f97316]/10 border border-[#f97316]/20 rounded-full px-4 py-2 mb-8">
-          <span className="text-[#f97316] text-sm font-bold uppercase tracking-wider">Coming 2026</span>
+          <span className="text-[#f97316] text-sm font-bold uppercase tracking-wider">Coming 2027 Season</span>
         </div>
         <h1 className="text-5xl md:text-6xl font-black mb-6 leading-tight">
           Fantasy sports.<br />
@@ -54,7 +68,7 @@ export default function FantasyPage() {
             href="/auth/payment"
             className="bg-[#f97316] hover:bg-[#ea580c] text-black font-black text-lg px-10 py-4 rounded"
           >
-            Get Pro - Fantasy included
+            Get Pro - Fantasy included when it launches
           </Link>
           <a
             href="#how-it-works"
@@ -111,7 +125,8 @@ export default function FantasyPage() {
 
       {/* How it works */}
       <div id="how-it-works" className="max-w-5xl mx-auto px-4 py-20">
-        <h2 className="text-4xl font-black text-center mb-16">How it works</h2>
+        <h2 className="text-4xl font-black text-center mb-4">How it works</h2>
+        <p className="text-center text-[#555] text-sm mb-12 uppercase tracking-widest font-bold">Coming 2027 AFL Season</p>
         <div className="grid md:grid-cols-3 gap-8">
           {[
             {
@@ -130,7 +145,10 @@ export default function FantasyPage() {
               desc: 'Players earn XP for performance milestones. Your captain earns double. XP accumulates across all three sports until February.',
             },
           ].map((item, i) => (
-            <div key={i} className="text-center">
+            <div key={i} className="text-center bg-[#111] border border-[#1a1a1a] rounded-xl p-8 relative">
+              <div className="absolute top-3 right-3 bg-[#f97316]/10 border border-[#f97316]/20 rounded text-[#f97316] text-[10px] font-black px-2 py-1 uppercase tracking-wider">
+                2027
+              </div>
               <div className="text-[#f97316] font-black text-sm tracking-widest mb-4">{item.step}</div>
               <h3 className="text-xl font-black mb-3">{item.title}</h3>
               <p className="text-[#888]">{item.desc}</p>
@@ -202,6 +220,39 @@ export default function FantasyPage() {
               </div>
             ))}
           </div>
+        </div>
+      </div>
+
+      {/* Waitlist form */}
+      <div className="max-w-md mx-auto px-4 mb-16">
+        <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-8 text-center">
+          <h3 className="font-black text-xl mb-2">Get early access</h3>
+          <p className="text-[#888] text-sm mb-6">
+            We will email you when SportSphere Fantasy launches.
+            Pro subscribers get access first.
+          </p>
+          {waitlistDone ? (
+            <div className="bg-[#030f08] border border-[#14532d] rounded-lg p-4 text-[#4ade80] font-bold text-sm">
+              You are on the list. We will be in touch.
+            </div>
+          ) : (
+            <div className="flex gap-3">
+              <input
+                type="email"
+                placeholder="your@email.com"
+                value={waitlistEmail}
+                onChange={e => setWaitlistEmail(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && handleWaitlist()}
+                className="flex-1 bg-[#0a0a0a] border border-[#2a2a2a] rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-[#f97316]/50"
+              />
+              <button
+                onClick={handleWaitlist}
+                className="bg-[#f97316] hover:bg-[#ea580c] text-black font-black px-6 py-3 rounded"
+              >
+                Notify Me
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

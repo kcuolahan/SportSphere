@@ -120,7 +120,12 @@ export default function Footer() {
             © 2026 SportSphere HQ. Analytics only - not financial or betting advice.
           </p>
           <p style={{ fontSize: 10, color: "#555", margin: 0 }}>
-            Not affiliated with any bookmaker.
+            Not affiliated with any bookmaker.{" "}
+            Questions?{" "}
+            <a href="mailto:support@sportspherehq.com" style={{ color: "#666", textDecoration: "none" }}>
+              support@sportspherehq.com
+            </a>
+            {/* Note: this inbox requires Google Workspace or Zoho Mail configured for sportspherehq.com */}
           </p>
         </div>
 
