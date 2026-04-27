@@ -7,8 +7,6 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 export async function POST(request: Request) {
   try {
     const { roundNumber, secret } = await request.json()
@@ -117,6 +115,7 @@ export async function POST(request: Request) {
 </div>
 </body></html>`
 
+    const resend = new Resend(process.env.RESEND_API_KEY!)
     const results = await Promise.allSettled(
       proUsers.map(user =>
         resend.emails.send({
