@@ -302,6 +302,8 @@ export default function AccuracyPage() {
     });
   }, [roundFilter, posFilter, tierFilter, resultFilter, sortKey, sortAsc]);
 
+  const displayedPicks = (!proLoading && !isPro) ? filtered.slice(0, 5) : filtered;
+
   function toggleSort(key: keyof Pick) {
     if (key === sortKey) setSortAsc(a => !a);
     else { setSortKey(key); setSortAsc(true); }
@@ -380,6 +382,7 @@ export default function AccuracyPage() {
         <StatsBar picks={filtered} />
 
         {/* Table */}
+        <div style={{ position: "relative" }}>
         <div style={{ background: "#080808", border: "1px solid #111", borderRadius: 12, overflow: "hidden" }}>
           {/* Header row */}
           <div className="track-row" style={{ display: "grid", gridTemplateColumns: GRID, borderBottom: "1px solid #111", background: "#050505" }}>
@@ -408,7 +411,7 @@ export default function AccuracyPage() {
             </div>
           )}
 
-          {filtered.map((p, idx) => {
+          {displayedPicks.map((p, idx) => {
             const line = getLine(p);
             const dir = getDir(p);
             const edge = getEdge(p);
@@ -461,6 +464,39 @@ export default function AccuracyPage() {
               </div>
             );
           })}
+        </div>
+
+        {/* Soft lock overlay — free users see 5 rows then blur */}
+        {!proLoading && !isPro && filtered.length > 0 && (
+          <div style={{
+            position: "absolute", bottom: 0, left: 0, right: 0,
+            height: 300,
+            background: "linear-gradient(to bottom, transparent 0%, #000 55%)",
+            borderRadius: "0 0 12px 12px",
+            display: "flex", flexDirection: "column",
+            alignItems: "center", justifyContent: "flex-end",
+            paddingBottom: 28,
+          }}>
+            <div style={{ textAlign: "center", maxWidth: 380, padding: "0 20px" }}>
+              <div style={{ fontSize: 10, color: "#f97316", textTransform: "uppercase", letterSpacing: "0.12em", fontWeight: 700, marginBottom: 8 }}>
+                Pro Feature
+              </div>
+              <div style={{ fontSize: 20, fontWeight: 800, color: "#f0f0f0", marginBottom: 10, letterSpacing: "-0.02em" }}>
+                Unlock Full Track Record
+              </div>
+              <div style={{ fontSize: 13, color: "#777", marginBottom: 20, lineHeight: 1.6 }}>
+                {totalPicks} verified picks — full P&L history, sortable by any field.
+              </div>
+              <a href="/auth/payment" style={{
+                display: "inline-block", background: "#f97316", color: "#000",
+                fontWeight: 800, fontSize: 14, borderRadius: 8, padding: "12px 32px",
+                textDecoration: "none",
+              }}>
+                Unlock Full Track Record
+              </a>
+            </div>
+          </div>
+        )}
         </div>
 
         {/* Detail drawer */}
@@ -533,34 +569,6 @@ export default function AccuracyPage() {
       </div>
       <Footer />
 
-      {/* Soft lock overlay for non-Pro users */}
-      {!proLoading && !isPro && (
-        <div style={{
-          position: "fixed", bottom: 0, left: 0, right: 0, height: "60vh",
-          background: "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.9) 40%, #000 60%)",
-          zIndex: 10, display: "flex", flexDirection: "column",
-          alignItems: "center", justifyContent: "flex-end", paddingBottom: 52,
-        }}>
-          <div style={{ textAlign: "center", maxWidth: 420, padding: "0 24px" }}>
-            <div style={{ fontSize: 10, color: "#f97316", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8, fontWeight: 700 }}>
-              Pro Feature
-            </div>
-            <div style={{ fontSize: 22, fontWeight: 800, color: "#f0f0f0", marginBottom: 8, letterSpacing: "-0.02em" }}>
-              Full Track Record
-            </div>
-            <div style={{ fontSize: 14, color: "#888", marginBottom: 24, lineHeight: 1.6 }}>
-              {totalPicks} verified picks, full P&L chart, sortable by any field.
-            </div>
-            <a href="/auth/payment" style={{
-              display: "inline-block", background: "#f97316", color: "#000",
-              fontWeight: 800, fontSize: 14, borderRadius: 8, padding: "12px 32px",
-              textDecoration: "none",
-            }}>
-              Upgrade to Pro — $29/month
-            </a>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

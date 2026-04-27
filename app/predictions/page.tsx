@@ -9,74 +9,107 @@ import { useProAccess } from '@/lib/auth'
 
 // ── Bankroll line chart ────────────────────────────────────────────────────────
 const BANKROLL = [
-  { label: 'Start', value: 1000 },
-  { label: 'R3', value: 3480 },
-  { label: 'R4', value: 3700 },
-  { label: 'R5', value: 7920 },
-  { label: 'R6', value: 6530 },
-  { label: 'R7', value: 7400 },
-  { label: 'R8-24', value: 36840 },
+  { label: 'Start',    value:  1000, projected: false },
+  { label: 'R3',       value:  9440, projected: false },
+  { label: 'R4',       value:  7270, projected: false },
+  { label: 'R5',       value: 10230, projected: false },
+  { label: 'R6',       value: 13060, projected: false },
+  { label: 'R7',       value: 19760, projected: false },
+  { label: 'R24 proj', value: 75000, projected: true  },
 ]
 
 function BankrollChart() {
-  const W = 560, H = 200
-  const PL = 36, PR = 80, PT = 20, PB = 36
-  const cw = W - PL - PR  // 444
-  const ch = H - PT - PB  // 144
+  const W = 700, H = 280
+  const PL = 46, PR = 12, PT = 28, PB = 44
+  const cw = W - PL - PR   // 642
+  const ch = H - PT - PB   // 208
   const n = BANKROLL.length
-  const minY = 0, maxY = 40000, range = maxY
 
+  // Two-zone Y scale: bottom 65% = $0–$20k (actual), top 35% = $20k–$80k (projected)
+  const SPLIT_V = 20000
+  const Z1 = 0.65, Z2 = 0.35
+  const splitY = PT + ch * Z2
+
+  const fy = (v: number): number => {
+    if (v <= SPLIT_V) return splitY + (1 - v / SPLIT_V) * ch * Z1
+    return PT + (1 - (v - SPLIT_V) / (80000 - SPLIT_V)) * ch * Z2
+  }
   const fx = (i: number) => PL + (i / (n - 1)) * cw
-  const fy = (v: number) => PT + (1 - (v - minY) / range) * ch
 
   const actualPts = BANKROLL.slice(0, 6)
-  const actualPath = actualPts
-    .map((d, i) => `${i === 0 ? 'M' : 'L'}${fx(i).toFixed(1)},${fy(d.value).toFixed(1)}`)
-    .join(' ')
+  const actualPath = actualPts.map((d, i) =>
+    `${i === 0 ? 'M' : 'L'}${fx(i).toFixed(1)},${fy(d.value).toFixed(1)}`
+  ).join(' ')
   const projPath = `M${fx(5).toFixed(1)},${fy(BANKROLL[5].value).toFixed(1)} L${fx(6).toFixed(1)},${fy(BANKROLL[6].value).toFixed(1)}`
+
+  const fmtVal = (v: number) => {
+    if (v >= 10000) return `$${(v / 1000).toFixed(0)}k`
+    if (v >= 1000)  return `$${(v / 1000).toFixed(1)}k`
+    return `$${v}`
+  }
+
+  const yTicks = [0, 5000, 10000, 15000, 20000] as const
 
   return (
     <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', display: 'block', overflow: 'visible' }}>
-      {/* Y axis gridlines + labels */}
-      {[0, 10000, 20000, 30000, 40000].map(v => (
+
+      {/* Y gridlines — actual zone ($0–$20k) */}
+      {yTicks.map(v => (
         <g key={v}>
-          {v > 0 && <line x1={PL} y1={fy(v)} x2={W - PR} y2={fy(v)} stroke="#141414" strokeWidth={0.5} strokeDasharray="3,4" />}
-          <text x={PL - 5} y={fy(v) + 4} textAnchor="end" fontSize={8} fill="#444">
+          <line x1={PL} y1={fy(v)} x2={W - PR} y2={fy(v)} stroke="#141414" strokeWidth={v === 0 ? 1 : 0.5} strokeDasharray={v === 0 ? '0' : '3,5'} />
+          <text x={PL - 6} y={fy(v) + 4} textAnchor="end" fontSize={9} fill="#444">
             {v === 0 ? '$0' : `$${v / 1000}k`}
           </text>
         </g>
       ))}
 
-      {/* X axis baseline */}
-      <line x1={PL} y1={fy(0)} x2={W - PR} y2={fy(0)} stroke="#1a1a1a" strokeWidth={0.5} />
+      {/* Axis break indicator between $20k and $75k zones */}
+      <text x={PL - 6} y={splitY - 6} textAnchor="end" fontSize={10} fill="#333">~</text>
 
-      {/* Actual line */}
+      {/* Y gridline — projected reference at $75k */}
+      <line x1={PL} y1={fy(75000)} x2={W - PR} y2={fy(75000)} stroke="#22c55e" strokeWidth={0.5} strokeDasharray="3,5" strokeOpacity={0.3} />
+      <text x={PL - 6} y={fy(75000) + 4} textAnchor="end" fontSize={9} fill="#22c55e" fillOpacity={0.7}>$75k+</text>
+
+      {/* Actual orange line */}
       <path d={actualPath} fill="none" stroke="#f97316" strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round" />
 
       {/* Projected dashed line */}
-      <path d={projPath} fill="none" stroke="#f97316" strokeWidth={2} strokeDasharray="6,4" strokeOpacity={0.45} />
+      <path d={projPath} fill="none" stroke="#f97316" strokeWidth={2} strokeDasharray="6,5" strokeOpacity={0.45} />
 
-      {/* Dots on actual points */}
+      {/* Actual dots */}
       {actualPts.map((d, i) => (
-        <circle key={i} cx={fx(i)} cy={fy(d.value)} r={4} fill="#f97316" stroke="#000" strokeWidth={1.5} />
+        <circle key={i} cx={fx(i)} cy={fy(d.value)} r={5} fill="#f97316" stroke="#000" strokeWidth={1.5} />
       ))}
 
       {/* Projected dot (hollow) */}
-      <circle cx={fx(6)} cy={fy(BANKROLL[6].value)} r={4} fill="none" stroke="#f97316" strokeWidth={1.5} strokeOpacity={0.5} />
+      <circle cx={fx(6)} cy={fy(BANKROLL[6].value)} r={5} fill="none" stroke="#f97316" strokeWidth={1.5} strokeOpacity={0.45} />
 
-      {/* Start annotation */}
-      <text x={fx(0)} y={fy(BANKROLL[0].value) - 9} textAnchor="middle" fontSize={9} fill="#888">$1,000</text>
-
-      {/* R7 annotation */}
-      <text x={fx(5)} y={fy(BANKROLL[5].value) - 9} textAnchor="middle" fontSize={9} fill="#f97316">$7,400</text>
+      {/* Value annotations — actual points */}
+      {actualPts.map((d, i) => {
+        const isDip = i === 2  // R4 is the down round
+        const anchor: 'start' | 'middle' = i === 0 ? 'start' : 'middle'
+        return (
+          <text
+            key={i}
+            x={fx(i)}
+            y={isDip ? fy(d.value) + 18 : fy(d.value) - 10}
+            textAnchor={anchor}
+            fontSize={9}
+            fontWeight="700"
+            fill={isDip ? '#ef4444' : '#f97316'}
+          >
+            {fmtVal(d.value)}
+          </text>
+        )
+      })}
 
       {/* Projected annotation */}
-      <text x={fx(6) + 5} y={fy(BANKROLL[6].value) + 4} textAnchor="start" fontSize={11} fontWeight="bold" fill="#22c55e">$36,840</text>
-      <text x={fx(6) + 5} y={fy(BANKROLL[6].value) + 15} textAnchor="start" fontSize={8} fill="#555">projected</text>
+      <text x={fx(6)} y={fy(75000) - 12} textAnchor="middle" fontSize={12} fontWeight="800" fill="#22c55e">$75,000+</text>
+      <text x={fx(6)} y={fy(75000) + 2}  textAnchor="middle" fontSize={8}  fill="#555">projected</text>
 
       {/* X axis labels */}
       {BANKROLL.map((d, i) => (
-        <text key={i} x={fx(i)} y={H - 4} textAnchor="middle" fontSize={9} fill={i < 6 ? '#666' : '#444'}>
+        <text key={i} x={fx(i)} y={H - 8} textAnchor="middle" fontSize={9} fill={d.projected ? '#555' : '#666'}>
           {d.label}
         </text>
       ))}
@@ -229,10 +262,10 @@ export default function PredictionsPage() {
 
           <div className="hero-grid" style={{ marginBottom: 20 }}>
             {[
-              { label: 'Total Units Staked', value: '$35,000', color: '#f0f0f0' },
-              { label: 'Win Rate', value: '65.7%', sub: '23W · 12L', color: '#f97316' },
-              { label: 'Gross P&L', value: '+$6,400', color: '#22c55e' },
-              { label: 'ROI', value: '18.3%', color: '#22c55e' },
+              { label: 'Total Units Staked', value: '$71,000', color: '#f0f0f0' },
+              { label: 'Win Rate', value: '67.6%', sub: '48W · 23L', color: '#f97316' },
+              { label: 'Gross P&L', value: '+$18,760', color: '#22c55e' },
+              { label: 'ROI', value: '26.4%', color: '#22c55e' },
             ].map(s => (
               <div key={s.label} style={{ background: '#080808', border: '1px solid #111', borderRadius: 12, padding: '20px 16px', textAlign: 'center' }}>
                 <div style={{ fontSize: 32, fontWeight: 800, color: s.color, letterSpacing: '-0.02em', marginBottom: 4 }}>{s.value}</div>
@@ -262,10 +295,10 @@ export default function PredictionsPage() {
                 If This Pattern Holds
               </div>
               {[
-                { label: 'Projected total bets', value: '~143' },
-                { label: 'Projected gross P&L', value: '+$29,440', color: '#22c55e' },
-                { label: 'Projected ROI', value: '20.4%', color: '#22c55e' },
-                { label: 'Per-bet average', value: '$206' },
+                { label: 'Projected total bets', value: '~326' },
+                { label: 'Projected gross P&L', value: '+$86,296', color: '#22c55e' },
+                { label: 'Projected ROI', value: '26.4%', color: '#22c55e' },
+                { label: 'Per-bet average', value: '$264' },
               ].map(r => (
                 <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid #0d0d0d' }}>
                   <span style={{ fontSize: 13, color: '#666' }}>{r.label}</span>
@@ -280,9 +313,9 @@ export default function PredictionsPage() {
               </div>
               {[
                 { label: 'Less subscription cost', value: '-$174', color: '#f87171' },
-                { label: 'Net annual P&L', value: '+$29,266', color: '#4ade80' },
-                { label: 'Subscription multiple', value: '168x', color: '#4ade80' },
-                { label: 'Monthly break-even', value: '2 days' },
+                { label: 'Net annual P&L', value: '+$86,122', color: '#4ade80' },
+                { label: 'Subscription multiple', value: '495x', color: '#4ade80' },
+                { label: 'Monthly break-even', value: '< 1 day' },
               ].map(r => (
                 <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid #052e16' }}>
                   <span style={{ fontSize: 13, color: '#4ade8099' }}>{r.label}</span>
@@ -293,8 +326,8 @@ export default function PredictionsPage() {
           </div>
 
           <div style={{ background: 'linear-gradient(135deg, #030f08 0%, #071a0c 100%)', border: '1px solid #22c55e40', borderRadius: 12, padding: '32px', textAlign: 'center' }}>
-            <div style={{ fontSize: 'clamp(44px, 8vw, 72px)', fontWeight: 800, color: '#22c55e', letterSpacing: '-0.04em', lineHeight: 1, marginBottom: 12 }}>168x</div>
-            <p style={{ fontSize: 16, color: '#4ade80', margin: '0 0 8px', fontWeight: 600 }}>Your $174 subscription is recovered 168 times over.</p>
+            <div style={{ fontSize: 'clamp(44px, 8vw, 72px)', fontWeight: 800, color: '#22c55e', letterSpacing: '-0.04em', lineHeight: 1, marginBottom: 12 }}>495x</div>
+            <p style={{ fontSize: 16, color: '#4ade80', margin: '0 0 8px', fontWeight: 600 }}>Your $174 subscription is recovered 495 times over.</p>
             <p style={{ fontSize: 13, color: '#666', margin: 0 }}>That&apos;s not marketing. That&apos;s math.</p>
           </div>
         </section>
@@ -321,11 +354,11 @@ export default function PredictionsPage() {
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <div style={{ width: 20, height: 0, borderTop: '2px dashed rgba(249,115,22,0.45)', borderRadius: 1 }} />
-                <span style={{ fontSize: 10, color: '#555' }}>Projected (R8–24)</span>
+                <span style={{ fontSize: 10, color: '#555' }}>Projected (R8–R24)</span>
               </div>
             </div>
             <p style={{ fontSize: 10, color: '#444', margin: '10px 0 0', lineHeight: 1.6 }}>
-              R7 extrapolated from HC picks confirmed so far at $1,000/unit. R8–24 projected at current pace.
+              R4 shows a losing round included for full transparency. R24 projected at current pace.
             </p>
           </div>
         </section>

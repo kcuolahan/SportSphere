@@ -1,55 +1,25 @@
 {
   "freeAccess": {
-    "picksToShow": 2,
+    "picksToShow": 1,
     "hideSimulator": true,
     "hideTracker": true
   },
   "hcStats": {
-    "totalBets": 31,
-    "wins": 20,
-    "losses": 11,
-    "totalStaked": 31000,
-    "netProfitBeforeFees": 6400,
-    "winRate": 0.6451612903225806,
-    "monthlySubscriptionFee": 29,
-    "durationMonths": 3
+    "totalBets": 71,
+    "wins": 48,
+    "losses": 23,
+    "winRate": 0.676,
+    "grossProfit": 18760,
+    "roi": 0.264,
+    "monthlyFee": 29,
+    "seasonMonths": 6,
+    "totalFee": 174
   },
   "roundBreakdown": [
-    {
-      "round": 3,
-      "bets": 5,
-      "wins": 4,
-      "losses": 1,
-      "netProfit": 2480,
-      "roiBefore": 49.6,
-      "roiAfter": 48.0
-    },
-    {
-      "round": 4,
-      "bets": 11,
-      "wins": 6,
-      "losses": 5,
-      "netProfit": 220,
-      "roiBefore": 2.0,
-      "roiAfter": 0.4
-    },
-    {
-      "round": 5,
-      "bets": 7,
-      "wins": 6,
-      "losses": 1,
-      "netProfit": 4220,
-      "roiBefore": 60.3,
-      "roiAfter": 58.7
-    },
-    {
-      "round": 6,
-      "bets": 8,
-      "wins": 4,
-      "losses": 4,
-      "netProfit": 2400,
-      "roiBefore": 30.0,
-      "roiAfter": 28.4
-    }
+    { "round": 3, "bets": 14, "wins": 12, "losses": 2,  "netPL":  8440 },
+    { "round": 4, "bets": 19, "wins": 9,  "losses": 10, "netPL": -2170 },
+    { "round": 5, "bets": 12, "wins": 8,  "losses": 4,  "netPL":  2960 },
+    { "round": 6, "bets": 14, "wins": 9,  "losses": 5,  "netPL":  2830 },
+    { "round": 7, "bets": 12, "wins": 10, "losses": 2,  "netPL":  6700 }
   ]
 }

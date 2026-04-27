@@ -1,24 +1,24 @@
 "use client";
 
 const ROUNDS_TRACKED = "3–7";
-const TOTAL_BETS = 35;
-const WIN_RATE = "65.7%";
-const WIN_LOSS = "23W · 12L";
-const GROSS_PROFIT_YTD = 43010; // 23 wins × $1,870 return
-const NET_PROFIT_YTD = 6400;
-const PROJECTED_GROSS = 29440;
+const TOTAL_BETS = 71;
+const WIN_RATE = "67.6%";
+const WIN_LOSS = "48W · 23L";
+const GROSS_PROFIT_YTD = 18760;
+const NET_PROFIT_YTD = 18760;
+const PROJECTED_GROSS = 86296;
 const ANNUAL_FEE = 174; // $29/month × 6 months
-const NET_AFTER_SUB = 29266;
-const MULTIPLIER = 168;
+const NET_AFTER_SUB = 86122;
+const MULTIPLIER = 495;
 
 const ROUND_PL = [
-  { round: 3, profit: 2480, wins: 4, losses: 1 },
-  { round: 4, profit: 220,  wins: 6, losses: 5 },
-  { round: 5, profit: 4220, wins: 6, losses: 1 },
-  { round: 6, profit: -1390, wins: 3, losses: 4 },
-  { round: 7, profit: 870,  wins: 4, losses: 1 },
+  { round: 3, profit:  8440, wins: 12, losses:  2 },
+  { round: 4, profit: -2170, wins:  9, losses: 10 },
+  { round: 5, profit:  2960, wins:  8, losses:  4 },
+  { round: 6, profit:  2830, wins:  9, losses:  5 },
+  { round: 7, profit:  6700, wins: 10, losses:  2 },
 ];
-const MAX_PROFIT = Math.max(...ROUND_PL.map(r => r.profit));
+const MAX_PROFIT = Math.max(...ROUND_PL.map(r => Math.abs(r.profit)));
 
 export function AnnualROIProof() {
   return (
@@ -53,13 +53,17 @@ export function AnnualROIProof() {
               <div style={{ width: 20, fontSize: 11, fontWeight: 600, color: "#555", flexShrink: 0 }}>R{r.round}</div>
               <div style={{ flex: 1, height: 26, background: "#111", borderRadius: 3, overflow: "hidden" }}>
                 <div style={{
-                  width: `${Math.min((r.profit / MAX_PROFIT) * 100, 100)}%`,
+                  width: `${Math.min((Math.abs(r.profit) / MAX_PROFIT) * 100, 100)}%`,
                   height: "100%",
-                  background: "linear-gradient(90deg, #f97316, #ea580c)",
+                  background: r.profit >= 0
+                    ? "linear-gradient(90deg, #f97316, #ea580c)"
+                    : "linear-gradient(90deg, #ef4444, #dc2626)",
                   display: "flex", alignItems: "center", justifyContent: "flex-end", paddingRight: 8,
                   minWidth: 52,
                 }}>
-                  <span style={{ fontSize: 10, fontWeight: 700, color: "#fff" }}>${r.profit.toLocaleString()}</span>
+                  <span style={{ fontSize: 10, fontWeight: 700, color: "#fff" }}>
+                    {r.profit > 0 ? '+' : ''}${Math.abs(r.profit).toLocaleString()}
+                  </span>
                 </div>
               </div>
               <div style={{ width: 42, textAlign: "right", fontSize: 10, color: "#666", flexShrink: 0 }}>
@@ -87,7 +91,7 @@ export function AnnualROIProof() {
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 13, padding: "10px 12px", background: "#0d0d0d", borderRadius: 6 }}>
             <span style={{ color: "#666" }}>AFL season access ($29 × 6 months)</span>
-            <span style={{ fontWeight: 700, color: "#f0f0f0" }}>−${ANNUAL_FEE}</span>
+            <span style={{ fontWeight: 700, color: "#f0f0f0" }}>−$174</span>
           </div>
           <div style={{ height: 1, background: "#1a1a1a" }} />
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 14px", background: "#030f08", border: "1px solid #14532d", borderRadius: 8 }}>
