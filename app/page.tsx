@@ -89,6 +89,15 @@ export default function LandingPage() {
   return (
     <div style={{ minHeight: "100vh", background: "#000", color: "#f0f0f0", fontFamily: "system-ui, -apple-system, sans-serif", overflowX: "hidden" }}>
       <Nav />
+      <style>{`
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        .grid-4-to-2 { display: grid; grid-template-columns: repeat(4,1fr); }
+        @media (max-width: 640px) {
+          .grid-4-to-2 { grid-template-columns: repeat(2,1fr) !important; }
+          .hero-cta-row { flex-direction: column !important; }
+          .latest-round-card { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
 
       {/* ── TICKER ── */}
       <div style={{
@@ -261,7 +270,7 @@ export default function LandingPage() {
       {/* ── LATEST ROUND SUMMARY CARD ── */}
       {lastRound && lastRoundStats && (
         <div style={{ padding: "48px 24px 0", maxWidth: 1100, margin: "0 auto" }}>
-          <div style={{
+          <div className="latest-round-card" style={{
             background: "#050505", border: "1px solid #1a1a1a",
             borderRadius: 12, padding: "28px 28px 24px",
             display: "grid", gridTemplateColumns: "1fr auto",

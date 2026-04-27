@@ -56,7 +56,7 @@ export function calculatePickResult(
   odds: number,
   stake: number = 1000,
 ) {
-  const hit = prediction === 'OVER' ? finalDisposals > line : finalDisposals < line
+  const hit = prediction === 'OVER' ? finalDisposals >= line : finalDisposals <= line
   return {
     result: hit ? 'WIN' : 'LOSS',
     profitLoss: hit ? Math.round(stake * (odds - 1)) : -stake,

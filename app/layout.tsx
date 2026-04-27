@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     template: "%s | SportSphere HQ",
   },
   description:
-    "60.7% HC win rate across 611 verified picks. Australia's sharpest AFL disposal model. Six-factor predictions, Edge/Vol filtering, publicly verified track record.",
+    "67.6% HC win rate. $18,760 gross profit. 71 HC picks tracked. Australia's sharpest AFL disposal model. Six-factor predictions, Edge/Vol filtering, publicly verified track record.",
   keywords: ["AFL", "AFL predictions", "AFL disposals", "AFL analytics", "sports analytics Australia", "AFL disposal model"],
   icons: {
     icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
@@ -27,23 +27,24 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "SportSphere HQ — AFL Disposal Analytics",
-    description: "60.7% HC win rate · 60.0% filtered · 611 picks tracked. Australia's sharpest AFL disposal model.",
+    description: "67.6% HC win rate · $18,760 gross profit · 71 HC picks tracked. Australia's sharpest AFL disposal model.",
     siteName: "SportSphere HQ",
     locale: "en_AU",
     type: "website",
+    url: "https://www.sportspherehq.com",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "SportSphere HQ — AFL Disposal Analytics. 60.7% HC win rate. 611 picks tracked.",
+        alt: "SportSphere HQ — AFL Disposal Analytics. 67.6% HC win rate. $18,760 gross profit.",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
     title: "SportSphere HQ — AFL Disposal Analytics",
-    description: "60.7% HC win rate · 60.0% filtered · 611 picks tracked. Australia's sharpest AFL disposal model.",
+    description: "67.6% HC win rate · $18,760 gross profit · 71 HC picks. Australia's sharpest AFL disposal model.",
     images: ["/og-image.png"],
   },
 };

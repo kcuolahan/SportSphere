@@ -231,6 +231,8 @@ export default function PredictionsPage() {
           .hero-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .proj-grid { grid-template-columns: 1fr !important; }
         }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        .skeleton { background:#111; border-radius:6px; animation:pulse 1.5s ease-in-out infinite; }
       `}</style>
 
       <div style={{ position: 'fixed', top: 60, left: 0, right: 0, height: 120, zIndex: 0, background: 'linear-gradient(180deg, #1a0a00 0%, #000000 100%)', pointerEvents: 'none' }} />
@@ -250,7 +252,14 @@ export default function PredictionsPage() {
           </p>
 
           <div className="hero-grid" style={{ marginBottom: 20 }}>
-            {[
+            {stats.loading ? (
+              [0,1,2,3].map(i => (
+                <div key={i} style={{ background: '#080808', border: '1px solid #111', borderRadius: 12, padding: '20px 16px', textAlign: 'center' }}>
+                  <div className="skeleton" style={{ height: 40, marginBottom: 8 }} />
+                  <div className="skeleton" style={{ height: 12, width: '60%', margin: '0 auto' }} />
+                </div>
+              ))
+            ) : [
               { label: 'Total Units Staked', value: `$${(stats.hc.totalPicks * 1000).toLocaleString()}`, color: '#f0f0f0' },
               { label: 'Win Rate', value: `${stats.hc.winRatePct}%`, sub: `${stats.hc.wins}W · ${stats.hc.losses}L`, color: '#f97316' },
               { label: 'Gross P&L', value: `+$${stats.hc.grossPL.toLocaleString()}`, color: '#22c55e' },
@@ -369,7 +378,18 @@ export default function PredictionsPage() {
           </div>
 
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '48px 0', fontSize: 13, color: '#555' }}>Loading signals...</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {[0,1,2].map(i => (
+                <div key={i} style={{ background: '#080808', border: '1px solid #111', borderRadius: 10, padding: '20px', display: 'flex', gap: 16, alignItems: 'center' }}>
+                  <div className="skeleton" style={{ width: 44, height: 44, borderRadius: '50%', flexShrink: 0 }} />
+                  <div style={{ flex: 1 }}>
+                    <div className="skeleton" style={{ height: 14, width: '40%', marginBottom: 8 }} />
+                    <div className="skeleton" style={{ height: 11, width: '25%' }} />
+                  </div>
+                  <div className="skeleton" style={{ width: 80, height: 32, borderRadius: 6 }} />
+                </div>
+              ))}
+            </div>
           ) : hcPicks.length === 0 ? (
             <div style={{ background: '#080808', border: '1px solid #111', borderRadius: 12, padding: '48px', textAlign: 'center' }}>
               <p style={{ fontSize: 14, color: '#555', margin: '0 0 8px' }}>No HC signals loaded yet for Round {currentRound}.</p>

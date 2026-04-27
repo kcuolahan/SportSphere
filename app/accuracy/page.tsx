@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import resultsData from "@/data/results.json";
 import { totalPicks, roundsLabel, currentSeason } from "@/lib/siteData";
 import { useProAccess } from "@/lib/auth";
+import { useStats, SportSphereStats } from "@/lib/useStats";
 
 /* ── Types ─────────────────────────────────────────────────────────────────── */
 interface Pick {
@@ -231,30 +232,21 @@ function StatsBar({ picks }: { picks: Pick[] }) {
 }
 
 /* ── Live 2026 HC betting record ────────────────────────────────────────────── */
-const LIVE_ROUNDS = [
-  { round: 3, bets: 14, wins: 12, losses:  2, netPL:  8440, bankroll:  9440, wr: 85.7 },
-  { round: 4, bets: 19, wins:  9, losses: 10, netPL: -2170, bankroll:  7270, wr: 47.4 },
-  { round: 5, bets: 12, wins:  8, losses:  4, netPL:  2960, bankroll: 10230, wr: 66.7 },
-  { round: 6, bets: 14, wins:  9, losses:  5, netPL:  2830, bankroll: 13060, wr: 64.3 },
-  { round: 7, bets: 12, wins: 10, losses:  2, netPL:  6700, bankroll: 19760, wr: 83.3 },
-];
-const LIVE_BY_POS = [
-  { pos: "MID",  picks: 44, wins: 30, losses: 14, wr: 68.2 },
-  { pos: "DEF",  picks: 23, wins: 15, losses:  8, wr: 65.2 },
-  { pos: "RUCK", picks:  4, wins:  3, losses:  1, wr: 75.0 },
-];
+function LiveSeasonStats({ stats }: { stats: SportSphereStats }) {
+  const firstRound = stats.byRound[0]?.round ?? 3;
+  const lastRound = stats.byRound[stats.byRound.length - 1]?.round ?? 7;
 
-function LiveSeasonStats() {
   const summaryStats = [
-    { label: "Total HC Picks", value: "71",    color: "#f0f0f0" },
-    { label: "Win Rate",       value: "67.6%", color: "#4ade80" },
-    { label: "Gross P&L",      value: "$18,760", color: "#4ade80" },
-    { label: "ROI",            value: "26.4%", color: "#4ade80" },
+    { label: "Total HC Picks", value: String(stats.hc.totalPicks),              color: "#f0f0f0" },
+    { label: "Win Rate",       value: `${stats.hc.winRatePct}%`,                color: "#4ade80" },
+    { label: "Gross P&L",      value: `$${stats.hc.grossPL.toLocaleString()}`,  color: "#4ade80" },
+    { label: "ROI",            value: `${stats.hc.roiPct}%`,                    color: "#4ade80" },
   ];
+
   return (
     <div style={{ marginBottom: 20 }}>
       <div style={{ fontSize: 10, fontWeight: 700, color: "#f97316", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 12 }}>
-        2026 Live Betting Record · Rounds 3–7
+        2026 Live Betting Record · Rounds {firstRound}–{lastRound}
       </div>
 
       {/* Summary stats */}
@@ -282,13 +274,13 @@ function LiveSeasonStats() {
               </tr>
             </thead>
             <tbody>
-              {LIVE_BY_POS.map(r => (
-                <tr key={r.pos}>
-                  <td style={{ padding: "10px 12px", fontSize: 12, fontWeight: 700, color: "#f97316" }}>{r.pos}</td>
+              {stats.byPosition.map(r => (
+                <tr key={r.position}>
+                  <td style={{ padding: "10px 12px", fontSize: 12, fontWeight: 700, color: "#f97316" }}>{r.position}</td>
                   <td style={{ padding: "10px 12px", fontSize: 12, color: "#888", textAlign: "right" }}>{r.picks}</td>
                   <td style={{ padding: "10px 12px", fontSize: 12, color: "#4ade80", textAlign: "right" }}>{r.wins}</td>
                   <td style={{ padding: "10px 12px", fontSize: 12, color: "#ef4444", textAlign: "right" }}>{r.losses}</td>
-                  <td style={{ padding: "10px 12px", fontSize: 12, fontWeight: 700, color: "#f0f0f0", textAlign: "right" }}>{r.wr}%</td>
+                  <td style={{ padding: "10px 12px", fontSize: 12, fontWeight: 700, color: "#f0f0f0", textAlign: "right" }}>{r.winRatePct}%</td>
                 </tr>
               ))}
             </tbody>
@@ -309,27 +301,32 @@ function LiveSeasonStats() {
               </tr>
             </thead>
             <tbody>
-              {LIVE_ROUNDS.map(r => (
-                <tr key={r.round}>
-                  <td style={{ padding: "8px 10px", fontSize: 12, fontWeight: 700, color: "#888" }}>R{r.round}</td>
-                  <td style={{ padding: "8px 10px", fontSize: 12, color: "#666", textAlign: "right" }}>{r.bets}</td>
-                  <td style={{ padding: "8px 10px", fontSize: 12, color: "#4ade80", textAlign: "right" }}>{r.wins}</td>
-                  <td style={{ padding: "8px 10px", fontSize: 12, color: "#ef4444", textAlign: "right" }}>{r.losses}</td>
-                  <td style={{ padding: "8px 10px", fontSize: 12, fontWeight: 700, color: r.wr >= 60 ? "#4ade80" : r.wr >= 50 ? "#f97316" : "#ef4444", textAlign: "right" }}>{r.wr}%</td>
-                  <td style={{ padding: "8px 10px", fontSize: 12, fontWeight: 700, color: r.netPL >= 0 ? "#4ade80" : "#ef4444", textAlign: "right" }}>
-                    {r.netPL >= 0 ? "+" : ""}${Math.abs(r.netPL).toLocaleString()}
-                  </td>
-                  <td style={{ padding: "8px 10px", fontSize: 12, color: "#888", textAlign: "right" }}>${r.bankroll.toLocaleString()}</td>
-                </tr>
-              ))}
+              {stats.byRound.map(r => {
+                const bankrollPt = stats.bankroll.find(b => b.label === `R${r.round}`);
+                const bankroll = bankrollPt?.value ?? 0;
+                const wrColor = r.winRatePct >= 65 ? "#4ade80" : r.winRatePct >= 50 ? "#f97316" : "#ef4444";
+                return (
+                  <tr key={r.round}>
+                    <td style={{ padding: "8px 10px", fontSize: 12, fontWeight: 700, color: "#888" }}>R{r.round}</td>
+                    <td style={{ padding: "8px 10px", fontSize: 12, color: "#666", textAlign: "right" }}>{r.picks}</td>
+                    <td style={{ padding: "8px 10px", fontSize: 12, color: "#4ade80", textAlign: "right" }}>{r.wins}</td>
+                    <td style={{ padding: "8px 10px", fontSize: 12, color: "#ef4444", textAlign: "right" }}>{r.losses}</td>
+                    <td style={{ padding: "8px 10px", fontSize: 12, fontWeight: 700, color: wrColor, textAlign: "right" }}>{r.winRatePct}%</td>
+                    <td style={{ padding: "8px 10px", fontSize: 12, fontWeight: 700, color: r.netPL >= 0 ? "#4ade80" : "#ef4444", textAlign: "right" }}>
+                      {r.netPL >= 0 ? "+" : ""}${Math.abs(r.netPL).toLocaleString()}
+                    </td>
+                    <td style={{ padding: "8px 10px", fontSize: 12, color: "#888", textAlign: "right" }}>${bankroll.toLocaleString()}</td>
+                  </tr>
+                );
+              })}
               <tr style={{ borderTop: "1px solid #1a1a1a" }}>
                 <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#666" }}>TOT</td>
-                <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#666", textAlign: "right" }}>71</td>
-                <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#4ade80", textAlign: "right" }}>48</td>
-                <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#ef4444", textAlign: "right" }}>23</td>
-                <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#4ade80", textAlign: "right" }}>67.6%</td>
-                <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#4ade80", textAlign: "right" }}>+$18,760</td>
-                <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#f0f0f0", textAlign: "right" }}>$19,760</td>
+                <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#666", textAlign: "right" }}>{stats.hc.totalPicks}</td>
+                <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#4ade80", textAlign: "right" }}>{stats.hc.wins}</td>
+                <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#ef4444", textAlign: "right" }}>{stats.hc.losses}</td>
+                <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#4ade80", textAlign: "right" }}>{stats.hc.winRatePct}%</td>
+                <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#4ade80", textAlign: "right" }}>+${stats.hc.grossPL.toLocaleString()}</td>
+                <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#f0f0f0", textAlign: "right" }}>${(1000 + stats.hc.grossPL).toLocaleString()}</td>
               </tr>
             </tbody>
           </table>
@@ -337,7 +334,7 @@ function LiveSeasonStats() {
       </div>
 
       <div style={{ marginTop: 8, padding: "10px 14px", background: "#050505", border: "1px solid #111", borderRadius: 8, fontSize: 10, color: "#555", lineHeight: 1.7 }}>
-        All results verified against official AFL game data. $1,000 flat stake assumed at 1.87 average odds.
+        All results verified against official AFL game data. $1,000 flat stake assumed at 1.87 average odds. Not financial advice.
       </div>
     </div>
   );
@@ -392,6 +389,7 @@ function Pill({ label, active, onClick, activeColor }: { label: string; active: 
 /* ── Main page ──────────────────────────────────────────────────────────────── */
 export default function AccuracyPage() {
   const { isPro, loading: proLoading } = useProAccess();
+  const liveStats = useStats();
   const [roundFilter, setRoundFilter] = useState<number | "ALL">("ALL");
   const [posFilter, setPosFilter] = useState<"ALL" | "MID" | "DEF" | "FWD" | "RUCK">("ALL");
   const [tierFilter, setTierFilter] = useState<"ALL" | "HC" | "BET" | "SKIP">("ALL");
@@ -459,7 +457,7 @@ export default function AccuracyPage() {
         </div>
 
         {/* Live 2026 betting record */}
-        <LiveSeasonStats />
+        <LiveSeasonStats stats={liveStats} />
 
         {/* Season summary */}
         <SeasonSummary />

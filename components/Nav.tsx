@@ -3,11 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { getCurrentPredictions } from "@/lib/data";
 import { supabase, signOut } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
-
-const { round, season } = getCurrentPredictions();
 
 const CENTRE_LINKS = [
   { href: "/predictions", label: "Picks" },
@@ -36,6 +33,8 @@ export default function Nav() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [round, setRound] = useState(8);
+  const [season, setSeason] = useState(2026);
 
   useEffect(() => {
     if (!supabase) { setUser(null); return; }
@@ -44,6 +43,16 @@ export default function Nav() {
       setUser(session?.user ?? null);
     });
     return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    fetch('/api/current-round')
+      .then(r => r.json())
+      .then(d => {
+        if (d.round) setRound(d.round);
+        if (d.season) setSeason(d.season);
+      })
+      .catch(() => {});
   }, []);
 
   const linkStyle = (active: boolean) => ({
