@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { strongRate, filteredRate, totalPicks, strongPicks, filteredPicks, overallRate } from "@/lib/siteData";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 const AUDIENCE_ID = process.env.RESEND_AUDIENCE_ID ?? "";
 const FROM_PRIMARY = "SportSphere HQ <picks@sportspherehq.com>";
 const FROM_FALLBACK = "SportSphere HQ <onboarding@resend.dev>";
@@ -29,7 +28,7 @@ function buildEmailBody(): string {
   ].join("\n");
 }
 
-async function sendEmail(from: string, to: string): Promise<{ error: { message: string } | null }> {
+async function sendEmail(resend: Resend, from: string, to: string): Promise<{ error: { message: string } | null }> {
   const result = await resend.emails.send({
     from,
     to,
@@ -59,6 +58,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Email service not configured — check back soon" }, { status: 503 });
   }
 
+  const resend = new Resend(process.env.RESEND_API_KEY!)
+
   try {
     // 1. Add to audience list (if configured)
     if (AUDIENCE_ID) {
@@ -71,14 +72,14 @@ export async function POST(req: NextRequest) {
     }
 
     // 2. Send confirmation — try verified domain, fall back to resend.dev
-    let emailResult = await sendEmail(FROM_PRIMARY, email);
+    let emailResult = await sendEmail(resend, FROM_PRIMARY, email);
 
     if (emailResult.error) {
       const msg = emailResult.error.message ?? "";
       const isDomainError = msg.toLowerCase().includes("domain") || msg.toLowerCase().includes("not verified") || msg.toLowerCase().includes("sender");
       if (isDomainError) {
         console.warn("Primary domain failed, retrying with fallback:", msg);
-        emailResult = await sendEmail(FROM_FALLBACK, email);
+        emailResult = await sendEmail(resend, FROM_FALLBACK, email);
       }
     }
 
