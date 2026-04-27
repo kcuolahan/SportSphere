@@ -1,9 +1,11 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { getCurrentPredictions } from "@/lib/data";
+import { supabase } from "@/lib/supabase";
 
 const { round } = getCurrentPredictions();
 
@@ -15,6 +17,48 @@ const QUICK_LINKS = [
 ];
 
 export default function ProWelcomePage() {
+  const [accessStatus, setAccessStatus] = useState<'checking' | 'active' | 'timeout'>('checking');
+
+  useEffect(() => {
+    if (!supabase) { setAccessStatus('active'); return; }
+    let attempts = 0;
+    const MAX_ATTEMPTS = 10;
+    let timerId: ReturnType<typeof setTimeout>;
+
+    async function poll() {
+      attempts++;
+      try {
+        const { data: { user } } = await supabase!.auth.getUser();
+        if (!user?.email) {
+          setAccessStatus('active');
+          return;
+        }
+        const { data } = await supabase!
+          .from('user_profiles')
+          .select('is_pro, pro_until')
+          .eq('email', user.email)
+          .maybeSingle();
+
+        if (data?.is_pro) {
+          setAccessStatus('active');
+        } else if (attempts >= MAX_ATTEMPTS) {
+          setAccessStatus('timeout');
+        } else {
+          timerId = setTimeout(poll, 3000);
+        }
+      } catch {
+        if (attempts >= MAX_ATTEMPTS) {
+          setAccessStatus('timeout');
+        } else {
+          timerId = setTimeout(poll, 3000);
+        }
+      }
+    }
+
+    timerId = setTimeout(poll, 2000);
+    return () => clearTimeout(timerId);
+  }, []);
+
   return (
     <div style={{ minHeight: "100vh", background: "#000", color: "#f0f0f0", fontFamily: "system-ui, -apple-system, sans-serif" }}>
       <Nav />
@@ -60,6 +104,12 @@ export default function ProWelcomePage() {
 
         <div style={{ fontSize: 11, fontWeight: 700, color: "#f97316", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12 }}>
           Payment confirmed
+        </div>
+
+        <div style={{ fontSize: 12, color: accessStatus === 'active' ? "#22c55e" : accessStatus === 'timeout' ? "#888" : "#555", marginBottom: 8 }}>
+          {accessStatus === 'checking' && "Activating your pro access..."}
+          {accessStatus === 'active' && "Pro access active"}
+          {accessStatus === 'timeout' && "Access activating — refresh in 30 seconds or contact support"}
         </div>
 
         <h1 style={{ fontSize: "clamp(26px, 5vw, 38px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 14px" }}>

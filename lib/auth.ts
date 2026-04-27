@@ -26,7 +26,7 @@ export function useProAccess(): ProAccess {
         .from("user_profiles")
         .select("is_pro, pro_until")
         .eq("email", user.email)
-        .single();
+        .maybeSingle();
 
       if (data?.is_pro && data?.pro_until) {
         const proUntil = new Date(data.pro_until);
@@ -37,6 +37,13 @@ export function useProAccess(): ProAccess {
     }
 
     checkAccess();
+
+    if (!supabase) return;
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      checkAccess();
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   return { isPro, loading, isLoggedIn };

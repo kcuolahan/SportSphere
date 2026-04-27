@@ -137,7 +137,7 @@ async function runDigest() {
     const results = await Promise.allSettled(
       proUsers.map(user =>
         resend.emails.send({
-          from: 'SportSphere HQ <picks@sportspherehq.com>',
+          from: 'SportSphere HQ <onboarding@resend.dev>',
           to: user.email,
           subject: `Weekly Digest — ${winRatePct}% HC win rate · +$${Number(grossPL).toLocaleString()} P&L`,
           html,

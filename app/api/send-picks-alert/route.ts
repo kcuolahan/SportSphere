@@ -119,7 +119,7 @@ export async function POST(request: Request) {
     const results = await Promise.allSettled(
       proUsers.map(user =>
         resend.emails.send({
-          from: 'SportSphere HQ <picks@sportspherehq.com>',
+          from: 'SportSphere HQ <onboarding@resend.dev>',
           to: user.email,
           subject: `Round ${roundNumber} HC Picks Are Live — ${pickCount} picks ready`,
           html,
