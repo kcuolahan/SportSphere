@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { getCurrentPredictions, getAllResults, getResultStats, getSeasonSummary } from "@/lib/data";
 import { roundsLabel, currentSeason } from "@/lib/siteData";
+import { useStats } from "@/lib/useStats";
 import { TEAM_COLOURS } from "@/lib/teams";
 const predictions = getCurrentPredictions();
 const highImpactNews = (predictions.team_news ?? []).filter((n: { impact: string }) => n.impact === "HIGH");
@@ -75,6 +76,7 @@ function TickerItem({ player, team, position, direction, bookie_line, edge_vol }
 
 export default function LandingPage() {
   const [loaded, setLoaded] = useState(false);
+  const liveStats = useStats();
 
   useEffect(() => {
     const t = setTimeout(() => setLoaded(true), 100);
@@ -236,10 +238,10 @@ export default function LandingPage() {
           maxWidth: 1100, margin: "0 auto", padding: "0 24px",
         }}>
           {[
-            { value: `${seasonSummary.strong_rate}%`, label: "HC Win Rate", sub: `${seasonSummary.strong_picks} picks · HIGH CONVICTION tier` },
-            { value: `${seasonSummary.filtered_rate}%`, label: "Filtered Win Rate", sub: `${seasonSummary.filtered_picks} picks · E/V ≥ 0.50` },
-            { value: seasonSummary.total_picks.toString(), label: "Picks Analysed", sub: `${roundsLabel} · ${currentSeason} season` },
-            { value: `${seasonSummary.overall_rate}%`, label: "Overall Win Rate", sub: `All ${seasonSummary.total_picks} picks tracked` },
+            { value: `${liveStats.hc.winRatePct}%`, label: "HC Win Rate", sub: `${liveStats.hc.wins}W · ${liveStats.hc.losses}L · HIGH CONVICTION` },
+            { value: `+$${liveStats.hc.grossPL.toLocaleString()}`, label: "2026 Gross P&L", sub: `${liveStats.projections.roundsTracked} rounds tracked` },
+            { value: liveStats.hc.totalPicks.toString(), label: "HC Picks", sub: `${roundsLabel} · ${currentSeason} season` },
+            { value: `${liveStats.hc.roiPct}%`, label: "ROI", sub: `$1,000 stake · 1.87 avg odds` },
           ].map((s, i) => (
             <div key={i} style={{
               padding: "28px 20px",
@@ -412,7 +414,7 @@ export default function LandingPage() {
           Ready to analyse with an edge?
         </h2>
         <p style={{ fontSize: 15, color: "#777", margin: "0 0 36px", lineHeight: 1.7 }}>
-          View this round's HIGH CONVICTION picks — the tier with a verified {seasonSummary.strong_rate}%+ win rate.
+          View this round's HIGH CONVICTION picks — the tier with a verified {liveStats.hc.winRatePct}%+ win rate.
         </p>
         <Link href="/predictions" style={{
           background: "#f97316", color: "#000",

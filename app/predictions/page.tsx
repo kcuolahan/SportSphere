@@ -6,35 +6,36 @@ import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import { PlayerAvatar } from '@/components/PlayerAvatar'
 import { useProAccess } from '@/lib/auth'
+import { useStats, BankrollPoint } from '@/lib/useStats'
 
 // ── Bankroll line chart ────────────────────────────────────────────────────────
-const BANKROLL = [
-  { label: 'Start',    value:  1000, projected: false },
-  { label: 'R3',       value:  9440, projected: false },
-  { label: 'R4',       value:  7270, projected: false },
-  { label: 'R5',       value: 10230, projected: false },
-  { label: 'R6',       value: 13060, projected: false },
-  { label: 'R7',       value: 19760, projected: false },
-  { label: 'R24 proj', value: 84000, projected: true  },
-]
-
-function BankrollChart() {
+function BankrollChart({ data }: { data: BankrollPoint[] }) {
   const W = 700, H = 300
   const PL = 60, PR = 40
   const MAX_V = 95000
-  const n = BANKROLL.length
+  const n = data.length
 
   const fx = (i: number) => PL + (i / (n - 1)) * (W - PL - PR)
   const fy = (v: number) => 260 - (v / MAX_V) * 230
 
-  const actualPts = BANKROLL.slice(0, 6)
+  const actualPts = data.filter(d => !d.projected)
+  const projPt = data.find(d => d.projected)
+  const lastActualIdx = actualPts.length - 1
+
   const actualPath = actualPts.map((d, i) =>
     `${i === 0 ? 'M' : 'L'}${fx(i).toFixed(1)},${fy(d.value).toFixed(1)}`
   ).join(' ')
-  const projPath = `M${fx(5).toFixed(1)},${fy(BANKROLL[5].value).toFixed(1)} L${fx(6).toFixed(1)},${fy(BANKROLL[6].value).toFixed(1)}`
+
+  const projPath = projPt
+    ? `M${fx(lastActualIdx).toFixed(1)},${fy(actualPts[lastActualIdx].value).toFixed(1)} L${fx(n - 1).toFixed(1)},${fy(projPt.value).toFixed(1)}`
+    : ''
 
   const yGridlines = [0, 20000, 40000, 60000, 80000]
-  const valueLabels = ['$1k', '$9.4k', '$7.3k', '$10.2k', '$13.1k', '$19.8k']
+  const formatV = (v: number) => {
+    if (v < 1000) return `$${v}`
+    const k = v / 1000
+    return `$${Number.isInteger(k) ? k : k.toFixed(1)}k`
+  }
 
   return (
     <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', display: 'block', overflow: 'visible' }}>
@@ -53,33 +54,39 @@ function BankrollChart() {
       <path d={actualPath} fill="none" stroke="#f97316" strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round" />
 
       {/* Projected dashed line */}
-      <path d={projPath} fill="none" stroke="#f97316" strokeWidth={2} strokeDasharray="6,4" strokeOpacity={0.4} />
+      {projPath && <path d={projPath} fill="none" stroke="#f97316" strokeWidth={2} strokeDasharray="6,4" strokeOpacity={0.4} />}
 
       {/* Actual dots + value labels */}
       {actualPts.map((d, i) => {
-        const isR4 = i === 2
+        const isDown = i > 0 && d.value < actualPts[i - 1].value
         const cx = fx(i), cy = fy(d.value)
         return (
           <g key={i}>
-            <circle cx={cx} cy={cy} r={5} fill={isR4 ? '#ef4444' : '#f97316'} stroke="#000" strokeWidth={1.5} />
+            <circle cx={cx} cy={cy} r={5} fill={isDown ? '#ef4444' : '#f97316'} stroke="#000" strokeWidth={1.5} />
             <text
-              x={cx} y={isR4 ? cy + 16 : cy - 10}
+              x={cx} y={isDown ? cy + 16 : cy - 10}
               textAnchor={i === 0 ? 'start' : 'middle'}
               fontSize={9} fontWeight="700"
-              fill={isR4 ? '#ef4444' : '#f97316'}
+              fill={isDown ? '#ef4444' : '#f97316'}
             >
-              {valueLabels[i]}
+              {formatV(d.value)}
             </text>
           </g>
         )
       })}
 
       {/* Projected dot (hollow) + label */}
-      <circle cx={fx(6)} cy={fy(BANKROLL[6].value)} r={5} fill="none" stroke="#f97316" strokeWidth={1.5} strokeOpacity={0.5} />
-      <text x={fx(6)} y={fy(BANKROLL[6].value) - 12} textAnchor="middle" fontSize={11} fontWeight="800" fill="#22c55e">$91k proj</text>
+      {projPt && (
+        <>
+          <circle cx={fx(n - 1)} cy={fy(projPt.value)} r={5} fill="none" stroke="#f97316" strokeWidth={1.5} strokeOpacity={0.5} />
+          <text x={fx(n - 1)} y={fy(projPt.value) - 12} textAnchor="middle" fontSize={11} fontWeight="800" fill="#22c55e">
+            ${Math.round(projPt.value / 1000)}k proj
+          </text>
+        </>
+      )}
 
       {/* X axis labels */}
-      {BANKROLL.map((d, i) => (
+      {data.map((d, i) => (
         <text key={i} x={fx(i)} y={285} textAnchor="middle" fontSize={11} fill={d.projected ? '#555' : '#888'}>
           {d.label}
         </text>
@@ -159,9 +166,13 @@ function PickCard({ pick }: { pick: LivePick }) {
 // ── Main page ──────────────────────────────────────────────────────────────────
 export default function PredictionsPage() {
   const { isPro, loading: proLoading } = useProAccess()
-  const [hcPicks, setHcPicks] = useState<LivePick[]>([])
+  const stats = useStats()
+  const [allPicks, setAllPicks] = useState<LivePick[]>([])
   const [loading, setLoading] = useState(true)
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
+
+  const currentRound = stats.currentRound ?? stats.hc.latestRound
+  const hcPicks = allPicks.filter(p => p.round === currentRound && p.tier === 'HC')
 
   useEffect(() => {
     const supabase = createClient(
@@ -175,7 +186,7 @@ export default function PredictionsPage() {
         .select('*')
         .order('edge_vol', { ascending: false })
       if (!error && data) {
-        setHcPicks(data.filter((p: LivePick) => p.round === 7 && p.tier === 'HC'))
+        setAllPicks(data)
         setLastUpdated(new Date())
       }
       setLoading(false)
@@ -201,6 +212,13 @@ export default function PredictionsPage() {
 
   const visiblePicks = (!proLoading && !isPro) ? hcPicks.slice(0, 1) : hcPicks
   const lockedCount = (!proLoading && !isPro) ? Math.max(0, hcPicks.length - 1) : 0
+
+  const firstRound = stats.byRound[0]?.round ?? 3
+  const lastRoundNum = stats.byRound[stats.byRound.length - 1]?.round ?? 7
+  const projectedBets = Math.round(
+    stats.hc.totalPicks / Math.max(stats.projections.roundsTracked, 1) * stats.projections.totalRounds
+  )
+  const perBetAvg = Math.round(stats.hc.grossPL / Math.max(stats.hc.totalPicks, 1))
 
   return (
     <div style={{ minHeight: '100vh', background: '#000', color: '#f0f0f0', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
@@ -228,15 +246,15 @@ export default function PredictionsPage() {
             The $1,000 Unit Thesis
           </h1>
           <p style={{ fontSize: 18, color: '#888', margin: '0 0 36px', lineHeight: 1.5 }}>
-            5 rounds tracked. Real money. Verified results.
+            {stats.projections.roundsTracked} rounds tracked. Real money. Verified results.
           </p>
 
           <div className="hero-grid" style={{ marginBottom: 20 }}>
             {[
-              { label: 'Total Units Staked', value: '$71,000', color: '#f0f0f0' },
-              { label: 'Win Rate', value: '67.6%', sub: '48W · 23L', color: '#f97316' },
-              { label: 'Gross P&L', value: '+$18,760', color: '#22c55e' },
-              { label: 'ROI', value: '26.4%', color: '#22c55e' },
+              { label: 'Total Units Staked', value: `$${(stats.hc.totalPicks * 1000).toLocaleString()}`, color: '#f0f0f0' },
+              { label: 'Win Rate', value: `${stats.hc.winRatePct}%`, sub: `${stats.hc.wins}W · ${stats.hc.losses}L`, color: '#f97316' },
+              { label: 'Gross P&L', value: `+$${stats.hc.grossPL.toLocaleString()}`, color: '#22c55e' },
+              { label: 'ROI', value: `${stats.hc.roiPct}%`, color: '#22c55e' },
             ].map(s => (
               <div key={s.label} style={{ background: '#080808', border: '1px solid #111', borderRadius: 12, padding: '20px 16px', textAlign: 'center' }}>
                 <div style={{ fontSize: 32, fontWeight: 800, color: s.color, letterSpacing: '-0.02em', marginBottom: 4 }}>{s.value}</div>
@@ -257,7 +275,7 @@ export default function PredictionsPage() {
             The Maths
           </div>
           <h2 style={{ fontSize: 'clamp(22px, 4vw, 34px)', fontWeight: 800, letterSpacing: '-0.02em', margin: '0 0 28px' }}>
-            Extrapolated to Full Season (24 Rounds)
+            Extrapolated to Full Season ({stats.projections.totalRounds} Rounds)
           </h2>
 
           <div className="proj-grid" style={{ marginBottom: 20 }}>
@@ -266,10 +284,10 @@ export default function PredictionsPage() {
                 If This Pattern Holds
               </div>
               {[
-                { label: 'Projected total bets', value: '~341' },
-                { label: 'Projected gross P&L', value: '+$90,048', color: '#22c55e' },
-                { label: 'Projected ROI', value: '26.4%', color: '#22c55e' },
-                { label: 'Per-bet average', value: '$264' },
+                { label: 'Projected total bets', value: `~${projectedBets}` },
+                { label: 'Projected gross P&L', value: `+$${stats.projections.projectedGrossPL.toLocaleString()}`, color: '#22c55e' },
+                { label: 'Projected ROI', value: `${stats.hc.roiPct}%`, color: '#22c55e' },
+                { label: 'Per-bet average', value: `$${perBetAvg}` },
               ].map(r => (
                 <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid #0d0d0d' }}>
                   <span style={{ fontSize: 13, color: '#666' }}>{r.label}</span>
@@ -280,12 +298,12 @@ export default function PredictionsPage() {
 
             <div style={{ background: '#030f08', border: '1px solid #14532d', borderRadius: 12, padding: '24px' }}>
               <div style={{ fontSize: 12, fontWeight: 700, color: '#4ade80', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>
-                After $29/month AFL Season Access (6 months = $174)
+                After ${stats.projections.monthlyFee}/month AFL Season Access ({stats.projections.seasonMonths} months = ${stats.projections.seasonFee})
               </div>
               {[
-                { label: 'Less subscription cost', value: '-$174', color: '#f87171' },
-                { label: 'Net annual P&L', value: '+$89,874', color: '#4ade80' },
-                { label: 'Subscription multiple', value: '517x', color: '#4ade80' },
+                { label: 'Less subscription cost', value: `-$${stats.projections.seasonFee}`, color: '#f87171' },
+                { label: 'Net annual P&L', value: `+$${stats.projections.netAfterFee.toLocaleString()}`, color: '#4ade80' },
+                { label: 'Subscription multiple', value: `${stats.projections.subscriptionMultiple}x`, color: '#4ade80' },
                 { label: 'Monthly break-even', value: '< 1 day' },
               ].map(r => (
                 <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid #052e16' }}>
@@ -297,8 +315,12 @@ export default function PredictionsPage() {
           </div>
 
           <div style={{ background: 'linear-gradient(135deg, #030f08 0%, #071a0c 100%)', border: '1px solid #22c55e40', borderRadius: 12, padding: '32px', textAlign: 'center' }}>
-            <div style={{ fontSize: 'clamp(44px, 8vw, 72px)', fontWeight: 800, color: '#22c55e', letterSpacing: '-0.04em', lineHeight: 1, marginBottom: 12 }}>517x</div>
-            <p style={{ fontSize: 16, color: '#4ade80', margin: '0 0 8px', fontWeight: 600 }}>Your $174 AFL season subscription is recovered 517 times over.</p>
+            <div style={{ fontSize: 'clamp(44px, 8vw, 72px)', fontWeight: 800, color: '#22c55e', letterSpacing: '-0.04em', lineHeight: 1, marginBottom: 12 }}>
+              {stats.projections.subscriptionMultiple}x
+            </div>
+            <p style={{ fontSize: 16, color: '#4ade80', margin: '0 0 8px', fontWeight: 600 }}>
+              Your ${stats.projections.seasonFee} AFL season subscription is recovered {stats.projections.subscriptionMultiple} times over.
+            </p>
             <p style={{ fontSize: 13, color: '#666', margin: 0 }}>That&apos;s not marketing. That&apos;s math.</p>
           </div>
         </section>
@@ -315,21 +337,21 @@ export default function PredictionsPage() {
           <div style={{ background: '#080808', border: '1px solid #111', borderRadius: 12, padding: '24px' }}>
             <div style={{ overflowX: 'auto' }}>
               <div style={{ minWidth: 400 }}>
-                <BankrollChart />
+                <BankrollChart data={stats.bankroll} />
               </div>
             </div>
             <div style={{ display: 'flex', gap: 20, marginTop: 16 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <div style={{ width: 20, height: 2.5, background: '#f97316', borderRadius: 1 }} />
-                <span style={{ fontSize: 10, color: '#666' }}>Actual (R3–R7)</span>
+                <span style={{ fontSize: 10, color: '#666' }}>Actual (R{firstRound}–R{lastRoundNum})</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <div style={{ width: 20, height: 0, borderTop: '2px dashed rgba(249,115,22,0.45)', borderRadius: 1 }} />
-                <span style={{ fontSize: 10, color: '#555' }}>Projected (R8–R24)</span>
+                <span style={{ fontSize: 10, color: '#555' }}>Projected (R{lastRoundNum + 1}–R{stats.projections.totalRounds})</span>
               </div>
             </div>
             <p style={{ fontSize: 10, color: '#444', margin: '10px 0 0', lineHeight: 1.6 }}>
-              R4 shows a losing round included for full transparency. R24 projected at current pace.
+              R4 shows a losing round included for full transparency. R{stats.projections.totalRounds} projected at current pace.
             </p>
           </div>
         </section>
@@ -337,7 +359,7 @@ export default function PredictionsPage() {
         {/* ── SECTION 4: HC PICKS ── */}
         <section>
           <div style={{ fontSize: 11, fontWeight: 700, color: '#f97316', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>
-            Round 7
+            Round {currentRound}
           </div>
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
             <h2 style={{ fontSize: 'clamp(20px, 3vw, 28px)', fontWeight: 800, letterSpacing: '-0.02em', margin: 0 }}>
@@ -350,7 +372,7 @@ export default function PredictionsPage() {
             <div style={{ textAlign: 'center', padding: '48px 0', fontSize: 13, color: '#555' }}>Loading signals...</div>
           ) : hcPicks.length === 0 ? (
             <div style={{ background: '#080808', border: '1px solid #111', borderRadius: 12, padding: '48px', textAlign: 'center' }}>
-              <p style={{ fontSize: 14, color: '#555', margin: '0 0 8px' }}>No HC signals loaded yet for Round 7.</p>
+              <p style={{ fontSize: 14, color: '#555', margin: '0 0 8px' }}>No HC signals loaded yet for Round {currentRound}.</p>
               <p style={{ fontSize: 12, color: '#333', margin: 0 }}>Check back after picks are seeded.</p>
             </div>
           ) : (
