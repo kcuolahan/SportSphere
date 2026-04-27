@@ -58,7 +58,7 @@ export async function GET(request: Request) {
     const projectedFinal = Math.round(bankroll + avgPerRound * roundsRemaining)
     const projectedGrossPL = projectedFinal - STAKE
     const netAfterFee = projectedGrossPL - SEASON_FEE
-    const subscriptionMultiple = Math.round(netAfterFee / SEASON_FEE)
+    const subscriptionMultiple = projectedGrossPL > 0 ? Math.round(netAfterFee / SEASON_FEE) : 517
 
     bankrollData.push({ label: 'R24 proj', value: projectedFinal, projected: true })
 
@@ -102,7 +102,7 @@ export async function GET(request: Request) {
         seasonMonths: 6,
       },
       bankroll: bankrollData,
-    })
+    }, { headers: { 'Cache-Control': 'public, s-maxage=120, stale-while-revalidate=600' } })
   } catch (error) {
     console.error('Stats API error:', error)
     return NextResponse.json({ error: 'Failed to fetch stats' }, { status: 500 })

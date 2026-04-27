@@ -3,6 +3,10 @@
     {
       "path": "/api/auto-update-results",
       "schedule": "0 10 * * *"
+    },
+    {
+      "path": "/api/send-weekly-digest",
+      "schedule": "0 22 * * 0"
     }
   ]
 }

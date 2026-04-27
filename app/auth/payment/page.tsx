@@ -5,12 +5,42 @@ import { useSearchParams } from "next/navigation";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { AnnualROIProof } from "@/components/AnnualROIProof";
+import { useStats } from "@/lib/useStats";
+
+const FAQ_ITEMS = [
+  {
+    q: "When do I get access?",
+    a: "Immediately after payment. Your account is upgraded automatically and you can view all HC picks right away.",
+  },
+  {
+    q: "Can I cancel anytime?",
+    a: "Yes. Cancel with one click from your dashboard. No questions asked, no cancellation fees.",
+  },
+  {
+    q: "What's included in Pro?",
+    a: "All HC picks for every round, real-time results as games finish, full track record analytics, Defence vs Position rankings, the Weight Optimisation Simulator, and Tracker.",
+  },
+  {
+    q: "Is this financial advice?",
+    a: "No. SportSphere HQ provides analytical data for informational purposes only. Nothing here is betting or financial advice. Always bet responsibly.",
+  },
+  {
+    q: "What's your refund policy?",
+    a: "If you're not satisfied in your first 7 days, contact us for a full refund — no questions asked.",
+  },
+  {
+    q: "Do you cover NRL or other sports?",
+    a: "AFL is the primary focus for 2026. NRL coverage is planned for future seasons.",
+  },
+];
 
 function PaymentContent() {
   const searchParams = useSearchParams();
   const userEmail = searchParams.get("email") ?? "";
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const stats = useStats();
 
   async function handlePay() {
     setError(null);
@@ -31,44 +61,90 @@ function PaymentContent() {
   }
 
   return (
-    <div style={{ maxWidth: 720, margin: "0 auto", padding: "100px 20px 60px" }}>
+    <div style={{ maxWidth: 780, margin: "0 auto", padding: "100px 20px 60px" }}>
 
-      {/* Header */}
-      <div style={{ textAlign: "center", marginBottom: 40 }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: "#22c55e", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 12 }}>
-          Account created ✓
+      {/* Hook — headline */}
+      <div style={{ textAlign: "center", marginBottom: 48 }}>
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#030f08", border: "1px solid #14532d", borderRadius: 20, padding: "5px 14px", marginBottom: 20 }}>
+          <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e" }} />
+          <span style={{ fontSize: 11, color: "#4ade80", fontWeight: 600, letterSpacing: "0.06em" }}>
+            {stats.hc.winRatePct}% HC Win Rate · {stats.projections.roundsTracked} Rounds Tracked
+          </span>
         </div>
-        <h1 style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 10px" }}>
-          See what you&apos;re getting
+        <h1 style={{ fontSize: "clamp(28px, 5vw, 44px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 14px", lineHeight: 1.1 }}>
+          Your $174 AFL season subscription<br />
+          <span style={{ color: "#22c55e" }}>returns {stats.projections.subscriptionMultiple}x.</span>
         </h1>
-        <p style={{ fontSize: 14, color: "#666", margin: 0, lineHeight: 1.6 }}>
-          Real numbers. Verified results. 5 rounds of HC pick performance.
+        <p style={{ fontSize: 15, color: "#666", margin: "0 auto", maxWidth: 500, lineHeight: 1.7 }}>
+          That&apos;s not marketing copy. That&apos;s the actual math based on {stats.hc.totalPicks} verified HC picks at a {stats.hc.winRatePct}% win rate with $1,000 flat stake.
         </p>
       </div>
 
+      {/* Social proof strip */}
+      <div style={{
+        display: "grid", gridTemplateColumns: "repeat(3, 1fr)",
+        gap: 1, background: "#111", border: "1px solid #111",
+        borderRadius: 12, overflow: "hidden", marginBottom: 36,
+      }}>
+        {[
+          { value: `${stats.hc.winRatePct}%`, label: "HC Win Rate", sub: `${stats.hc.wins}W · ${stats.hc.losses}L` },
+          { value: `+$${stats.hc.grossPL.toLocaleString()}`, label: "2026 Gross P&L", sub: "$1,000 flat stake" },
+          { value: `${stats.projections.subscriptionMultiple}x`, label: "Return on $174", sub: "subscription multiple" },
+        ].map((s, i) => (
+          <div key={i} style={{ background: "#050505", padding: "20px 16px", textAlign: "center" }}>
+            <div style={{ fontSize: "clamp(20px, 3vw, 28px)", fontWeight: 800, color: "#f97316", letterSpacing: "-0.02em" }}>{s.value}</div>
+            <div style={{ fontSize: 11, color: "#fff", fontWeight: 600, marginTop: 4 }}>{s.label}</div>
+            <div style={{ fontSize: 10, color: "#555", marginTop: 2 }}>{s.sub}</div>
+          </div>
+        ))}
+      </div>
+
       {/* ROI proof */}
-      <div style={{ marginBottom: 24 }}>
+      <div style={{ marginBottom: 32 }}>
         <AnnualROIProof />
       </div>
 
       {/* Payment card */}
       <div style={{
         background: "rgba(249,115,22,0.04)",
-        border: "1px solid rgba(249,115,22,0.25)",
-        borderRadius: 12,
-        padding: "28px",
+        border: "1px solid rgba(249,115,22,0.3)",
+        borderRadius: 14,
+        padding: "32px",
+        marginBottom: 32,
       }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24, flexWrap: "wrap", gap: 16 }}>
           <div>
-            <div style={{ fontSize: 18, fontWeight: 800, color: "#f0f0f0", marginBottom: 2 }}>SportSphere HQ Pro</div>
-            <div style={{ fontSize: 13, color: "#666" }}>Full access to all HC picks · Real-time results</div>
+            <div style={{ fontSize: 20, fontWeight: 800, color: "#f0f0f0", marginBottom: 4 }}>SportSphere HQ Pro</div>
+            <div style={{ fontSize: 13, color: "#666", lineHeight: 1.6 }}>
+              Full access · All HC picks · Real-time results<br />
+              Simulator · Tracker · Picks Archive · DvP
+            </div>
           </div>
           <div style={{ textAlign: "right" }}>
-            <div style={{ fontSize: 36, fontWeight: 800, color: "#f97316", letterSpacing: "-0.03em", lineHeight: 1 }}>
-              $29<span style={{ fontSize: 15, fontWeight: 400, color: "#666" }}>/mo</span>
+            <div style={{ fontSize: 40, fontWeight: 800, color: "#f97316", letterSpacing: "-0.03em", lineHeight: 1 }}>
+              $29<span style={{ fontSize: 16, fontWeight: 400, color: "#666" }}>/mo</span>
             </div>
-            <div style={{ fontSize: 11, color: "#555", marginTop: 2 }}>Cancel anytime</div>
+            <div style={{ fontSize: 11, color: "#555", marginTop: 4 }}>$174 for full AFL season</div>
           </div>
+        </div>
+
+        {/* Feature checklist */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 24 }}>
+          {[
+            "All HC picks every round",
+            "Real-time result tracking",
+            "Full analytics dashboard",
+            "Defence vs Position (DvP)",
+            "Weight Optimisation Simulator",
+            "Picks archive (all rounds)",
+            "Weekly performance digest",
+            "Cancel anytime",
+          ].map((f, i) => (
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, color: "#888" }}>
+              <span style={{ color: "#22c55e", fontWeight: 700 }}>✓</span>
+              {f}
+            </div>
+          ))}
         </div>
 
         {error && (
@@ -81,20 +157,74 @@ function PaymentContent() {
           onClick={handlePay}
           disabled={loading}
           style={{
-            width: "100%", padding: "15px",
+            width: "100%", padding: "16px",
             background: loading ? "#444" : "#f97316",
             border: "none", borderRadius: 8,
-            fontSize: 15, fontWeight: 800, color: "#000",
+            fontSize: 16, fontWeight: 800, color: "#000",
             cursor: loading ? "not-allowed" : "pointer",
             letterSpacing: "0.01em",
           }}
         >
-          {loading ? "Redirecting to Stripe…" : "Complete Payment — $29/month →"}
+          {loading ? "Redirecting to Stripe…" : "Get Pro — $29/month →"}
         </button>
 
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, marginTop: 12 }}>
-          <span style={{ fontSize: 11, color: "#444" }}>Secure payments via</span>
-          <span style={{ fontSize: 11, fontWeight: 700, color: "#635bff", letterSpacing: "-0.02em" }}>stripe</span>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginTop: 14 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+            <span style={{ fontSize: 10, color: "#22c55e" }}>🔒</span>
+            <span style={{ fontSize: 11, color: "#444" }}>Secure via Stripe</span>
+          </div>
+          <div style={{ width: 1, height: 12, background: "#222" }} />
+          <span style={{ fontSize: 11, color: "#444" }}>Cancel anytime</span>
+          <div style={{ width: 1, height: 12, background: "#222" }} />
+          <span style={{ fontSize: 11, color: "#444" }}>7-day guarantee</span>
+        </div>
+      </div>
+
+      {/* Guarantee */}
+      <div style={{
+        background: "#030f08", border: "1px solid #14532d",
+        borderRadius: 12, padding: "24px 28px", marginBottom: 40,
+        display: "flex", alignItems: "flex-start", gap: 16,
+      }}>
+        <div style={{ fontSize: 28, flexShrink: 0, lineHeight: 1 }}>🛡</div>
+        <div>
+          <div style={{ fontSize: 15, fontWeight: 700, color: "#4ade80", marginBottom: 6 }}>7-Day Money-Back Guarantee</div>
+          <p style={{ fontSize: 13, color: "#4ade8099", margin: 0, lineHeight: 1.7 }}>
+            If you&apos;re not completely satisfied within your first 7 days, email us for a full refund. No forms, no questions, no hassle. We&apos;re confident you&apos;ll stay once you see the picks.
+          </p>
+        </div>
+      </div>
+
+      {/* FAQ */}
+      <div>
+        <h2 style={{ fontSize: 20, fontWeight: 800, letterSpacing: "-0.02em", margin: "0 0 20px" }}>
+          Frequently Asked Questions
+        </h2>
+        <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          {FAQ_ITEMS.map((item, i) => (
+            <div key={i} style={{
+              background: "#080808", border: "1px solid #111",
+              borderRadius: 8, overflow: "hidden",
+            }}>
+              <button
+                onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                style={{
+                  width: "100%", padding: "16px 20px",
+                  display: "flex", justifyContent: "space-between", alignItems: "center",
+                  background: "none", border: "none", cursor: "pointer",
+                  textAlign: "left", color: "#f0f0f0",
+                }}
+              >
+                <span style={{ fontSize: 14, fontWeight: 600 }}>{item.q}</span>
+                <span style={{ fontSize: 18, color: "#555", flexShrink: 0, transform: openFaq === i ? "rotate(45deg)" : "none", transition: "transform 0.2s" }}>+</span>
+              </button>
+              {openFaq === i && (
+                <div style={{ padding: "0 20px 16px", fontSize: 13, color: "#666", lineHeight: 1.7 }}>
+                  {item.a}
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </div>
 

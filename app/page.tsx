@@ -8,6 +8,7 @@ import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { getCurrentPredictions, getAllResults, getResultStats, getSeasonSummary } from "@/lib/data";
 import { roundsLabel, currentSeason } from "@/lib/siteData";
 import { useStats } from "@/lib/useStats";
+import { useProAccess } from "@/lib/auth";
 import { TEAM_COLOURS } from "@/lib/teams";
 const predictions = getCurrentPredictions();
 const highImpactNews = (predictions.team_news ?? []).filter((n: { impact: string }) => n.impact === "HIGH");
@@ -77,6 +78,7 @@ function TickerItem({ player, team, position, direction, bookie_line, edge_vol }
 export default function LandingPage() {
   const [loaded, setLoaded] = useState(false);
   const liveStats = useStats();
+  const { isPro } = useProAccess();
 
   useEffect(() => {
     const t = setTimeout(() => setLoaded(true), 100);
@@ -106,23 +108,53 @@ export default function LandingPage() {
         overflow: "hidden", height: 48,
         display: "flex", alignItems: "center",
       }}>
-        <div style={{
-          fontSize: 9, fontWeight: 700, color: "#f97316",
-          letterSpacing: "0.1em", textTransform: "uppercase",
-          padding: "0 14px", whiteSpace: "nowrap", borderRight: "1px solid #1a1a1a",
-          height: "100%", display: "flex", alignItems: "center",
-          background: "#000", zIndex: 1, flexShrink: 0,
-        }}>
-          R{predictions.round} HC
-        </div>
-        <div style={{ overflow: "hidden", flex: 1 }}>
-          <div className="ticker-track" style={{ display: "flex", alignItems: "center", height: 48 }}>
-            {[...tickerPicks, ...tickerPicks].map((p, i) => (
-              <TickerItem key={i} player={p.player} team={p.team} position={p.position}
-                direction={p.direction} bookie_line={p.bookie_line} edge_vol={p.edge_vol} />
-            ))}
+        {isPro ? (
+          <>
+            <div style={{
+              fontSize: 9, fontWeight: 700, color: "#f97316",
+              letterSpacing: "0.1em", textTransform: "uppercase",
+              padding: "0 14px", whiteSpace: "nowrap", borderRight: "1px solid #1a1a1a",
+              height: "100%", display: "flex", alignItems: "center",
+              background: "#000", zIndex: 1, flexShrink: 0,
+            }}>
+              R{predictions.round} HC
+            </div>
+            <div style={{ overflow: "hidden", flex: 1 }}>
+              <div className="ticker-track" style={{ display: "flex", alignItems: "center", height: 48 }}>
+                {[...tickerPicks, ...tickerPicks].map((p, i) => (
+                  <TickerItem key={i} player={p.player} team={p.team} position={p.position}
+                    direction={p.direction} bookie_line={p.bookie_line} edge_vol={p.edge_vol} />
+                ))}
+              </div>
+            </div>
+          </>
+        ) : (
+          <div style={{ overflow: "hidden", flex: 1 }}>
+            <div className="ticker-track" style={{ display: "flex", alignItems: "center", height: 48 }}>
+              {[...Array(4)].flatMap((_, rep) =>
+                [
+                  { text: "67.6% HC Win Rate", highlight: false },
+                  { text: "+$18,760 Gross P&L · 2026 Season", highlight: false },
+                  { text: "71 HC Picks Tracked · R3–R7", highlight: false },
+                  { text: "Australia's Sharpest AFL Disposal Model", highlight: false },
+                  { text: "Unlock Pro — $29/month →", highlight: true },
+                ].map((item, i) => (
+                  <Link key={`${rep}-${i}`} href="/auth/payment" style={{
+                    display: "inline-flex", alignItems: "center",
+                    padding: "0 28px", height: 48, gap: 8,
+                    fontSize: 11, fontWeight: item.highlight ? 700 : 400,
+                    color: item.highlight ? "#f97316" : "#444",
+                    textDecoration: "none", whiteSpace: "nowrap", flexShrink: 0,
+                    borderRight: "1px solid #0d0d0d",
+                  }}>
+                    {item.highlight && <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#f97316", flexShrink: 0 }} />}
+                    {item.text}
+                  </Link>
+                ))
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       <style>{`

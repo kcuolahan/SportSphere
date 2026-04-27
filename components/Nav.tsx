@@ -16,16 +16,20 @@ const CENTRE_LINKS = [
 
 const RIGHT_LINKS = [
   { href: "/accuracy", label: "Track Record", isPro: true },
+  { href: "/round-preview", label: "Preview", isPro: true },
   { href: "/defence", label: "DvP", isPro: true },
-  { href: "/insights", label: "Insights", isPro: true },
-  { href: "/simulator", label: "Simulator", isPro: true },
-  { href: "/tracker", label: "Tracker", isPro: true },
+  { href: "/betslip", label: "Betslip", isPro: true },
+  { href: "/simulator", label: "Simulator", isPro: true, hideUnder1280: true },
+  { href: "/tracker", label: "Tracker", isPro: true, hideUnder1280: true },
+  { href: "/archive", label: "Archive", isPro: true, hideUnder1280: true },
 ];
 
 const ALL_LINKS = [
   ...CENTRE_LINKS,
   ...RIGHT_LINKS,
+  { href: "/dashboard", label: "Dashboard" },
   { href: "/faq", label: "FAQ" },
+  { href: "/responsible-gambling", label: "Responsible Gambling" },
   { href: "/login", label: "Sign In" },
 ];
 
@@ -155,9 +159,9 @@ export default function Nav() {
             {/* Auth */}
             {user ? (
               <div style={{ display: "flex", alignItems: "center", gap: 6 }} className="nav-hide-1024">
-                <span style={{ fontSize: 11, color: "#555", maxWidth: 100, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                <Link href="/dashboard" style={{ fontSize: 11, color: "#555", textDecoration: "none", padding: "4px 8px" }}>
                   {user.email?.split("@")[0]}
-                </span>
+                </Link>
                 <button
                   onClick={() => signOut()}
                   style={{ fontSize: 11, color: "#555", background: "none", border: "1px solid #1f1f1f", borderRadius: 5, padding: "4px 10px", cursor: "pointer" }}

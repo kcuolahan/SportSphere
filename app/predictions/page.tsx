@@ -213,6 +213,7 @@ export default function PredictionsPage() {
   const visiblePicks = (!proLoading && !isPro) ? hcPicks.slice(0, 1) : hcPicks
   const lockedCount = (!proLoading && !isPro) ? Math.max(0, hcPicks.length - 1) : 0
 
+  const roundsTracked = stats.hc.totalPicks > 0 ? stats.projections.roundsTracked : 5
   const firstRound = stats.byRound[0]?.round ?? 3
   const lastRoundNum = stats.byRound[stats.byRound.length - 1]?.round ?? 7
   const projectedBets = Math.round(
@@ -248,7 +249,7 @@ export default function PredictionsPage() {
             The $1,000 Unit Thesis
           </h1>
           <p style={{ fontSize: 18, color: '#888', margin: '0 0 36px', lineHeight: 1.5 }}>
-            {stats.projections.roundsTracked} rounds tracked. Real money. Verified results.
+            {roundsTracked} rounds tracked. Real money. Verified results.
           </p>
 
           <div className="hero-grid" style={{ marginBottom: 20 }}>

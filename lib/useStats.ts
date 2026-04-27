@@ -120,7 +120,11 @@ export function useStats(sport = 'AFL'): SportSphereStats {
       })
       .then(data => {
         if (!cancelled) {
-          setStats({ ...data, loading: false, error: null })
+          if (data.hc && data.hc.totalPicks > 0) {
+            setStats({ ...data, loading: false, error: null })
+          } else {
+            setStats(prev => ({ ...prev, loading: false }))
+          }
         }
       })
       .catch(() => {

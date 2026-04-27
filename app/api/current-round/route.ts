@@ -18,13 +18,16 @@ export async function GET() {
     return NextResponse.json({ round: 8, season: 2026 })
   }
 
-  return NextResponse.json({
-    round: data.round_number,
-    season: data.season,
-    sport: data.sport,
-    status: data.status,
-    picksSeededAt: data.picks_seeded_at,
-  })
+  return NextResponse.json(
+    {
+      round: data.round_number,
+      season: data.season,
+      sport: data.sport,
+      status: data.status,
+      picksSeededAt: data.picks_seeded_at,
+    },
+    { headers: { 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300' } }
+  )
 }
 
 export async function POST(request: Request) {

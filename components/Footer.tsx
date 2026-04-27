@@ -56,6 +56,7 @@ export default function Footer() {
                 { href: "/model", label: "How It Works" },
                 { href: "/faq", label: "FAQ" },
                 { href: "/about", label: "About" },
+                { href: "/responsible-gambling", label: "Responsible Gambling" },
               ].map(l => (
                 <div key={l.href} style={{ marginBottom: 6 }}>
                   <Link href={l.href} style={{ fontSize: 12, color: "#666", textDecoration: "none" }}>{l.label}</Link>
@@ -102,8 +103,8 @@ export default function Footer() {
               gamblinghelponline.org.au
             </a>
           </span>
-          <Link href="/faq" style={{ fontSize: 11, color: "#555", textDecoration: "none", flexShrink: 0 }}>
-            Disclaimer →
+          <Link href="/responsible-gambling" style={{ fontSize: 11, color: "#555", textDecoration: "none", flexShrink: 0 }}>
+            Responsible Gambling →
           </Link>
         </div>
 

@@ -20,8 +20,21 @@ export default function SignupPage() {
     if (password.length < 8) { setError("Password must be at least 8 characters."); return; }
     setLoading(true);
     const { error: err } = await signUp(email, password);
+    if (err) { setLoading(false); setError(err.message); return; }
+
+    const referralCode = typeof window !== "undefined" ? sessionStorage.getItem("referral_code") : null;
+    if (referralCode) {
+      try {
+        await fetch("/api/referral", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ code: referralCode, action: "convert" }),
+        });
+        sessionStorage.removeItem("referral_code");
+      } catch {}
+    }
+
     setLoading(false);
-    if (err) { setError(err.message); return; }
     router.push(`/auth/payment?email=${encodeURIComponent(email)}`);
   }
 
