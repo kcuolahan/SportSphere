@@ -213,19 +213,19 @@ export default function LandingPage() {
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 24, flexWrap: "wrap" }}>
           <div>
             <div style={{ fontSize: 16, fontWeight: 700, color: "#f0f0f0", marginBottom: 4 }}>
-              Start Pro for $29/month
+              Unlock Pro for $29/month
             </div>
             <div style={{ fontSize: 13, color: "#555" }}>
-              *No payment required for beta. Full access while we&apos;re live-testing.
+              Full season access · All HC picks · Simulator + Tracker · 6 months for $174
             </div>
           </div>
-          <Link href="/auth/signup" style={{
+          <Link href="/auth/payment" style={{
             background: "#f97316", color: "#000",
             padding: "12px 24px", borderRadius: 8,
             fontSize: 14, fontWeight: 700, textDecoration: "none",
             whiteSpace: "nowrap", flexShrink: 0,
           }}>
-            Get Started — Free Trial*
+            Get Pro — $29/month
           </Link>
         </div>
       </div>

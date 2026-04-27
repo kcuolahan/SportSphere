@@ -301,6 +301,98 @@ function SubPositionGuide() {
   );
 }
 
+// ── Pro gate teaser ───────────────────────────────────────────────────────────
+function DvPGate() {
+  const previewTeams = TEAMS.slice(0, 3);
+  return (
+    <div style={{ minHeight: "100vh", background: "#000", color: "#f0f0f0", fontFamily: "system-ui, -apple-system, sans-serif" }}>
+      <Nav />
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "84px 20px 60px" }}>
+        <div style={{ marginBottom: 28 }}>
+          <div style={{ fontSize: 11, color: "#f97316", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 }}>Defence vs Position</div>
+          <h1 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 12px" }}>DvP Rankings</h1>
+          <div style={{ background: "#080808", border: "1px solid #111", borderRadius: 8, padding: "14px 16px", maxWidth: 680 }}>
+            <p style={{ fontSize: 12, color: "#555", margin: 0, lineHeight: 1.7 }}>
+              Teams in <span style={{ color: "#ef4444" }}>red concede more</span> — good OVER targets.
+              Teams in <span style={{ color: "#22c55e" }}>green concede fewer</span> — tilt toward UNDERs.
+              See which teams are leaking disposals to each position.
+            </p>
+          </div>
+        </div>
+
+        {/* Blurred teaser */}
+        <div style={{ position: "relative", borderRadius: 12, overflow: "hidden" }}>
+          <div style={{ filter: "blur(5px)", pointerEvents: "none", userSelect: "none", opacity: 0.6 }}>
+            <div style={{ overflowX: "auto", borderRadius: 12, border: "1px solid #111" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 700 }}>
+                <thead>
+                  <tr style={{ background: "#080808", borderBottom: "1px solid #111" }}>
+                    {["Team", "MID Avg", "DEF Avg", "FWD Avg", "RUCK Avg", "Disposal Index"].map(h => (
+                      <th key={h} style={{ padding: "10px 14px", fontSize: 10, color: "#666", fontWeight: 600, textAlign: "left", letterSpacing: "0.06em", textTransform: "uppercase" }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {previewTeams.map((team, i) => (
+                    <tr key={team.code} style={{ borderBottom: "1px solid #0a0a0a", background: i % 2 === 0 ? "#050505" : "#000" }}>
+                      <td style={{ padding: "12px 14px" }}>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: "#f0f0f0" }}>{team.name}</div>
+                        <div style={{ fontSize: 10, color: "#555" }}>{team.code}</div>
+                      </td>
+                      {(["MID", "DEF", "FWD", "RUCK"] as Position[]).map(pos => {
+                        const posData = team.concedes_by_position[pos];
+                        return (
+                          <td key={pos} style={{ padding: "11px 14px", background: heatColor(posData.vs_league, pos) }}>
+                            <div style={{ fontSize: 13, fontWeight: 600, color: heatTextColor(posData.vs_league) }}>
+                              {posData.avg.toFixed(1)}
+                            </div>
+                            <div style={{ fontSize: 9, color: "#666" }}>
+                              {posData.vs_league >= 1 ? "+" : ""}{((posData.vs_league - 1) * 100).toFixed(0)}% vs avg
+                            </div>
+                          </td>
+                        );
+                      })}
+                      <td style={{ padding: "12px 14px" }}>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: team.disposal_index > 30 ? "#f97316" : team.disposal_index < -30 ? "#60a5fa" : "#555" }}>
+                          {team.disposal_index > 0 ? "+" : ""}{team.disposal_index}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Gate overlay */}
+          <div style={{
+            position: "absolute", inset: 0,
+            background: "linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.85) 50%, #000 100%)",
+            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end",
+            paddingBottom: 32,
+          }}>
+            <div style={{ textAlign: "center", maxWidth: 420, padding: "0 24px" }}>
+              <div style={{ fontSize: 10, color: "#f97316", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8, fontWeight: 700 }}>Pro Feature</div>
+              <div style={{ fontSize: 22, fontWeight: 800, color: "#f0f0f0", marginBottom: 8, letterSpacing: "-0.02em" }}>DvP Rankings</div>
+              <div style={{ fontSize: 14, color: "#888", marginBottom: 20, lineHeight: 1.6 }}>
+                See which teams concede most to each position — the edge behind every pick.
+              </div>
+              <a href="/auth/payment" style={{
+                display: "inline-block", background: "#f97316", color: "#000",
+                fontWeight: 800, fontSize: 14, borderRadius: 8, padding: "12px 32px",
+                textDecoration: "none",
+              }}>
+                Unlock DvP — $29/month
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </div>
+  );
+}
+
 // ── Main page ─────────────────────────────────────────────────────────────────
 export default function DefencePage() {
   const { isPro, loading: proLoading } = useProAccess();
@@ -310,6 +402,8 @@ export default function DefencePage() {
   const [viewMode, setViewMode] = useState<ViewMode>("table");
   const [showBestMatchups, setShowBestMatchups] = useState(false);
   const [showSubPosGuide, setShowSubPosGuide] = useState(false);
+
+  if (!proLoading && !isPro) return <DvPGate />;
 
   const sorted = useMemo(() => {
     return [...TEAMS].sort((a, b) => {
@@ -509,34 +603,6 @@ export default function DefencePage() {
       </div>
       <Footer />
 
-      {/* Soft lock overlay for non-Pro users */}
-      {!proLoading && !isPro && (
-        <div style={{
-          position: "fixed", bottom: 0, left: 0, right: 0, height: "60vh",
-          background: "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.9) 40%, #000 60%)",
-          zIndex: 10, display: "flex", flexDirection: "column",
-          alignItems: "center", justifyContent: "flex-end", paddingBottom: 52,
-        }}>
-          <div style={{ textAlign: "center", maxWidth: 420, padding: "0 24px" }}>
-            <div style={{ fontSize: 10, color: "#f97316", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8, fontWeight: 700 }}>
-              Pro Feature
-            </div>
-            <div style={{ fontSize: 22, fontWeight: 800, color: "#f0f0f0", marginBottom: 8, letterSpacing: "-0.02em" }}>
-              DvP Rankings
-            </div>
-            <div style={{ fontSize: 14, color: "#888", marginBottom: 24, lineHeight: 1.6 }}>
-              Full team vs position data, matchup cards, and heatmap view.
-            </div>
-            <a href="/auth/payment" style={{
-              display: "inline-block", background: "#f97316", color: "#000",
-              fontWeight: 800, fontSize: 14, borderRadius: 8, padding: "12px 32px",
-              textDecoration: "none",
-            }}>
-              Upgrade to Pro — $29/month
-            </a>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

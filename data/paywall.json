@@ -8,12 +8,13 @@
   "roi": 0.264,
   "avgOdds": 1.87,
   "stakePerBet": 1000,
+  "currentRound": 8,
   "roundBreakdown": [
-    { "round": 3, "bets": 14, "wins": 12, "losses": 2,  "netPL":  8440, "bankroll": 9440 },
-    { "round": 4, "bets": 19, "wins": 9,  "losses": 10, "netPL": -2170, "bankroll": 7270 },
-    { "round": 5, "bets": 12, "wins": 8,  "losses": 4,  "netPL":  2960, "bankroll": 10230 },
-    { "round": 6, "bets": 14, "wins": 9,  "losses": 5,  "netPL":  2830, "bankroll": 13060 },
-    { "round": 7, "bets": 12, "wins": 10, "losses": 2,  "netPL":  6700, "bankroll": 19760 }
+    { "round": 3, "bets": 14, "wins": 12, "losses": 2,  "netPL":  8440, "bankroll": 9440,  "winRate": 0.857 },
+    { "round": 4, "bets": 19, "wins": 9,  "losses": 10, "netPL": -2170, "bankroll": 7270,  "winRate": 0.474 },
+    { "round": 5, "bets": 12, "wins": 8,  "losses": 4,  "netPL":  2960, "bankroll": 10230, "winRate": 0.667 },
+    { "round": 6, "bets": 14, "wins": 9,  "losses": 5,  "netPL":  2830, "bankroll": 13060, "winRate": 0.643 },
+    { "round": 7, "bets": 12, "wins": 10, "losses": 2,  "netPL":  6700, "bankroll": 19760, "winRate": 0.833 }
   ],
   "projections": {
     "totalRounds": 24,

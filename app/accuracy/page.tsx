@@ -232,11 +232,11 @@ function StatsBar({ picks }: { picks: Pick[] }) {
 
 /* ── Live 2026 HC betting record ────────────────────────────────────────────── */
 const LIVE_ROUNDS = [
-  { round: 3, bets: 14, wins: 12, losses:  2, netPL:  8440, bankroll:  9440 },
-  { round: 4, bets: 19, wins:  9, losses: 10, netPL: -2170, bankroll:  7270 },
-  { round: 5, bets: 12, wins:  8, losses:  4, netPL:  2960, bankroll: 10230 },
-  { round: 6, bets: 14, wins:  9, losses:  5, netPL:  2830, bankroll: 13060 },
-  { round: 7, bets: 12, wins: 10, losses:  2, netPL:  6700, bankroll: 19760 },
+  { round: 3, bets: 14, wins: 12, losses:  2, netPL:  8440, bankroll:  9440, wr: 85.7 },
+  { round: 4, bets: 19, wins:  9, losses: 10, netPL: -2170, bankroll:  7270, wr: 47.4 },
+  { round: 5, bets: 12, wins:  8, losses:  4, netPL:  2960, bankroll: 10230, wr: 66.7 },
+  { round: 6, bets: 14, wins:  9, losses:  5, netPL:  2830, bankroll: 13060, wr: 64.3 },
+  { round: 7, bets: 12, wins: 10, losses:  2, netPL:  6700, bankroll: 19760, wr: 83.3 },
 ];
 const LIVE_BY_POS = [
   { pos: "MID",  picks: 44, wins: 30, losses: 14, wr: 68.2 },
@@ -303,7 +303,7 @@ function LiveSeasonStats() {
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ background: "#050505" }}>
-                {["Rd", "W", "L", "Net P&L", "Bank"].map(h => (
+                {["Rd", "Picks", "W", "L", "Win%", "Net P&L", "Bank"].map(h => (
                   <th key={h} style={{ padding: "8px 10px", fontSize: 9, fontWeight: 700, color: "#555", textTransform: "uppercase", letterSpacing: "0.07em", textAlign: h === "Rd" ? "left" : "right", borderBottom: "1px solid #0d0d0d" }}>{h}</th>
                 ))}
               </tr>
@@ -312,8 +312,10 @@ function LiveSeasonStats() {
               {LIVE_ROUNDS.map(r => (
                 <tr key={r.round}>
                   <td style={{ padding: "8px 10px", fontSize: 12, fontWeight: 700, color: "#888" }}>R{r.round}</td>
+                  <td style={{ padding: "8px 10px", fontSize: 12, color: "#666", textAlign: "right" }}>{r.bets}</td>
                   <td style={{ padding: "8px 10px", fontSize: 12, color: "#4ade80", textAlign: "right" }}>{r.wins}</td>
                   <td style={{ padding: "8px 10px", fontSize: 12, color: "#ef4444", textAlign: "right" }}>{r.losses}</td>
+                  <td style={{ padding: "8px 10px", fontSize: 12, fontWeight: 700, color: r.wr >= 60 ? "#4ade80" : r.wr >= 50 ? "#f97316" : "#ef4444", textAlign: "right" }}>{r.wr}%</td>
                   <td style={{ padding: "8px 10px", fontSize: 12, fontWeight: 700, color: r.netPL >= 0 ? "#4ade80" : "#ef4444", textAlign: "right" }}>
                     {r.netPL >= 0 ? "+" : ""}${Math.abs(r.netPL).toLocaleString()}
                   </td>
@@ -322,8 +324,10 @@ function LiveSeasonStats() {
               ))}
               <tr style={{ borderTop: "1px solid #1a1a1a" }}>
                 <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#666" }}>TOT</td>
+                <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#666", textAlign: "right" }}>71</td>
                 <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#4ade80", textAlign: "right" }}>48</td>
                 <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#ef4444", textAlign: "right" }}>23</td>
+                <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#4ade80", textAlign: "right" }}>67.6%</td>
                 <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#4ade80", textAlign: "right" }}>+$18,760</td>
                 <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#f0f0f0", textAlign: "right" }}>$19,760</td>
               </tr>
