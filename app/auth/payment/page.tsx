@@ -14,7 +14,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "Can I cancel anytime?",
-    a: "Yes. Cancel with one click from your dashboard. No questions asked, no cancellation fees.",
+    a: "Yes. Cancel with one click from your dashboard. No cancellation fees.",
   },
   {
     q: "What's included in Pro?",

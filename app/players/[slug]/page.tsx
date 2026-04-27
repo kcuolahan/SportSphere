@@ -258,7 +258,7 @@ function ModelTab({ player }: { player: NonNullable<ReturnType<typeof getPlayerB
     { label: "TOG-Adjusted Rate", desc: "Scales prediction by time on ground", value: `${Math.round(player.togPct * 100)}% TOG`, pct: 40 },
     { label: "Opponent Factor", desc: "Concession rate vs league avg", value: "1.00× (current matchup)", pct: 25 },
     { label: "Play Style Multiplier", desc: `${player.playStyle} style × conditions`, value: player.playStyle, pct: 60 },
-    { label: "Rules Boost", desc: "Position-based CBA rule adjustment", value: player.position === "MID" ? "+2%" : player.position === "DEF" ? "+3%" : "—", pct: 20 },
+    { label: "Rules Boost", desc: "Position-based CBA rule adjustment", value: player.position === "MID" ? "+2%" : player.position === "DEF" ? "+3%" : "-", pct: 20 },
     { label: "CBA Dampening", desc: "Centre bounce attendance adjustment", value: `${Math.round(player.cbaRate * 100)}% CBA rate`, pct: 10 },
   ];
 
@@ -333,7 +333,7 @@ function ModelTab({ player }: { player: NonNullable<ReturnType<typeof getPlayerB
               : "Outside accumulator. Production can vary with game flow and defensive pressure."}
           </div>
           <div style={{ marginTop: 12, fontSize: 11, color: "#f97316" }}>
-            Std Dev: ±{player.stdDev} · Confidence interval: {player.stats.model - player.stdDev * 1.5}–{player.stats.model + player.stdDev * 1.5}
+            Std Dev: ±{player.stdDev} · Confidence interval: {player.stats.model - player.stdDev * 1.5} to {player.stats.model + player.stdDev * 1.5}
           </div>
         </div>
       </div>

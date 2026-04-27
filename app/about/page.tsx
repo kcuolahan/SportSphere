@@ -35,7 +35,7 @@ export default function AboutPage() {
                 Every pick is graded using <strong style={{ color: "#f97316" }}>Edge/Volatility (E/V)</strong> -the ratio of predicted edge to historical standard deviation. This measures not just whether the model predicts differently from the line, but whether that difference is statistically meaningful.
               </p>
               <p style={{ fontSize: 14, color: "#888", lineHeight: 1.8, margin: 0 }}>
-                Picks are tiered into <strong style={{ color: "#f97316" }}>HC (High Conviction, E/V ≥ 0.90)</strong>, <strong style={{ color: "#60a5fa" }}>SHARP (E/V 0.70–0.89)</strong>, and <strong style={{ color: "#22c55e" }}>BET (E/V 0.50–0.69)</strong>. Picks below 0.50 are shown for reference only and excluded from recommendations.
+                Picks are tiered into <strong style={{ color: "#f97316" }}>HC (High Conviction, E/V ≥ 0.90)</strong>, <strong style={{ color: "#60a5fa" }}>SHARP (E/V 0.70 to 0.89)</strong>, and <strong style={{ color: "#22c55e" }}>BET (E/V 0.50 to 0.69)</strong>. Picks below 0.50 are shown for reference only and excluded from recommendations.
               </p>
             </div>
           </section>

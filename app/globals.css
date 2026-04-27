@@ -163,25 +163,6 @@ body {
   .nav-mobile  { display: none !important; }
 }
 
-/* ── Mobile bottom navigation ───────────────────────────────────────────────── */
-.mobile-bottom-nav {
-  display: none;
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  z-index: 200;
-  background: rgba(8, 8, 8, 0.96);
-  backdrop-filter: blur(12px);
-  border-top: 1px solid #111;
-  height: 60px;
-  padding: 0 8px;
-  justify-content: space-around;
-  align-items: center;
-}
-@media (max-width: 700px) {
-  .mobile-bottom-nav { display: flex !important; }
-  /* Push page content above bottom nav */
-  body { padding-bottom: 60px; }
-}
 
 /* ── Accessibility ──────────────────────────────────────────────────────────── */
 :focus-visible {

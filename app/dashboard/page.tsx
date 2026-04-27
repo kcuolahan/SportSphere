@@ -169,7 +169,7 @@ export default function DashboardPage() {
               <section style={{ marginBottom: 32 }}>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
                   {[
-                    { label: "Rounds Active", value: "5", sub: "R3–R7 tracked" },
+                    { label: "Rounds Active", value: "5", sub: "R3 to R7 tracked" },
                     { label: "HC Picks This Season", value: "71", sub: "48W · 23L" },
                     { label: "HC Win Rate", value: "67.6%", sub: "2026 season" },
                   ].map(s => (

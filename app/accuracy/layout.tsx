@@ -4,7 +4,7 @@ const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://sportspherehq.com";
 
 export const metadata: Metadata = {
   title: "Track Record | SportSphere HQ",
-  description: "Complete verified track record of every AFL disposal model pick across Rounds 3–6, 2026 season. Full transparency - ROI, MAE, win rates by tier. No cherry picking.",
+  description: "Complete verified track record of every AFL disposal model pick across Rounds 3 to 7, 2026 season. Full transparency - ROI, MAE, win rates by tier. No cherry picking.",
   openGraph: {
     title: "Track Record | SportSphere HQ",
     description: "Every AFL disposal prediction logged and verified. Full round-by-round results with ROI tracking.",

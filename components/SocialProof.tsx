@@ -87,7 +87,7 @@ export function LiveResultsTicker() {
     `+$${stats.hc.grossPL.toLocaleString()} Gross P&L`,
     `${stats.hc.totalPicks} HC Picks Tracked`,
     `${stats.hc.wins}W · ${stats.hc.losses}L`,
-    `${stats.projections.roundsTracked} Rounds · R${stats.byRound[0]?.round ?? 3}–R${stats.byRound[stats.byRound.length - 1]?.round ?? 7}`,
+    `${stats.projections.roundsTracked} Rounds · R${stats.byRound[0]?.round ?? 3} to R${stats.byRound[stats.byRound.length - 1]?.round ?? 7}`,
     `${stats.projections.subscriptionMultiple}x Subscription Return`,
     `ROI: ${stats.hc.roiPct}%`,
   ];

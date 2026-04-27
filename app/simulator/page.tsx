@@ -696,7 +696,7 @@ export default function SimulatorPage() {
             Weight Optimisation Simulator
           </h1>
           <p style={{ fontSize: 13, color: "#777", margin: 0, maxWidth: 560 }}>
-            Adjust model weights and see how accuracy changes across {ALL_EXTENDED.length} picks from Rounds {roundNums[0]}–{roundNums[roundNums.length - 1]}. Run a grid search over {TOTAL_COMBOS.toLocaleString()} combinations to find optimal parameters.
+            Adjust model weights and see how accuracy changes across {ALL_EXTENDED.length} picks from Rounds {roundNums[0]} to {roundNums[roundNums.length - 1]}. Run a grid search over {TOTAL_COMBOS.toLocaleString()} combinations to find optimal parameters.
           </p>
         </div>
 

@@ -53,7 +53,7 @@ export default function AccuracyPage() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12, marginBottom: 32 }}>
           {[
             { label: "HC Win Rate",   value: "67.6%",      sub: "48W / 23L",        color: "#4ade80" },
-            { label: "Total HC Picks", value: "71",         sub: "R3–R7 · 2026",     color: "#f0f0f0" },
+            { label: "Total HC Picks", value: "71",         sub: "R3 to R7 · 2026",  color: "#f0f0f0" },
             { label: "Gross P&L",     value: "+$18,760",   sub: "$1k flat stake",    color: "#4ade80" },
             { label: "ROI",           value: "26.4%",      sub: "1.87 avg odds",     color: "#f97316" },
           ].map((s, i) => (

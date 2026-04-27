@@ -101,7 +101,7 @@ export function FreeTierPnLCard() {
       {/* P&L by round - horizontal bar chart */}
       <div>
         <div style={{ fontSize: 10, fontWeight: 700, color: "#666", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12 }}>
-          P&amp;L by Round (3–7)
+          P&amp;L by Round (3 to 7)
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {roundBreakdown.map(r => {

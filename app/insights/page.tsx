@@ -255,9 +255,9 @@ export default function InsightsPage() {
             <div style={{ marginTop: 12, display: "flex", gap: 12, flexWrap: "wrap" }}>
               {[
                 { bg: "#052e16", color: "#4ade80", label: "≥60%" },
-                { bg: "#14532d", color: "#86efac", label: "55–60%" },
-                { bg: "#0a0a0a", color: "#888", label: "50–55%" },
-                { bg: "#450a0a", color: "#f87171", label: "45–50%" },
+                { bg: "#14532d", color: "#86efac", label: "55-60%" },
+                { bg: "#0a0a0a", color: "#888", label: "50-55%" },
+                { bg: "#450a0a", color: "#f87171", label: "45-50%" },
                 { bg: "#3b0000", color: "#ef4444", label: "<45%" },
                 { bg: "#0a0a0a", color: "#444", label: "Excluded" },
               ].map(s => (

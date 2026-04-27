@@ -363,11 +363,11 @@ export default function PredictionsPage() {
             <div style={{ display: 'flex', gap: 20, marginTop: 16 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <div style={{ width: 20, height: 2.5, background: '#f97316', borderRadius: 1 }} />
-                <span style={{ fontSize: 10, color: '#666' }}>Actual (R{firstRound}–R{lastRoundNum})</span>
+                <span style={{ fontSize: 10, color: '#666' }}>Actual (R{firstRound} to R{lastRoundNum})</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <div style={{ width: 20, height: 0, borderTop: '2px dashed rgba(249,115,22,0.45)', borderRadius: 1 }} />
-                <span style={{ fontSize: 10, color: '#555' }}>Projected (R{lastRoundNum + 1}–R{stats.projections.totalRounds})</span>
+                <span style={{ fontSize: 10, color: '#555' }}>Projected (R{lastRoundNum + 1} to R{stats.projections.totalRounds})</span>
               </div>
             </div>
             <p style={{ fontSize: 10, color: '#444', margin: '10px 0 0', lineHeight: 1.6 }}>

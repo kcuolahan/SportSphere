@@ -135,7 +135,7 @@ export default function LandingPage() {
                 [
                   { text: "67.6% HC Win Rate", highlight: false },
                   { text: "+$18,760 Gross P&L · 2026 Season", highlight: false },
-                  { text: "71 HC Picks Tracked · R3–R7", highlight: false },
+                  { text: "71 HC Picks Tracked · R3 to R7", highlight: false },
                   { text: "Australia's Sharpest AFL Disposal Model", highlight: false },
                   { text: "Unlock Pro - $29/month →", highlight: true },
                 ].map((item, i) => (
@@ -399,10 +399,10 @@ export default function LandingPage() {
               Verified results
             </div>
             <h2 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 800, letterSpacing: "-0.03em", margin: 0 }}>
-              HC Filtered Pick Performance
+              HC Pick Performance - The tier we publish
             </h2>
             <p style={{ fontSize: 14, color: "#555", marginTop: 10, maxWidth: 560 }}>
-              The tier we publish - HIGH CONVICTION only.
+              HC filtered picks only. STRONG confidence + E/V above 0.50. This is the exact tier published to subscribers each week.
             </p>
           </div>
 
@@ -453,8 +453,7 @@ export default function LandingPage() {
             </table>
           </div>
           <p style={{ fontSize: 11, color: "#444", marginTop: 12, lineHeight: 1.7 }}>
-            HC = HIGH CONVICTION tier only (STRONG confidence + E/V ≥ 0.50).
-            This is the exact tier published to subscribers each week.
+            HC picks only. R4 loss included for full transparency. $1,000 flat stake, 1.87 avg odds.
           </p>
         </div>
       </div>

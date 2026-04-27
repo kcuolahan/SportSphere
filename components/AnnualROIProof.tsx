@@ -7,7 +7,7 @@ export function AnnualROIProof() {
 
   const firstRound = stats.byRound[0]?.round ?? 3;
   const lastRound = stats.byRound[stats.byRound.length - 1]?.round ?? 7;
-  const roundsRange = `${firstRound}–${lastRound}`;
+  const roundsRange = `${firstRound} to ${lastRound}`;
 
   const roundData = stats.byRound.map(r => ({
     round: r.round,

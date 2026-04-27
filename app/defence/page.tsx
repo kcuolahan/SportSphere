@@ -600,7 +600,7 @@ export default function DefencePage() {
         )}
 
         <div style={{ marginTop: 16, fontSize: 11, color: "#555" }}>
-          Data based on {TEAMS[0]?.concedes_by_position.MID.games ?? 0} rounds sampled. Rank #1–6 = easy matchup (green). Rank #13–18 = hard (red).
+          Data based on {TEAMS[0]?.concedes_by_position.MID.games ?? 0} rounds sampled. Rank #1-6 = easy matchup (green). Rank #13-18 = hard (red).
           ↑↓ trend derived from season avg deviation. LOW n = &lt;4 games - insufficient sample to act on.
         </div>
       </div>
