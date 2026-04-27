@@ -19,22 +19,13 @@ const BANKROLL = [
 ]
 
 function BankrollChart() {
-  const W = 700, H = 280
-  const PL = 46, PR = 12, PT = 28, PB = 44
-  const cw = W - PL - PR   // 642
-  const ch = H - PT - PB   // 208
+  const W = 700, H = 300
+  const PL = 60, PR = 40
+  const MAX_V = 95000
   const n = BANKROLL.length
 
-  // Two-zone Y scale: bottom 65% = $0–$20k (actual), top 35% = $20k–$80k (projected)
-  const SPLIT_V = 20000
-  const Z1 = 0.65, Z2 = 0.35
-  const splitY = PT + ch * Z2
-
-  const fy = (v: number): number => {
-    if (v <= SPLIT_V) return splitY + (1 - v / SPLIT_V) * ch * Z1
-    return PT + (1 - (v - SPLIT_V) / (90000 - SPLIT_V)) * ch * Z2
-  }
-  const fx = (i: number) => PL + (i / (n - 1)) * cw
+  const fx = (i: number) => PL + (i / (n - 1)) * (W - PL - PR)
+  const fy = (v: number) => 260 - (v / MAX_V) * 230
 
   const actualPts = BANKROLL.slice(0, 6)
   const actualPath = actualPts.map((d, i) =>
@@ -42,74 +33,54 @@ function BankrollChart() {
   ).join(' ')
   const projPath = `M${fx(5).toFixed(1)},${fy(BANKROLL[5].value).toFixed(1)} L${fx(6).toFixed(1)},${fy(BANKROLL[6].value).toFixed(1)}`
 
-  const fmtVal = (v: number) => {
-    if (v >= 10000) return `$${(v / 1000).toFixed(0)}k`
-    if (v >= 1000)  return `$${(v / 1000).toFixed(1)}k`
-    return `$${v}`
-  }
-
-  const yTicks = [0, 5000, 10000, 15000, 20000] as const
+  const yGridlines = [0, 20000, 40000, 60000, 80000]
+  const valueLabels = ['$1k', '$9.4k', '$7.3k', '$10.2k', '$13.1k', '$19.8k']
 
   return (
     <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', display: 'block', overflow: 'visible' }}>
 
-      {/* Y gridlines — actual zone ($0–$20k) */}
-      {yTicks.map(v => (
+      {/* Y gridlines */}
+      {yGridlines.map(v => (
         <g key={v}>
-          <line x1={PL} y1={fy(v)} x2={W - PR} y2={fy(v)} stroke="#141414" strokeWidth={v === 0 ? 1 : 0.5} strokeDasharray={v === 0 ? '0' : '3,5'} />
-          <text x={PL - 6} y={fy(v) + 4} textAnchor="end" fontSize={9} fill="#444">
+          <line x1={PL} y1={fy(v)} x2={W - PR} y2={fy(v)} stroke="#1a1a1a" strokeWidth={0.5} />
+          <text x={PL - 6} y={fy(v) + 4} textAnchor="end" fontSize={10} fill="#666">
             {v === 0 ? '$0' : `$${v / 1000}k`}
           </text>
         </g>
       ))}
 
-      {/* Axis break indicator between $20k and $75k zones */}
-      <text x={PL - 6} y={splitY - 6} textAnchor="end" fontSize={10} fill="#333">~</text>
-
-      {/* Y gridline — projected reference at $84k */}
-      <line x1={PL} y1={fy(84000)} x2={W - PR} y2={fy(84000)} stroke="#22c55e" strokeWidth={0.5} strokeDasharray="3,5" strokeOpacity={0.3} />
-      <text x={PL - 6} y={fy(84000) + 4} textAnchor="end" fontSize={9} fill="#22c55e" fillOpacity={0.7}>$84k+</text>
-
       {/* Actual orange line */}
       <path d={actualPath} fill="none" stroke="#f97316" strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round" />
 
       {/* Projected dashed line */}
-      <path d={projPath} fill="none" stroke="#f97316" strokeWidth={2} strokeDasharray="6,5" strokeOpacity={0.45} />
+      <path d={projPath} fill="none" stroke="#f97316" strokeWidth={2} strokeDasharray="6,4" strokeOpacity={0.4} />
 
-      {/* Actual dots */}
-      {actualPts.map((d, i) => (
-        <circle key={i} cx={fx(i)} cy={fy(d.value)} r={5} fill="#f97316" stroke="#000" strokeWidth={1.5} />
-      ))}
-
-      {/* Projected dot (hollow) */}
-      <circle cx={fx(6)} cy={fy(BANKROLL[6].value)} r={5} fill="none" stroke="#f97316" strokeWidth={1.5} strokeOpacity={0.45} />
-
-      {/* Value annotations — actual points */}
+      {/* Actual dots + value labels */}
       {actualPts.map((d, i) => {
-        const isDip = i === 2  // R4 is the down round
-        const anchor: 'start' | 'middle' = i === 0 ? 'start' : 'middle'
+        const isR4 = i === 2
+        const cx = fx(i), cy = fy(d.value)
         return (
-          <text
-            key={i}
-            x={fx(i)}
-            y={isDip ? fy(d.value) + 18 : fy(d.value) - 10}
-            textAnchor={anchor}
-            fontSize={9}
-            fontWeight="700"
-            fill={isDip ? '#ef4444' : '#f97316'}
-          >
-            {fmtVal(d.value)}
-          </text>
+          <g key={i}>
+            <circle cx={cx} cy={cy} r={5} fill={isR4 ? '#ef4444' : '#f97316'} stroke="#000" strokeWidth={1.5} />
+            <text
+              x={cx} y={isR4 ? cy + 16 : cy - 10}
+              textAnchor={i === 0 ? 'start' : 'middle'}
+              fontSize={9} fontWeight="700"
+              fill={isR4 ? '#ef4444' : '#f97316'}
+            >
+              {valueLabels[i]}
+            </text>
+          </g>
         )
       })}
 
-      {/* Projected annotation */}
-      <text x={fx(6)} y={fy(84000) - 12} textAnchor="middle" fontSize={12} fontWeight="800" fill="#22c55e">$84,000+</text>
-      <text x={fx(6)} y={fy(84000) + 2}  textAnchor="middle" fontSize={8}  fill="#555">projected</text>
+      {/* Projected dot (hollow) + label */}
+      <circle cx={fx(6)} cy={fy(BANKROLL[6].value)} r={5} fill="none" stroke="#f97316" strokeWidth={1.5} strokeOpacity={0.5} />
+      <text x={fx(6)} y={fy(BANKROLL[6].value) - 12} textAnchor="middle" fontSize={11} fontWeight="800" fill="#22c55e">$91k proj</text>
 
       {/* X axis labels */}
       {BANKROLL.map((d, i) => (
-        <text key={i} x={fx(i)} y={H - 8} textAnchor="middle" fontSize={9} fill={d.projected ? '#555' : '#666'}>
+        <text key={i} x={fx(i)} y={285} textAnchor="middle" fontSize={11} fill={d.projected ? '#555' : '#888'}>
           {d.label}
         </text>
       ))}
@@ -314,7 +285,7 @@ export default function PredictionsPage() {
               {[
                 { label: 'Less subscription cost', value: '-$174', color: '#f87171' },
                 { label: 'Net annual P&L', value: '+$89,874', color: '#4ade80' },
-                { label: 'Subscription multiple', value: '516x', color: '#4ade80' },
+                { label: 'Subscription multiple', value: '517x', color: '#4ade80' },
                 { label: 'Monthly break-even', value: '< 1 day' },
               ].map(r => (
                 <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid #052e16' }}>
@@ -326,8 +297,8 @@ export default function PredictionsPage() {
           </div>
 
           <div style={{ background: 'linear-gradient(135deg, #030f08 0%, #071a0c 100%)', border: '1px solid #22c55e40', borderRadius: 12, padding: '32px', textAlign: 'center' }}>
-            <div style={{ fontSize: 'clamp(44px, 8vw, 72px)', fontWeight: 800, color: '#22c55e', letterSpacing: '-0.04em', lineHeight: 1, marginBottom: 12 }}>516x</div>
-            <p style={{ fontSize: 16, color: '#4ade80', margin: '0 0 8px', fontWeight: 600 }}>Your $174 subscription is recovered 516 times over.</p>
+            <div style={{ fontSize: 'clamp(44px, 8vw, 72px)', fontWeight: 800, color: '#22c55e', letterSpacing: '-0.04em', lineHeight: 1, marginBottom: 12 }}>517x</div>
+            <p style={{ fontSize: 16, color: '#4ade80', margin: '0 0 8px', fontWeight: 600 }}>Your $174 AFL season subscription is recovered 517 times over.</p>
             <p style={{ fontSize: 13, color: '#666', margin: 0 }}>That&apos;s not marketing. That&apos;s math.</p>
           </div>
         </section>

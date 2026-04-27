@@ -230,6 +230,115 @@ function StatsBar({ picks }: { picks: Pick[] }) {
   );
 }
 
+/* ── Live 2026 HC betting record ────────────────────────────────────────────── */
+const LIVE_ROUNDS = [
+  { round: 3, bets: 14, wins: 12, losses:  2, netPL:  8440, bankroll:  9440 },
+  { round: 4, bets: 19, wins:  9, losses: 10, netPL: -2170, bankroll:  7270 },
+  { round: 5, bets: 12, wins:  8, losses:  4, netPL:  2960, bankroll: 10230 },
+  { round: 6, bets: 14, wins:  9, losses:  5, netPL:  2830, bankroll: 13060 },
+  { round: 7, bets: 12, wins: 10, losses:  2, netPL:  6700, bankroll: 19760 },
+];
+const LIVE_BY_POS = [
+  { pos: "MID",  picks: 44, wins: 30, losses: 14, wr: 68.2 },
+  { pos: "DEF",  picks: 23, wins: 15, losses:  8, wr: 65.2 },
+  { pos: "RUCK", picks:  4, wins:  3, losses:  1, wr: 75.0 },
+];
+
+function LiveSeasonStats() {
+  const summaryStats = [
+    { label: "Total HC Picks", value: "71",    color: "#f0f0f0" },
+    { label: "Win Rate",       value: "67.6%", color: "#4ade80" },
+    { label: "Gross P&L",      value: "$18,760", color: "#4ade80" },
+    { label: "ROI",            value: "26.4%", color: "#4ade80" },
+  ];
+  return (
+    <div style={{ marginBottom: 20 }}>
+      <div style={{ fontSize: 10, fontWeight: 700, color: "#f97316", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 12 }}>
+        2026 Live Betting Record · Rounds 3–7
+      </div>
+
+      {/* Summary stats */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 1, background: "#111", borderRadius: 10, overflow: "hidden", marginBottom: 12 }}>
+        {summaryStats.map(s => (
+          <div key={s.label} style={{ background: "#080808", padding: "16px 12px", textAlign: "center" }}>
+            <div style={{ fontSize: 9, fontWeight: 700, color: "#555", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 6 }}>{s.label}</div>
+            <div style={{ fontSize: 22, fontWeight: 800, color: s.color, letterSpacing: "-0.02em" }}>{s.value}</div>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+        {/* By position */}
+        <div style={{ background: "#080808", border: "1px solid #111", borderRadius: 10, overflow: "hidden" }}>
+          <div style={{ padding: "12px 16px", borderBottom: "1px solid #111", fontSize: 10, fontWeight: 700, color: "#555", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+            By Position
+          </div>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead>
+              <tr style={{ background: "#050505" }}>
+                {["Pos", "Picks", "W", "L", "Win Rate"].map(h => (
+                  <th key={h} style={{ padding: "8px 12px", fontSize: 9, fontWeight: 700, color: "#555", textTransform: "uppercase", letterSpacing: "0.07em", textAlign: h === "Pos" ? "left" : "right", borderBottom: "1px solid #0d0d0d" }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {LIVE_BY_POS.map(r => (
+                <tr key={r.pos}>
+                  <td style={{ padding: "10px 12px", fontSize: 12, fontWeight: 700, color: "#f97316" }}>{r.pos}</td>
+                  <td style={{ padding: "10px 12px", fontSize: 12, color: "#888", textAlign: "right" }}>{r.picks}</td>
+                  <td style={{ padding: "10px 12px", fontSize: 12, color: "#4ade80", textAlign: "right" }}>{r.wins}</td>
+                  <td style={{ padding: "10px 12px", fontSize: 12, color: "#ef4444", textAlign: "right" }}>{r.losses}</td>
+                  <td style={{ padding: "10px 12px", fontSize: 12, fontWeight: 700, color: "#f0f0f0", textAlign: "right" }}>{r.wr}%</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* By round */}
+        <div style={{ background: "#080808", border: "1px solid #111", borderRadius: 10, overflow: "hidden" }}>
+          <div style={{ padding: "12px 16px", borderBottom: "1px solid #111", fontSize: 10, fontWeight: 700, color: "#555", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+            By Round
+          </div>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead>
+              <tr style={{ background: "#050505" }}>
+                {["Rd", "W", "L", "Net P&L", "Bank"].map(h => (
+                  <th key={h} style={{ padding: "8px 10px", fontSize: 9, fontWeight: 700, color: "#555", textTransform: "uppercase", letterSpacing: "0.07em", textAlign: h === "Rd" ? "left" : "right", borderBottom: "1px solid #0d0d0d" }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {LIVE_ROUNDS.map(r => (
+                <tr key={r.round}>
+                  <td style={{ padding: "8px 10px", fontSize: 12, fontWeight: 700, color: "#888" }}>R{r.round}</td>
+                  <td style={{ padding: "8px 10px", fontSize: 12, color: "#4ade80", textAlign: "right" }}>{r.wins}</td>
+                  <td style={{ padding: "8px 10px", fontSize: 12, color: "#ef4444", textAlign: "right" }}>{r.losses}</td>
+                  <td style={{ padding: "8px 10px", fontSize: 12, fontWeight: 700, color: r.netPL >= 0 ? "#4ade80" : "#ef4444", textAlign: "right" }}>
+                    {r.netPL >= 0 ? "+" : ""}${Math.abs(r.netPL).toLocaleString()}
+                  </td>
+                  <td style={{ padding: "8px 10px", fontSize: 12, color: "#888", textAlign: "right" }}>${r.bankroll.toLocaleString()}</td>
+                </tr>
+              ))}
+              <tr style={{ borderTop: "1px solid #1a1a1a" }}>
+                <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#666" }}>TOT</td>
+                <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#4ade80", textAlign: "right" }}>48</td>
+                <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#ef4444", textAlign: "right" }}>23</td>
+                <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#4ade80", textAlign: "right" }}>+$18,760</td>
+                <td style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: "#f0f0f0", textAlign: "right" }}>$19,760</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style={{ marginTop: 8, padding: "10px 14px", background: "#050505", border: "1px solid #111", borderRadius: 8, fontSize: 10, color: "#555", lineHeight: 1.7 }}>
+        All results verified against official AFL game data. $1,000 flat stake assumed at 1.87 average odds.
+      </div>
+    </div>
+  );
+}
+
 /* ── Season summary header cards ────────────────────────────────────────────── */
 function SeasonSummary() {
   return (
@@ -344,6 +453,9 @@ export default function AccuracyPage() {
             {totalPicks} picks · {roundsLabel} · {currentSeason} season · verified vs Wheeloratings
           </p>
         </div>
+
+        {/* Live 2026 betting record */}
+        <LiveSeasonStats />
 
         {/* Season summary */}
         <SeasonSummary />

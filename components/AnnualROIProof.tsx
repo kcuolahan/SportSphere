@@ -9,7 +9,7 @@ const NET_PROFIT_YTD = 18760;
 const PROJECTED_GROSS = 90048;
 const ANNUAL_FEE = 174; // $29/month × 6 months
 const NET_AFTER_SUB = 89874;
-const MULTIPLIER = 516;
+const MULTIPLIER = 517;
 
 const ROUND_PL = [
   { round: 3, profit:  8440, wins: 12, losses:  2 },

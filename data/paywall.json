@@ -1,25 +1,34 @@
 {
-  "freeAccess": {
-    "picksToShow": 1,
-    "hideSimulator": true,
-    "hideTracker": true
-  },
-  "hcStats": {
-    "totalBets": 71,
-    "wins": 48,
-    "losses": 23,
-    "winRate": 0.676,
-    "grossProfit": 18760,
-    "roi": 0.264,
-    "monthlyFee": 29,
-    "seasonMonths": 6,
-    "totalFee": 174
-  },
+  "totalBets": 71,
+  "wins": 48,
+  "losses": 23,
+  "winRate": 0.676,
+  "grossProfit": 18760,
+  "totalStaked": 71000,
+  "roi": 0.264,
+  "avgOdds": 1.87,
+  "stakePerBet": 1000,
   "roundBreakdown": [
-    { "round": 3, "bets": 14, "wins": 12, "losses": 2,  "netPL":  8440 },
-    { "round": 4, "bets": 19, "wins": 9,  "losses": 10, "netPL": -2170 },
-    { "round": 5, "bets": 12, "wins": 8,  "losses": 4,  "netPL":  2960 },
-    { "round": 6, "bets": 14, "wins": 9,  "losses": 5,  "netPL":  2830 },
-    { "round": 7, "bets": 12, "wins": 10, "losses": 2,  "netPL":  6700 }
-  ]
+    { "round": 3, "bets": 14, "wins": 12, "losses": 2,  "netPL":  8440, "bankroll": 9440 },
+    { "round": 4, "bets": 19, "wins": 9,  "losses": 10, "netPL": -2170, "bankroll": 7270 },
+    { "round": 5, "bets": 12, "wins": 8,  "losses": 4,  "netPL":  2960, "bankroll": 10230 },
+    { "round": 6, "bets": 14, "wins": 9,  "losses": 5,  "netPL":  2830, "bankroll": 13060 },
+    { "round": 7, "bets": 12, "wins": 10, "losses": 2,  "netPL":  6700, "bankroll": 19760 }
+  ],
+  "projections": {
+    "totalRounds": 24,
+    "roundsTracked": 5,
+    "projectedGrossPL": 90048,
+    "projectedBankroll": 91048,
+    "seasonFee": 174,
+    "netAfterFee": 89874,
+    "subscriptionMultiple": 517,
+    "monthlyFee": 29,
+    "seasonMonths": 6
+  },
+  "byPosition": {
+    "MID":  { "picks": 44, "wins": 30, "losses": 14, "winRate": 0.682 },
+    "DEF":  { "picks": 23, "wins": 15, "losses": 8,  "winRate": 0.652 },
+    "RUCK": { "picks": 4,  "wins": 3,  "losses": 1,  "winRate": 0.750 }
+  }
 }

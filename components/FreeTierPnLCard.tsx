@@ -3,12 +3,15 @@
 import pnlData from "@/data/paywall.json";
 
 export function FreeTierPnLCard() {
-  const { hcStats, roundBreakdown } = pnlData;
-  const totalFees = hcStats.monthlyFee * hcStats.seasonMonths;
-  const netAfterFees = hcStats.grossProfit - totalFees;
-  const roiBefore = ((hcStats.grossProfit / (hcStats.totalBets * 1000)) * 100).toFixed(1);
-  const roiAfter  = ((netAfterFees       / (hcStats.totalBets * 1000)) * 100).toFixed(1);
-  const annualMultiple = Math.round(hcStats.grossProfit / (hcStats.monthlyFee * 12));
+  const { roundBreakdown, projections } = pnlData;
+  const totalBets   = pnlData.totalBets;
+  const grossProfit = pnlData.grossProfit;
+  const winRate     = pnlData.winRate;
+  const totalFees   = projections.seasonFee;
+  const netAfterFees = projections.netAfterFee;
+  const roiBefore  = ((grossProfit / (totalBets * 1000)) * 100).toFixed(1);
+  const roiAfter   = ((netAfterFees / (totalBets * 1000)) * 100).toFixed(1);
+  const annualMultiple = projections.subscriptionMultiple;
   const MAX_PROFIT = Math.max(...roundBreakdown.map(r => Math.abs(r.netPL)));
 
   return (
@@ -27,16 +30,16 @@ export function FreeTierPnLCard() {
       {/* Main stats row */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 1, background: "#111", borderRadius: 8, overflow: "hidden", marginBottom: 20 }}>
         {[
-          { label: "TOTAL BETS",    value: hcStats.totalBets },
-          { label: "WIN RATE",      value: `${(hcStats.winRate * 100).toFixed(1)}%` },
-          { label: "GROSS PROFIT",  value: `$${hcStats.grossProfit.toLocaleString()}`, color: "#4ade80" },
-          { label: "ROI",           value: `${roiBefore}%`, color: "#4ade80" },
+          { label: "TOTAL BETS", value: totalBets },
+          { label: "WIN RATE",   value: `${(winRate * 100).toFixed(1)}%` },
+          { label: "GROSS PROFIT", value: `$${grossProfit.toLocaleString()}`, color: "#4ade80" },
+          { label: "ROI",          value: `${roiBefore}%`, color: "#4ade80" },
         ].map((s, i) => (
           <div key={i} style={{ background: "#080808", padding: "14px 12px", textAlign: "center" }}>
             <div style={{ fontSize: 9, fontWeight: 700, color: "#666", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 4 }}>
               {s.label}
             </div>
-            <div style={{ fontSize: 20, fontWeight: 800, color: s.color ?? "#f0f0f0", letterSpacing: "-0.02em" }}>
+            <div style={{ fontSize: 20, fontWeight: 800, color: (s as { color?: string }).color ?? "#f0f0f0", letterSpacing: "-0.02em" }}>
               {s.value}
             </div>
           </div>
@@ -57,7 +60,7 @@ export function FreeTierPnLCard() {
 
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingBottom: 12, marginBottom: 12, borderBottom: "1px solid #111" }}>
           <span style={{ fontSize: 13, color: "#666" }}>
-            {hcStats.seasonMonths}-month season access
+            {projections.seasonMonths}-month season access
           </span>
           <span style={{ fontSize: 13, fontWeight: 600, color: "#f0f0f0" }}>
             ${totalFees} total fees
@@ -70,7 +73,7 @@ export function FreeTierPnLCard() {
               Before fees
             </div>
             <div style={{ fontSize: 13, color: "#666", marginBottom: 4 }}>
-              Net: <span style={{ color: "#f0f0f0", fontWeight: 700 }}>${hcStats.grossProfit.toLocaleString()}</span>
+              Net: <span style={{ color: "#f0f0f0", fontWeight: 700 }}>${grossProfit.toLocaleString()}</span>
             </div>
             <div style={{ fontSize: 13, color: "#666" }}>
               ROI: <span style={{ color: "#f0f0f0", fontWeight: 700 }}>{roiBefore}%</span>
@@ -78,7 +81,7 @@ export function FreeTierPnLCard() {
           </div>
           <div>
             <div style={{ fontSize: 10, fontWeight: 700, color: "#555", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 8 }}>
-              After $29/mo
+              After ${projections.monthlyFee}/mo
             </div>
             <div style={{ fontSize: 13, color: "#4ade80", marginBottom: 4 }}>
               Net: <span style={{ color: "#f0f0f0", fontWeight: 700 }}>${netAfterFees.toLocaleString()}</span>
@@ -98,7 +101,7 @@ export function FreeTierPnLCard() {
       {/* P&L by round — horizontal bar chart */}
       <div>
         <div style={{ fontSize: 10, fontWeight: 700, color: "#666", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12 }}>
-          P&L by Round (3–7)
+          P&amp;L by Round (3–7)
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {roundBreakdown.map(r => {
