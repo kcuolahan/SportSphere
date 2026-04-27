@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server'
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   return NextResponse.json({
     league: {
-      id: params.id,
+      id,
       name: 'Demo League',
       sports: ['AFL'],
       status: 'active',
@@ -16,7 +17,8 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   })
 }
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const body = await request.json()
-  return NextResponse.json({ league: { id: params.id, ...body } })
+  return NextResponse.json({ league: { id, ...body } })
 }
