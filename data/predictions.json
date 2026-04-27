@@ -1,8 +1,8 @@
 {
-  "round": 7,
+  "round": 8,
   "season": 2026,
-  "generated_at": "2026-04-22T08:00:00",
-  "verified_at": "2026-04-22T08:00:00",
+  "generated_at": "2026-04-27T08:00:00",
+  "verified_at": "2026-04-27T08:00:00",
   "team_news": [],
   "fixtures": [
     {"home": "SYD", "away": "WBD", "venue": "MRVL", "day": "Friday", "time": "7:50pm"},
