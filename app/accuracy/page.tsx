@@ -33,7 +33,7 @@ const ALL_PICKS: Pick[] = resultsData.rounds.flatMap((r: any) =>
 );
 
 const SS = resultsData.season_summary;
-const ROUNDS = [3, 4, 5, 6] as const;
+const ROUNDS = [3, 4, 5, 6, 7] as const;
 const FLAT_ODDS = 1.90;
 
 /* ── Helpers ────────────────────────────────────────────────────────────────── */

@@ -15,7 +15,7 @@ const BANKROLL = [
   { label: 'R5',       value: 10230, projected: false },
   { label: 'R6',       value: 13060, projected: false },
   { label: 'R7',       value: 19760, projected: false },
-  { label: 'R24 proj', value: 75000, projected: true  },
+  { label: 'R24 proj', value: 84000, projected: true  },
 ]
 
 function BankrollChart() {
@@ -32,7 +32,7 @@ function BankrollChart() {
 
   const fy = (v: number): number => {
     if (v <= SPLIT_V) return splitY + (1 - v / SPLIT_V) * ch * Z1
-    return PT + (1 - (v - SPLIT_V) / (80000 - SPLIT_V)) * ch * Z2
+    return PT + (1 - (v - SPLIT_V) / (90000 - SPLIT_V)) * ch * Z2
   }
   const fx = (i: number) => PL + (i / (n - 1)) * cw
 
@@ -66,9 +66,9 @@ function BankrollChart() {
       {/* Axis break indicator between $20k and $75k zones */}
       <text x={PL - 6} y={splitY - 6} textAnchor="end" fontSize={10} fill="#333">~</text>
 
-      {/* Y gridline — projected reference at $75k */}
-      <line x1={PL} y1={fy(75000)} x2={W - PR} y2={fy(75000)} stroke="#22c55e" strokeWidth={0.5} strokeDasharray="3,5" strokeOpacity={0.3} />
-      <text x={PL - 6} y={fy(75000) + 4} textAnchor="end" fontSize={9} fill="#22c55e" fillOpacity={0.7}>$75k+</text>
+      {/* Y gridline — projected reference at $84k */}
+      <line x1={PL} y1={fy(84000)} x2={W - PR} y2={fy(84000)} stroke="#22c55e" strokeWidth={0.5} strokeDasharray="3,5" strokeOpacity={0.3} />
+      <text x={PL - 6} y={fy(84000) + 4} textAnchor="end" fontSize={9} fill="#22c55e" fillOpacity={0.7}>$84k+</text>
 
       {/* Actual orange line */}
       <path d={actualPath} fill="none" stroke="#f97316" strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round" />
@@ -104,8 +104,8 @@ function BankrollChart() {
       })}
 
       {/* Projected annotation */}
-      <text x={fx(6)} y={fy(75000) - 12} textAnchor="middle" fontSize={12} fontWeight="800" fill="#22c55e">$75,000+</text>
-      <text x={fx(6)} y={fy(75000) + 2}  textAnchor="middle" fontSize={8}  fill="#555">projected</text>
+      <text x={fx(6)} y={fy(84000) - 12} textAnchor="middle" fontSize={12} fontWeight="800" fill="#22c55e">$84,000+</text>
+      <text x={fx(6)} y={fy(84000) + 2}  textAnchor="middle" fontSize={8}  fill="#555">projected</text>
 
       {/* X axis labels */}
       {BANKROLL.map((d, i) => (
@@ -286,7 +286,7 @@ export default function PredictionsPage() {
             The Maths
           </div>
           <h2 style={{ fontSize: 'clamp(22px, 4vw, 34px)', fontWeight: 800, letterSpacing: '-0.02em', margin: '0 0 28px' }}>
-            Extrapolated to Full Season (23 Rounds)
+            Extrapolated to Full Season (24 Rounds)
           </h2>
 
           <div className="proj-grid" style={{ marginBottom: 20 }}>
@@ -295,8 +295,8 @@ export default function PredictionsPage() {
                 If This Pattern Holds
               </div>
               {[
-                { label: 'Projected total bets', value: '~326' },
-                { label: 'Projected gross P&L', value: '+$86,296', color: '#22c55e' },
+                { label: 'Projected total bets', value: '~341' },
+                { label: 'Projected gross P&L', value: '+$90,048', color: '#22c55e' },
                 { label: 'Projected ROI', value: '26.4%', color: '#22c55e' },
                 { label: 'Per-bet average', value: '$264' },
               ].map(r => (
@@ -313,8 +313,8 @@ export default function PredictionsPage() {
               </div>
               {[
                 { label: 'Less subscription cost', value: '-$174', color: '#f87171' },
-                { label: 'Net annual P&L', value: '+$86,122', color: '#4ade80' },
-                { label: 'Subscription multiple', value: '495x', color: '#4ade80' },
+                { label: 'Net annual P&L', value: '+$89,874', color: '#4ade80' },
+                { label: 'Subscription multiple', value: '516x', color: '#4ade80' },
                 { label: 'Monthly break-even', value: '< 1 day' },
               ].map(r => (
                 <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid #052e16' }}>
@@ -326,8 +326,8 @@ export default function PredictionsPage() {
           </div>
 
           <div style={{ background: 'linear-gradient(135deg, #030f08 0%, #071a0c 100%)', border: '1px solid #22c55e40', borderRadius: 12, padding: '32px', textAlign: 'center' }}>
-            <div style={{ fontSize: 'clamp(44px, 8vw, 72px)', fontWeight: 800, color: '#22c55e', letterSpacing: '-0.04em', lineHeight: 1, marginBottom: 12 }}>495x</div>
-            <p style={{ fontSize: 16, color: '#4ade80', margin: '0 0 8px', fontWeight: 600 }}>Your $174 subscription is recovered 495 times over.</p>
+            <div style={{ fontSize: 'clamp(44px, 8vw, 72px)', fontWeight: 800, color: '#22c55e', letterSpacing: '-0.04em', lineHeight: 1, marginBottom: 12 }}>516x</div>
+            <p style={{ fontSize: 16, color: '#4ade80', margin: '0 0 8px', fontWeight: 600 }}>Your $174 subscription is recovered 516 times over.</p>
             <p style={{ fontSize: 13, color: '#666', margin: 0 }}>That&apos;s not marketing. That&apos;s math.</p>
           </div>
         </section>

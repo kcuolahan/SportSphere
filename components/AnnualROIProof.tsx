@@ -6,10 +6,10 @@ const WIN_RATE = "67.6%";
 const WIN_LOSS = "48W · 23L";
 const GROSS_PROFIT_YTD = 18760;
 const NET_PROFIT_YTD = 18760;
-const PROJECTED_GROSS = 86296;
+const PROJECTED_GROSS = 90048;
 const ANNUAL_FEE = 174; // $29/month × 6 months
-const NET_AFTER_SUB = 86122;
-const MULTIPLIER = 495;
+const NET_AFTER_SUB = 89874;
+const MULTIPLIER = 516;
 
 const ROUND_PL = [
   { round: 3, profit:  8440, wins: 12, losses:  2 },
@@ -80,9 +80,9 @@ export function AnnualROIProof() {
       {/* Full Season Projection */}
       <div style={{ background: "#080808", border: "1px solid rgba(249,115,22,0.2)", borderRadius: 12, padding: "24px" }}>
         <div style={{ fontSize: 10, fontWeight: 700, color: "#f97316", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 6 }}>
-          Projected Full Season — 23 Rounds
+          Projected Full Season — 24 Rounds
         </div>
-        <div style={{ fontSize: 12, color: "#555", marginBottom: 20 }}>Based on 6.2 avg HC picks per round</div>
+        <div style={{ fontSize: 12, color: "#555", marginBottom: 20 }}>Based on 14.2 avg HC picks per round</div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 16 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 13 }}>
