@@ -165,7 +165,7 @@ function PickCard({ pick }: { pick: LivePick }) {
 
 // ── Main page ──────────────────────────────────────────────────────────────────
 export default function PredictionsPage() {
-  const { isPro, loading: proLoading } = useProAccess()
+  const { isPro, loading: proLoading, isLoggedIn, recheckPro } = useProAccess()
   const stats = useStats()
   const [allPicks, setAllPicks] = useState<LivePick[]>([])
   const [loading, setLoading] = useState(true)
@@ -239,6 +239,29 @@ export default function PredictionsPage() {
       <div style={{ position: 'fixed', top: 60, left: 0, right: 0, height: 120, zIndex: 0, background: 'linear-gradient(180deg, #1a0a00 0%, #000000 100%)', pointerEvents: 'none' }} />
 
       <div style={{ maxWidth: 900, margin: '0 auto', padding: '84px 20px 60px', position: 'relative' }}>
+
+        {/* ── PRO REFRESH BANNER ── */}
+        {isLoggedIn && !isPro && !proLoading && (
+          <div style={{
+            background: '#0d0d08', border: '1px solid rgba(249,115,22,0.3)',
+            borderRadius: 10, padding: '14px 18px', marginBottom: 16,
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap',
+          }}>
+            <span style={{ fontSize: 13, color: '#888' }}>
+              Just subscribed? It may take a moment for access to activate.
+            </span>
+            <button
+              onClick={() => recheckPro()}
+              style={{
+                background: '#f97316', color: '#000', fontWeight: 700,
+                fontSize: 12, border: 'none', borderRadius: 6,
+                padding: '7px 16px', cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0,
+              }}
+            >
+              Refresh Pro Status
+            </button>
+          </div>
+        )}
 
         {/* ── HC DISCLOSURE ── */}
         <div style={{ background: '#0d0d0d', border: '1px solid rgba(249,115,22,0.2)', borderRadius: 10, padding: '14px 18px', marginBottom: 36 }}>

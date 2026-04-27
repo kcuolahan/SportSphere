@@ -28,6 +28,13 @@ export default function AFLPage() {
 
       <div style={{ maxWidth: 960, margin: "0 auto", padding: "96px 20px 80px" }}>
 
+        {/* Breadcrumb */}
+        <div style={{ fontSize: 13, color: "#555", marginBottom: 24 }}>
+          <a href="/" style={{ color: "#555", textDecoration: "none" }}>SportSphere</a>
+          <span style={{ margin: "0 8px" }}>/</span>
+          <span style={{ color: "#f0f0f0" }}>AFL</span>
+        </div>
+
         {/* Header */}
         <div style={{ marginBottom: 48, maxWidth: 600 }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: "#f97316", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12 }}>

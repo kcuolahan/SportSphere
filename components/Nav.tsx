@@ -3,24 +3,27 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { supabase, signOut } from "@/lib/supabase";
-import type { User } from "@supabase/supabase-js";
+import { signOut } from "@/lib/supabase";
+import { useProAccess } from "@/lib/auth";
 
 const LEFT_LINKS = [
   { href: "/afl", label: "AFL", alsoActive: ["/predictions"] },
   { href: "/nba", label: "NBA" },
   { href: "/nfl", label: "NFL" },
   { href: "/fantasy", label: "Fantasy", badge: "NEW" },
-  { href: "/players", label: "Players", hideUnder1280: true },
-  { href: "/model", label: "How It Works", hideUnder1280: true },
 ];
 
-const RIGHT_LINKS = [
-  { href: "/accuracy", label: "Track Record", isPro: true },
-  { href: "/defence", label: "DvP", isPro: true },
-  { href: "/simulator", label: "Simulator", isPro: true, hideUnder1280: true },
-  { href: "/betslip", label: "Betslip", isPro: true, hideUnder1280: true },
-  { href: "/tracker", label: "Tracker", isPro: true, hideUnder1280: true },
+const PRO_RIGHT_LINKS = [
+  { href: "/accuracy", label: "Track Record" },
+  { href: "/defence", label: "DvP" },
+  { href: "/simulator", label: "Simulator", hideUnder1280: true },
+  { href: "/betslip", label: "Betslip", hideUnder1280: true },
+  { href: "/tracker", label: "Tracker", hideUnder1280: true },
+];
+
+const FREE_RIGHT_LINKS = [
+  { href: "/players", label: "Players" },
+  { href: "/model", label: "How It Works" },
 ];
 
 const ALL_MOBILE_LINKS = [
@@ -30,6 +33,7 @@ const ALL_MOBILE_LINKS = [
   { href: "/fantasy", label: "Fantasy", badge: "NEW" },
   { href: "/players", label: "Players" },
   { href: "/model", label: "How It Works" },
+  { href: "/predictions", label: "Picks (AFL)" },
   { href: "/accuracy", label: "Track Record", isPro: true },
   { href: "/defence", label: "DvP", isPro: true },
   { href: "/simulator", label: "Simulator", isPro: true },
@@ -44,28 +48,25 @@ const ALL_MOBILE_LINKS = [
 export default function Nav() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
   const [round, setRound] = useState(8);
-  const [season, setSeason] = useState(2026);
+  const [showProToast, setShowProToast] = useState(false);
 
-  useEffect(() => {
-    if (!supabase) { setUser(null); return; }
-    supabase.auth.getUser().then(({ data }) => setUser(data.user));
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_ev, session) => {
-      setUser(session?.user ?? null);
-    });
-    return () => subscription.unsubscribe();
-  }, []);
+  const { isPro, isLoggedIn, loading: proLoading, userEmail } = useProAccess();
 
   useEffect(() => {
     fetch('/api/current-round')
       .then(r => r.json())
-      .then(d => {
-        if (d.round) setRound(d.round);
-        if (d.season) setSeason(d.season);
-      })
+      .then(d => { if (d.round) setRound(d.round); })
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    if (!proLoading && isPro && typeof sessionStorage !== 'undefined' && !sessionStorage.getItem('pro_toast_shown')) {
+      setShowProToast(true);
+      sessionStorage.setItem('pro_toast_shown', 'true');
+      setTimeout(() => setShowProToast(false), 3000);
+    }
+  }, [isPro, proLoading]);
 
   function isActive(link: { href: string; alsoActive?: string[] }) {
     if (pathname === link.href) return true;
@@ -87,6 +88,17 @@ export default function Nav() {
     gap: 5,
     whiteSpace: "nowrap" as const,
   });
+
+  const proBadge = {
+    fontSize: 9 as const,
+    fontWeight: 800 as const,
+    color: "#000",
+    background: "#f97316",
+    borderRadius: 3,
+    padding: "1px 5px",
+    letterSpacing: "0.04em" as const,
+    lineHeight: 1.5 as const,
+  };
 
   return (
     <>
@@ -116,21 +128,16 @@ export default function Nav() {
             </span>
           </Link>
 
-          {/* Left — sport + free pages */}
+          {/* Left — sport links */}
           <div className="nav-centre" style={{ display: "flex", alignItems: "center", gap: 4, flex: 1 }}>
             {LEFT_LINKS.map(link => {
               const active = isActive(link);
               return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={(link as { hideUnder1280?: boolean }).hideUnder1280 ? "nav-hide-1280" : undefined}
-                  style={linkStyle(active)}
-                >
+                <Link key={link.href} href={link.href} style={linkStyle(active)}>
                   {link.label}
-                  {(link as { badge?: string }).badge && (
+                  {link.badge && (
                     <span style={{ fontSize: 8, fontWeight: 800, color: "#000", background: "#4ade80", borderRadius: 3, padding: "1px 4px", letterSpacing: "0.04em", lineHeight: 1.5 }}>
-                      {(link as { badge: string }).badge}
+                      {link.badge}
                     </span>
                   )}
                 </Link>
@@ -138,57 +145,66 @@ export default function Nav() {
             })}
           </div>
 
-          {/* Right — Pro gated tools + auth */}
+          {/* Right — conditional on auth/pro status */}
           <div className="nav-right" style={{ display: "flex", alignItems: "center", gap: 4, flexShrink: 0 }}>
-            {RIGHT_LINKS.map(link => {
-              const active = pathname === link.href;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={(link as { hideUnder1280?: boolean }).hideUnder1280 ? "nav-hide-1280" : undefined}
-                  style={linkStyle(active)}
-                >
-                  {link.label}
-                  {link.isPro && (
-                    <span style={{
-                      fontSize: 9, fontWeight: 800, color: "#000",
-                      background: "#f97316",
-                      borderRadius: 3, padding: "1px 5px", letterSpacing: "0.04em",
-                      lineHeight: 1.5,
-                    }}>PRO</span>
-                  )}
+
+            {isPro ? (
+              /* Pro user: show tool links */
+              <>
+                {PRO_RIGHT_LINKS.map(link => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={(link as { hideUnder1280?: boolean }).hideUnder1280 ? "nav-hide-1280" : undefined}
+                    style={linkStyle(pathname === link.href)}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+                <div style={{ width: 1, height: 16, background: "#1f1f1f", margin: "0 4px" }} className="nav-hide-1024" />
+                <Link href="/dashboard" className="nav-hide-1024" style={{ fontSize: 12, color: "#555", textDecoration: "none", padding: "4px 8px" }}>
+                  {userEmail?.split("@")[0]}
                 </Link>
-              );
-            })}
-
-            <div style={{ width: 1, height: 16, background: "#1f1f1f", margin: "0 4px" }} />
-
-            {/* Round indicator */}
-            <div style={{ display: "flex", alignItems: "center", gap: 5 }} className="nav-hide-1024">
-              <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e" }} />
-              <span style={{ fontSize: 10, color: "#555", letterSpacing: "0.04em", whiteSpace: "nowrap" }}>
-                R{round} · {season}
-              </span>
-            </div>
-
-            {/* Auth */}
-            {user ? (
-              <div style={{ display: "flex", alignItems: "center", gap: 6 }} className="nav-hide-1024">
-                <Link href="/dashboard" style={{ fontSize: 12, color: "#555", textDecoration: "none", padding: "4px 8px" }}>
-                  {user.email?.split("@")[0]}
-                </Link>
+                <span className="nav-hide-1024" style={{ fontSize: 9, fontWeight: 800, color: "#000", background: "#22c55e", borderRadius: 3, padding: "1px 5px" }}>PRO</span>
                 <button
                   onClick={() => signOut()}
+                  className="nav-hide-1024"
                   style={{ fontSize: 12, color: "#555", background: "none", border: "1px solid #1f1f1f", borderRadius: 5, padding: "4px 10px", cursor: "pointer" }}
                 >
                   Sign Out
                 </button>
-              </div>
+              </>
+            ) : isLoggedIn ? (
+              /* Logged in, not Pro */
+              <>
+                {FREE_RIGHT_LINKS.map(link => (
+                  <Link key={link.href} href={link.href} className="nav-hide-1280" style={linkStyle(pathname === link.href)}>
+                    {link.label}
+                  </Link>
+                ))}
+                <div style={{ width: 1, height: 16, background: "#1f1f1f", margin: "0 4px" }} className="nav-hide-1024" />
+                <Link href="/dashboard" className="nav-hide-1024" style={{ fontSize: 12, color: "#555", textDecoration: "none", padding: "4px 8px" }}>
+                  {userEmail?.split("@")[0]}
+                </Link>
+                <Link href="/auth/payment" className="nav-hide-1024" style={{ fontSize: 13, fontWeight: 700, color: "#000", background: "#f97316", textDecoration: "none", borderRadius: 6, padding: "5px 12px", whiteSpace: "nowrap" }}>
+                  Upgrade
+                </Link>
+              </>
             ) : (
-              <Link href="/login" className="nav-hide-1024" style={{ fontSize: 13, fontWeight: 600, color: "#f97316", textDecoration: "none", border: "1px solid #f9731440", borderRadius: 6, padding: "5px 12px", whiteSpace: "nowrap" }}>
-                Sign In
-              </Link>
+              /* Logged out */
+              <>
+                {FREE_RIGHT_LINKS.map(link => (
+                  <Link key={link.href} href={link.href} className="nav-hide-1280" style={linkStyle(pathname === link.href)}>
+                    {link.label}
+                  </Link>
+                ))}
+                <Link href="/login" className="nav-hide-1024" style={{ fontSize: 13, color: "#777", textDecoration: "none", padding: "5px 10px" }}>
+                  Sign In
+                </Link>
+                <Link href="/auth/payment" className="nav-hide-1024" style={{ fontSize: 13, fontWeight: 700, color: "#000", background: "#f97316", textDecoration: "none", borderRadius: 6, padding: "5px 14px", whiteSpace: "nowrap" }}>
+                  Get Pro
+                </Link>
+              </>
             )}
 
             {/* Hamburger */}
@@ -237,7 +253,8 @@ export default function Nav() {
           >
             <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 16 }}>
               <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e" }} />
-              <span style={{ fontSize: 11, color: "#777" }}>Round {round} · {season}</span>
+              <span style={{ fontSize: 11, color: "#777" }}>Round {round} · 2026</span>
+              {isPro && <span style={{ ...proBadge, background: "#22c55e" }}>PRO</span>}
             </div>
             {ALL_MOBILE_LINKS.map(link => {
               const active = pathname === link.href;
@@ -263,30 +280,52 @@ export default function Nav() {
                     </span>
                   )}
                   {(link as { isPro?: boolean }).isPro && (
-                    <span style={{ fontSize: 9, fontWeight: 800, color: "#000", background: "#f97316", borderRadius: 3, padding: "1px 5px" }}>
-                      PRO
-                    </span>
+                    <span style={proBadge}>PRO</span>
                   )}
                 </Link>
               );
             })}
-            {user ? (
-              <button
-                onClick={() => { signOut(); setMenuOpen(false); }}
-                style={{ fontSize: 14, color: "#555", background: "none", border: "1px solid #1f1f1f", borderRadius: 5, padding: "10px 0", cursor: "pointer", marginTop: 14, textAlign: "left" }}
-              >
-                Sign Out
-              </button>
+            {isLoggedIn ? (
+              <>
+                <Link href="/dashboard" onClick={() => setMenuOpen(false)} style={{ fontSize: 14, color: "#666", textDecoration: "none", padding: "11px 0", borderBottom: "1px solid #0f0f0f" }}>
+                  Dashboard ({userEmail?.split("@")[0]})
+                </Link>
+                <button
+                  onClick={() => { signOut(); setMenuOpen(false); }}
+                  style={{ fontSize: 14, color: "#555", background: "none", border: "1px solid #1f1f1f", borderRadius: 5, padding: "10px 0", cursor: "pointer", marginTop: 14, textAlign: "left" }}
+                >
+                  Sign Out
+                </button>
+                {!isPro && (
+                  <Link href="/auth/payment" onClick={() => setMenuOpen(false)} style={{ display: "block", marginTop: 12, background: "#f97316", color: "#000", fontWeight: 800, fontSize: 14, textDecoration: "none", borderRadius: 6, padding: "12px 16px", textAlign: "center" }}>
+                    Upgrade to Pro →
+                  </Link>
+                )}
+              </>
             ) : (
-              <Link
-                href="/login"
-                onClick={() => setMenuOpen(false)}
-                style={{ fontSize: 15, color: "#f97316", textDecoration: "none", padding: "11px 0", marginTop: 8, fontWeight: 600 }}
-              >
-                Sign In
-              </Link>
+              <>
+                <Link href="/login" onClick={() => setMenuOpen(false)} style={{ fontSize: 15, color: "#888", textDecoration: "none", padding: "11px 0", borderBottom: "1px solid #0f0f0f" }}>
+                  Sign In
+                </Link>
+                <Link href="/auth/payment" onClick={() => setMenuOpen(false)} style={{ display: "block", marginTop: 12, background: "#f97316", color: "#000", fontWeight: 800, fontSize: 14, textDecoration: "none", borderRadius: 6, padding: "12px 16px", textAlign: "center" }}>
+                  Get Pro - $29/month
+                </Link>
+              </>
             )}
           </div>
+        </div>
+      )}
+
+      {/* Pro toast */}
+      {showProToast && (
+        <div style={{
+          position: "fixed", bottom: 24, right: 24,
+          background: "#22c55e", color: "#000", fontWeight: 700,
+          fontSize: 14, padding: "12px 20px",
+          borderRadius: 10, boxShadow: "0 4px 24px rgba(34,197,94,0.3)",
+          zIndex: 300, letterSpacing: "-0.01em",
+        }}>
+          Pro access active
         </div>
       )}
 

@@ -1,79 +1,19 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
-import { getCurrentPredictions, getAllResults, getResultStats, getSeasonSummary } from "@/lib/data";
+import { getAllResults, getResultStats } from "@/lib/data";
 import { roundsLabel, currentSeason } from "@/lib/siteData";
 import { useStats } from "@/lib/useStats";
 import { useProAccess } from "@/lib/auth";
 import { TEAM_COLOURS } from "@/lib/teams";
+import { getCurrentPredictions } from "@/lib/data";
+
 const predictions = getCurrentPredictions();
-const highImpactNews = (predictions.team_news ?? []).filter((n: { impact: string }) => n.impact === "HIGH");
 const results = getAllResults();
-const seasonSummary = getSeasonSummary();
-const stats = getResultStats();
-
-const hcPicks = predictions.picks.filter(p => p.enhanced_signal === 'HC' || p.edge_vol >= 0.90);
-const tickerPicks = hcPicks.length > 0 ? hcPicks : predictions.picks.filter(p => p.filter_pass);
-
-const features = [
-  {
-    title: "Disposal prediction model",
-    body: "Six-factor weighted model built on 2025 and 2026 season data, opponent concession rates, TOG-adjusted disposal rates, play style, conditions, and availability.",
-  },
-  {
-    title: "Edge/Vol filtering",
-    body: "Every pick is scored by Edge divided by Estimated Standard Deviation. Only picks with E/V ≥ 0.50 make the cut - eliminating noise and keeping only statistically meaningful edges.",
-  },
-  {
-    title: "Position-specific thresholds",
-    body: "MID, DEF, FWD and RUCK markets price differently. Our STRONG thresholds are calibrated per position based on real backtested accuracy - not a one-size-fits-all number.",
-  },
-  {
-    title: "Transparent track record",
-    body: "Every prediction is logged. Every result is tracked. Win rate, MAE, ROI - all published publicly. No cherry picking. No hidden losses.",
-  },
-  {
-    title: "Weight Optimisation Simulator",
-    body: "Adjust any model parameter and instantly see how historical accuracy changes across all tracked predictions. Find the optimal configuration before the next round.",
-    link: "/simulator",
-    linkLabel: "Try the Simulator →",
-  },
-];
-
-function TickerItem({ player, team, position, direction, bookie_line, edge_vol }: {
-  player: string; team: string; position: string;
-  direction: string; bookie_line: number; edge_vol: number;
-}) {
-  const teamColor = TEAM_COLOURS[team]?.primary ?? "#1a1a1a";
-  return (
-    <div style={{
-      display: "inline-flex", alignItems: "center", gap: 10,
-      padding: "8px 20px 8px 12px",
-      background: "#0a0a0a", border: "1px solid #1a1a1a",
-      borderLeft: `3px solid ${teamColor}`,
-      borderRadius: 8, marginRight: 12, flexShrink: 0,
-    }}>
-      <PlayerAvatar name={player} team={team} size={28} />
-      <div>
-        <div style={{ fontSize: 12, fontWeight: 700, color: "#f0f0f0", whiteSpace: "nowrap" }}>{player}</div>
-        <div style={{ fontSize: 10, color: "#888", whiteSpace: "nowrap" }}>
-          {position} · {team} · {direction} {bookie_line}
-        </div>
-      </div>
-      <div style={{
-        background: "#1a0f00", border: "1px solid #f9731640",
-        color: "#f97316", fontSize: 10, fontWeight: 800,
-        padding: "2px 7px", borderRadius: 4, whiteSpace: "nowrap",
-      }}>
-        E/V {edge_vol.toFixed(2)}
-      </div>
-    </div>
-  );
-}
 
 export default function LandingPage() {
   const [loaded, setLoaded] = useState(false);
@@ -98,6 +38,16 @@ export default function LandingPage() {
           .grid-4-to-2 { grid-template-columns: repeat(2,1fr) !important; }
           .hero-cta-row { flex-direction: column !important; }
           .latest-round-card { grid-template-columns: 1fr !important; }
+          .sport-tiles { grid-template-columns: 1fr !important; }
+        }
+        .ticker-track {
+          animation: ticker 40s linear infinite;
+          width: max-content;
+        }
+        .ticker-track:hover { animation-play-state: paused; }
+        @keyframes ticker {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
         }
       `}</style>
 
@@ -105,92 +55,40 @@ export default function LandingPage() {
       <div style={{
         position: "fixed", top: 60, left: 0, right: 0, zIndex: 40,
         borderBottom: "1px solid #111", background: "#000",
-        overflow: "hidden", height: 48,
+        overflow: "hidden", height: 44,
         display: "flex", alignItems: "center",
       }}>
-        {isPro ? (
-          <>
-            <div style={{
-              fontSize: 9, fontWeight: 700, color: "#f97316",
-              letterSpacing: "0.1em", textTransform: "uppercase",
-              padding: "0 14px", whiteSpace: "nowrap", borderRight: "1px solid #1a1a1a",
-              height: "100%", display: "flex", alignItems: "center",
-              background: "#000", zIndex: 1, flexShrink: 0,
-            }}>
-              R{predictions.round} HC
-            </div>
-            <div style={{ overflow: "hidden", flex: 1 }}>
-              <div className="ticker-track" style={{ display: "flex", alignItems: "center", height: 48 }}>
-                {[...tickerPicks, ...tickerPicks].map((p, i) => (
-                  <TickerItem key={i} player={p.player} team={p.team} position={p.position}
-                    direction={p.direction} bookie_line={p.bookie_line} edge_vol={p.edge_vol} />
-                ))}
-              </div>
-            </div>
-          </>
-        ) : (
-          <div style={{ overflow: "hidden", flex: 1 }}>
-            <div className="ticker-track" style={{ display: "flex", alignItems: "center", height: 48 }}>
-              {[...Array(4)].flatMap((_, rep) =>
-                [
-                  { text: "67.6% HC Win Rate", highlight: false },
-                  { text: "+$18,760 Gross P&L · 2026 Season", highlight: false },
-                  { text: "71 HC Picks Tracked · R3 to R7", highlight: false },
-                  { text: "Australia's Sharpest AFL Disposal Model", highlight: false },
-                  { text: "Unlock Pro - $29/month →", highlight: true },
-                ].map((item, i) => (
-                  <Link key={`${rep}-${i}`} href="/auth/payment" style={{
-                    display: "inline-flex", alignItems: "center",
-                    padding: "0 28px", height: 48, gap: 8,
-                    fontSize: 11, fontWeight: item.highlight ? 700 : 400,
-                    color: item.highlight ? "#f97316" : "#444",
-                    textDecoration: "none", whiteSpace: "nowrap", flexShrink: 0,
-                    borderRight: "1px solid #0d0d0d",
-                  }}>
-                    {item.highlight && <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#f97316", flexShrink: 0 }} />}
-                    {item.text}
-                  </Link>
-                ))
-              )}
-            </div>
+        <div style={{ overflow: "hidden", flex: 1 }}>
+          <div className="ticker-track" style={{ display: "flex", alignItems: "center", height: 44 }}>
+            {[...Array(4)].flatMap((_, rep) =>
+              [
+                { text: `AFL · 67.6% HC Win Rate · R3 to R7`, highlight: false },
+                { text: "+$18,760 Gross P&L · 2026 Season", highlight: false },
+                { text: "71 HC Picks Tracked", highlight: false },
+                { text: "NBA · Coming Late 2026", highlight: false },
+                { text: "NFL · Coming Late 2026", highlight: false },
+                { text: "Get Pro - $29/month →", highlight: true },
+              ].map((item, i) => (
+                <Link key={`${rep}-${i}`} href="/auth/payment" style={{
+                  display: "inline-flex", alignItems: "center",
+                  padding: "0 28px", height: 44, gap: 8,
+                  fontSize: 11, fontWeight: item.highlight ? 700 : 400,
+                  color: item.highlight ? "#f97316" : "#444",
+                  textDecoration: "none", whiteSpace: "nowrap", flexShrink: 0,
+                  borderRight: "1px solid #0d0d0d",
+                }}>
+                  {item.highlight && <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#f97316", flexShrink: 0 }} />}
+                  {item.text}
+                </Link>
+              ))
+            )}
           </div>
-        )}
-      </div>
-
-      <style>{`
-        .ticker-track {
-          animation: ticker 40s linear infinite;
-          width: max-content;
-        }
-        .ticker-track:hover {
-          animation-play-state: paused;
-        }
-        @keyframes ticker {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-      `}</style>
-
-      {/* Team news alert strip */}
-      {highImpactNews.length > 0 && (
-        <div style={{
-          background: "#1c0a00", borderBottom: "1px solid #78350f",
-          padding: "8px 24px", display: "flex", alignItems: "center",
-          justifyContent: "center", gap: 12,
-        }}>
-          <span style={{ fontSize: 11, color: "#f59e0b" }}>
-            ⚠ {highImpactNews[0].player_out} ({highImpactNews[0].team}) - team news may affect predictions.
-          </span>
-          <Link href="/predictions" style={{ fontSize: 11, color: "#fb923c", textDecoration: "none", fontWeight: 600 }}>
-            Check picks →
-          </Link>
         </div>
-      )}
+      </div>
 
       {/* ── HERO ── */}
       <div style={{
-        paddingTop: 148,
-        padding: "148px 24px 80px",
+        padding: "144px 24px 72px",
         maxWidth: 1100,
         margin: "0 auto",
         opacity: loaded ? 1 : 0,
@@ -204,84 +102,130 @@ export default function LandingPage() {
         }}>
           <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#f97316" }} />
           <span style={{ fontSize: 11, color: "#888", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-            AFL · {predictions.season} Season · Round {predictions.round}
+            Multi-sport analytics platform
           </span>
         </div>
 
         <h1 style={{
-          fontSize: "clamp(36px, 6vw, 72px)", fontWeight: 800,
+          fontSize: "clamp(36px, 6vw, 68px)", fontWeight: 800,
           letterSpacing: "-0.04em", lineHeight: 1.05,
-          margin: "0 0 20px", maxWidth: 800,
+          margin: "0 0 20px", maxWidth: 820,
         }}>
-          The sharpest<br />
-          <span style={{ color: "#f97316" }}>AFL disposal</span><br />
-          model in Australia.
+          Sports analytics<br />
+          with a <span style={{ color: "#f97316" }}>verified edge.</span>
         </h1>
 
         <p style={{
           fontSize: "clamp(15px, 2vw, 18px)", color: "#666",
           lineHeight: 1.7, maxWidth: 520, margin: "0 0 40px",
         }}>
-          Predictive disposal analytics powered by a six-factor model,
-          Edge/Vol filtering, and a publicly verified track record.
-          Built for serious AFL bettors.
+          Predictive models, transparent track records, and data tools for
+          serious sports bettors and fantasy players. AFL live now. NBA and NFL coming.
         </p>
 
-        <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-          <Link href="/predictions" style={{
+        <div className="hero-cta-row" style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+          <Link href="/afl" style={{
             background: "#f97316", color: "#000",
             padding: "14px 28px", borderRadius: 10,
             fontSize: 14, fontWeight: 700, textDecoration: "none",
-            letterSpacing: "-0.01em", display: "inline-block",
           }}>
-            View Round {predictions.round} Picks →
+            Explore AFL Analytics →
           </Link>
-          <a href="#how-it-works" style={{
+          <Link href="/auth/payment" style={{
             background: "transparent", color: "#888",
             padding: "14px 28px", borderRadius: 10,
             fontSize: 14, fontWeight: 500, textDecoration: "none",
-            border: "1px solid #1f1f1f", display: "inline-block",
-          }}>
-            How it works
-          </a>
-        </div>
-      </div>
-
-      {/* ── PRO CTA ── */}
-      <div style={{
-        borderTop: "1px solid #0d0d0d",
-        background: "#030303",
-        padding: "40px 24px",
-      }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 24, flexWrap: "wrap" }}>
-          <div>
-            <div style={{ fontSize: 16, fontWeight: 700, color: "#f0f0f0", marginBottom: 4 }}>
-              Unlock Pro for $29/month
-            </div>
-            <div style={{ fontSize: 13, color: "#555" }}>
-              Full season access · All HC picks · Simulator + Tracker · 6 months for $174
-            </div>
-          </div>
-          <Link href="/auth/payment" style={{
-            background: "#f97316", color: "#000",
-            padding: "12px 24px", borderRadius: 8,
-            fontSize: 14, fontWeight: 700, textDecoration: "none",
-            whiteSpace: "nowrap", flexShrink: 0,
+            border: "1px solid #1f1f1f",
           }}>
             Get Pro - $29/month
           </Link>
         </div>
       </div>
 
-      {/* ── SEASON SUMMARY STATS ── */}
+      {/* ── SPORT TILES ── */}
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px 64px" }}>
+        <div className="sport-tiles" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
+
+          {/* AFL — LIVE */}
+          <Link href="/afl" style={{ textDecoration: "none" }}>
+            <div style={{
+              background: "#080808",
+              border: "1px solid rgba(249,115,22,0.4)",
+              borderRadius: 12, padding: "28px 24px",
+              position: "relative", overflow: "hidden",
+              transition: "border-color 0.15s",
+            }}>
+              <div style={{
+                position: "absolute", top: 16, right: 16,
+                background: "#f97316", color: "#000",
+                fontSize: 9, fontWeight: 800, padding: "2px 7px",
+                borderRadius: 3, letterSpacing: "0.08em",
+              }}>LIVE</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#f97316", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 12 }}>AFL</div>
+              <div style={{ fontSize: 20, fontWeight: 800, color: "#fff", marginBottom: 8 }}>Disposal Analytics</div>
+              <p style={{ fontSize: 13, color: "#666", lineHeight: 1.6, margin: "0 0 20px" }}>
+                67.6% HC win rate. 71 picks tracked. Round {predictions.round} picks live.
+              </p>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "#f97316" }}>Explore AFL →</div>
+            </div>
+          </Link>
+
+          {/* NBA — COMING SOON */}
+          <Link href="/nba" style={{ textDecoration: "none" }}>
+            <div style={{
+              background: "#080808",
+              border: "1px solid #1a1a1a",
+              borderRadius: 12, padding: "28px 24px",
+              position: "relative", overflow: "hidden",
+            }}>
+              <div style={{
+                position: "absolute", top: 16, right: 16,
+                background: "#1a1a1a", color: "#555",
+                fontSize: 9, fontWeight: 800, padding: "2px 7px",
+                borderRadius: 3, letterSpacing: "0.08em",
+              }}>COMING SOON</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#555", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 12 }}>NBA</div>
+              <div style={{ fontSize: 20, fontWeight: 800, color: "#777", marginBottom: 8 }}>Player Props</div>
+              <p style={{ fontSize: 13, color: "#444", lineHeight: 1.6, margin: "0 0 20px" }}>
+                Points, assists and rebounds predictions. Same methodology.
+              </p>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "#555" }}>Join Waitlist →</div>
+            </div>
+          </Link>
+
+          {/* NFL — COMING SOON */}
+          <Link href="/nfl" style={{ textDecoration: "none" }}>
+            <div style={{
+              background: "#080808",
+              border: "1px solid #1a1a1a",
+              borderRadius: 12, padding: "28px 24px",
+              position: "relative", overflow: "hidden",
+            }}>
+              <div style={{
+                position: "absolute", top: 16, right: 16,
+                background: "#1a1a1a", color: "#555",
+                fontSize: 9, fontWeight: 800, padding: "2px 7px",
+                borderRadius: 3, letterSpacing: "0.08em",
+              }}>COMING SOON</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#555", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 12 }}>NFL</div>
+              <div style={{ fontSize: 20, fontWeight: 800, color: "#777", marginBottom: 8 }}>Player Props</div>
+              <p style={{ fontSize: 13, color: "#444", lineHeight: 1.6, margin: "0 0 20px" }}>
+                Receiving yards, rushing yards, touchdowns. Backtested model.
+              </p>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "#555" }}>Join Waitlist →</div>
+            </div>
+          </Link>
+
+        </div>
+      </div>
+
+      {/* ── PLATFORM STATS ── */}
       <div style={{ borderTop: "1px solid #111", borderBottom: "1px solid #111", background: "#050505" }}>
-        <div className="grid-4-to-2" style={{
-          maxWidth: 1100, margin: "0 auto", padding: "0 24px",
-        }}>
+        <div className="grid-4-to-2" style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px" }}>
           {[
-            { value: `${liveStats.hc.winRatePct}%`, label: "HC Win Rate", sub: `${liveStats.hc.wins}W · ${liveStats.hc.losses}L · HIGH CONVICTION` },
-            { value: `+$${liveStats.hc.grossPL.toLocaleString()}`, label: "2026 Gross P&L", sub: `${liveStats.projections.roundsTracked} rounds tracked` },
-            { value: liveStats.hc.totalPicks.toString(), label: "HC Picks", sub: `${roundsLabel} · ${currentSeason} season` },
+            { value: `${liveStats.hc.winRatePct}%`, label: "AFL HC Win Rate", sub: `${liveStats.hc.wins}W · ${liveStats.hc.losses}L · HIGH CONVICTION` },
+            { value: `+$${liveStats.hc.grossPL.toLocaleString()}`, label: "AFL 2026 Gross P&L", sub: `${liveStats.projections.roundsTracked} rounds tracked` },
+            { value: liveStats.hc.totalPicks.toString(), label: "AFL HC Picks", sub: `${roundsLabel} · ${currentSeason} season` },
             { value: `${liveStats.hc.roiPct}%`, label: "ROI", sub: `$1,000 stake · 1.87 avg odds` },
           ].map((s, i) => (
             <div key={i} style={{
@@ -293,13 +237,13 @@ export default function LandingPage() {
                 {s.value}
               </div>
               <div style={{ fontSize: 12, color: "#fff", fontWeight: 600, marginTop: 4 }}>{s.label}</div>
-              <div style={{ fontSize: 11, color: "#666", marginTop: 2 }}>{s.sub}</div>
+              <div style={{ fontSize: 11, color: "#555", marginTop: 2 }}>{s.sub}</div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* ── LATEST ROUND SUMMARY CARD ── */}
+      {/* ── LATEST ROUND CARD ── */}
       {lastRound && lastRoundStats && (
         <div style={{ padding: "48px 24px 0", maxWidth: 1100, margin: "0 auto" }}>
           <div className="latest-round-card" style={{
@@ -310,13 +254,13 @@ export default function LandingPage() {
           }}>
             <div>
               <div style={{ fontSize: 11, color: "#f97316", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8 }}>
-                Latest results
+                Latest AFL results
               </div>
               <div style={{ fontSize: 20, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em", marginBottom: 4 }}>
                 Round {lastRound.round} · {lastRound.season}
               </div>
               <div style={{ fontSize: 13, color: "#666", marginBottom: 20 }}>
-                {lastRound.total_picks} picks tracked - {lastRound.wins}W / {lastRound.losses}L
+                {lastRound.total_picks} picks tracked — {lastRound.wins}W / {lastRound.losses}L
               </div>
               <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
                 {lastRound.picks.filter(p => p.confidence === 'STRONG').slice(0, 4).map((p, i) => (
@@ -336,10 +280,10 @@ export default function LandingPage() {
               <div style={{ fontSize: 36, fontWeight: 800, color: "#f97316", letterSpacing: "-0.03em" }}>
                 {lastRound.win_rate}%
               </div>
-              <div style={{ fontSize: 11, color: "#666", marginBottom: 12 }}>Overall win rate</div>
+              <div style={{ fontSize: 11, color: "#666", marginBottom: 12 }}>HC win rate</div>
               <Link href="/accuracy" style={{
                 fontSize: 12, color: "#f97316", textDecoration: "none",
-                fontWeight: 600, letterSpacing: "-0.01em",
+                fontWeight: 600,
               }}>
                 Full track record →
               </Link>
@@ -348,14 +292,14 @@ export default function LandingPage() {
         </div>
       )}
 
-      {/* ── HOW IT WORKS ── */}
-      <div id="how-it-works" style={{ padding: "80px 24px", maxWidth: 1100, margin: "0 auto" }}>
+      {/* ── WHAT MAKES IT DIFFERENT ── */}
+      <div style={{ padding: "80px 24px", maxWidth: 1100, margin: "0 auto" }}>
         <div style={{ marginBottom: 48 }}>
           <div style={{ fontSize: 11, color: "#f97316", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12 }}>
-            The model
+            Platform
           </div>
           <h2 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 800, letterSpacing: "-0.03em", margin: 0 }}>
-            How SportSphere HQ works
+            What makes it different
           </h2>
         </div>
 
@@ -364,7 +308,30 @@ export default function LandingPage() {
           gap: 1, background: "#111", border: "1px solid #111",
           borderRadius: 12, overflow: "hidden",
         }}>
-          {features.map((f, i) => (
+          {[
+            {
+              num: "01",
+              title: "Verified track record",
+              body: "Every pick logged. Every result tracked. Win rate, MAE, ROI — all published publicly. No cherry picking. No hidden losses. This is the only tier we market.",
+            },
+            {
+              num: "02",
+              title: "Edge/Vol filtering",
+              body: "Every pick is scored by Edge divided by Estimated Standard Deviation. Only picks with E/V ≥ 0.50 make the cut — eliminating noise and keeping only statistically meaningful edges.",
+            },
+            {
+              num: "03",
+              title: "Transparent methodology",
+              body: "The model is explained, not a black box. Six-factor weighted system built on disposal rates, DvP matchups, TOG, conditions and availability. You can see exactly why each pick was made.",
+            },
+            {
+              num: "04",
+              title: "Coming: Cross-sport fantasy",
+              body: "A season-long fantasy competition across AFL, NBA and NFL. Draft players, earn XP, and compete using the same model that powers our betting analytics. Launching 2027.",
+              link: "/fantasy",
+              linkLabel: "Learn about Fantasy →",
+            },
+          ].map((f, i) => (
             <div key={i} style={{ background: "#000", padding: "28px 24px" }}>
               <div style={{
                 width: 28, height: 28, borderRadius: 6,
@@ -372,18 +339,18 @@ export default function LandingPage() {
                 display: "flex", alignItems: "center", justifyContent: "center",
                 fontSize: 11, fontWeight: 700, color: "#f97316", marginBottom: 16,
               }}>
-                {String(i + 1).padStart(2, "0")}
+                {f.num}
               </div>
               <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 10, letterSpacing: "-0.01em" }}>
                 {f.title}
               </div>
               <div style={{ fontSize: 13, color: "#777", lineHeight: 1.65 }}>{f.body}</div>
-              {(f as { link?: string; linkLabel?: string }).link && (
-                <Link href={(f as { link: string }).link} style={{
+              {f.link && (
+                <Link href={f.link} style={{
                   display: "inline-block", marginTop: 12, fontSize: 12, fontWeight: 700,
-                  color: "#f97316", textDecoration: "none", letterSpacing: "-0.01em",
+                  color: "#f97316", textDecoration: "none",
                 }}>
-                  {(f as { linkLabel?: string }).linkLabel ?? "Learn more →"}
+                  {f.linkLabel}
                 </Link>
               )}
             </div>
@@ -396,13 +363,13 @@ export default function LandingPage() {
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <div style={{ marginBottom: 40 }}>
             <div style={{ fontSize: 11, color: "#f97316", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12 }}>
-              Verified results
+              Verified results — AFL
             </div>
             <h2 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 800, letterSpacing: "-0.03em", margin: 0 }}>
-              HC Pick Performance - The tier we publish
+              HC Pick Performance
             </h2>
             <p style={{ fontSize: 14, color: "#555", marginTop: 10, maxWidth: 560 }}>
-              HC filtered picks only. STRONG confidence + E/V above 0.50. This is the exact tier published to subscribers each week.
+              HC filtered picks only. STRONG confidence + E/V above 0.50. The exact tier published to subscribers each week.
             </p>
           </div>
 
@@ -460,23 +427,29 @@ export default function LandingPage() {
 
       {/* ── CTA ── */}
       <div style={{ padding: "100px 24px", maxWidth: 700, margin: "0 auto", textAlign: "center" }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: "#f97316", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 16 }}>
+          AFL · Live now
+        </div>
         <h2 style={{
-          fontSize: "clamp(28px, 5vw, 52px)", fontWeight: 800,
+          fontSize: "clamp(28px, 5vw, 48px)", fontWeight: 800,
           letterSpacing: "-0.04em", lineHeight: 1.1, margin: "0 0 16px",
         }}>
-          Ready to analyse with an edge?
+          Start with AFL.<br />More sports coming.
         </h2>
         <p style={{ fontSize: 15, color: "#777", margin: "0 0 36px", lineHeight: 1.7 }}>
-          View this round's HIGH CONVICTION picks - the tier with a verified {liveStats.hc.winRatePct}%+ win rate.
+          {liveStats.hc.winRatePct}% HC win rate across {roundsLabel}. Pro subscribers get full access to picks, DvP, simulator and more.
         </p>
-        <Link href="/predictions" style={{
+        <Link href="/auth/payment" style={{
           background: "#f97316", color: "#000",
           padding: "16px 36px", borderRadius: 10,
           fontSize: 15, fontWeight: 700, textDecoration: "none",
-          letterSpacing: "-0.01em", display: "inline-block",
+          display: "inline-block",
         }}>
-          View Round {predictions.round} Picks →
+          Get Pro - $29/month
         </Link>
+        <div style={{ marginTop: 16, fontSize: 13, color: "#444" }}>
+          Includes AFL picks, simulator, DvP, track record and Fantasy when it launches.
+        </div>
       </div>
 
       <Footer />
