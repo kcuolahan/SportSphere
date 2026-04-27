@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import Nav from "@/components/Nav";
@@ -61,7 +61,7 @@ export default function BetslipPage() {
             Optimal stake sizing using Kelly Criterion. Input your win probability and odds to get full, half, and quarter Kelly recommendations.
           </p>
           <Link href="/auth/payment" style={{ background: "#f97316", color: "#000", borderRadius: 8, padding: "13px 28px", fontSize: 14, fontWeight: 700, textDecoration: "none", display: "inline-block" }}>
-            Unlock Pro — $29/month →
+            Unlock Pro - $29/month →
           </Link>
         </div>
         <Footer />
@@ -95,7 +95,7 @@ export default function BetslipPage() {
 
   function downloadBetslip() {
     const lines = [
-      `SportSphere HQ — Betslip Export`,
+      `SportSphere HQ - Betslip Export`,
       `Bankroll: $${bankroll.toLocaleString()}`,
       `Kelly mode: ${kellyMode}`,
       ``,
@@ -103,7 +103,7 @@ export default function BetslipPage() {
       ...bets.map(bet => {
         const k = calcKelly(bet.winProb, bet.odds, bankroll);
         const ev = k.expectedValue * bet.stake / 100;
-        return `${bet.player || "—"}\t${bet.winProb}%\t${bet.odds}\t$${bet.stake}\t${ev >= 0 ? "+" : ""}$${Math.round(ev)}`;
+        return `${bet.player || "-"}\t${bet.winProb}%\t${bet.odds}\t$${bet.stake}\t${ev >= 0 ? "+" : ""}$${Math.round(ev)}`;
       }),
       ``,
       `Total Stake: $${totalStake.toLocaleString()}`,
@@ -147,7 +147,7 @@ export default function BetslipPage() {
 
             {[
               { label: "Bankroll ($)", value: bankroll, setter: setBankroll, min: 100, max: 1000000, step: 100 },
-              { label: `Win Probability (%) — Book implies ${impliedProb}%`, value: winProb, setter: setWinProb, min: 1, max: 99, step: 0.1 },
+              { label: `Win Probability (%) - Book implies ${impliedProb}%`, value: winProb, setter: setWinProb, min: 1, max: 99, step: 0.1 },
               { label: "Decimal Odds", value: odds, setter: setOdds, min: 1.01, max: 20, step: 0.01 },
             ].map(({ label, value, setter, min, max, step }) => (
               <div key={label} style={{ marginBottom: 16 }}>
@@ -173,7 +173,7 @@ export default function BetslipPage() {
               borderRadius: 8, padding: "16px", marginBottom: 20, textAlign: "center",
             }}>
               <div style={{ fontSize: 11, color: kelly.edge > 0 ? "#4ade80" : "#f59e0b", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 6 }}>
-                {kelly.edge > 0 ? "Positive Edge" : "Negative Edge — Avoid"}
+                {kelly.edge > 0 ? "Positive Edge" : "Negative Edge - Avoid"}
               </div>
               <div style={{ fontSize: 32, fontWeight: 800, color: kelly.edge > 0 ? "#22c55e" : "#ef4444", letterSpacing: "-0.02em" }}>
                 {kelly.edge > 0 ? "+" : ""}{kelly.edge}%

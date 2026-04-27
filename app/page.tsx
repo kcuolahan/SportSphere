@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -26,15 +26,15 @@ const features = [
   },
   {
     title: "Edge/Vol filtering",
-    body: "Every pick is scored by Edge divided by Estimated Standard Deviation. Only picks with E/V ≥ 0.50 make the cut — eliminating noise and keeping only statistically meaningful edges.",
+    body: "Every pick is scored by Edge divided by Estimated Standard Deviation. Only picks with E/V ≥ 0.50 make the cut - eliminating noise and keeping only statistically meaningful edges.",
   },
   {
     title: "Position-specific thresholds",
-    body: "MID, DEF, FWD and RUCK markets price differently. Our STRONG thresholds are calibrated per position based on real backtested accuracy — not a one-size-fits-all number.",
+    body: "MID, DEF, FWD and RUCK markets price differently. Our STRONG thresholds are calibrated per position based on real backtested accuracy - not a one-size-fits-all number.",
   },
   {
     title: "Transparent track record",
-    body: "Every prediction is logged. Every result is tracked. Win rate, MAE, ROI — all published publicly. No cherry picking. No hidden losses.",
+    body: "Every prediction is logged. Every result is tracked. Win rate, MAE, ROI - all published publicly. No cherry picking. No hidden losses.",
   },
   {
     title: "Weight Optimisation Simulator",
@@ -137,7 +137,7 @@ export default function LandingPage() {
                   { text: "+$18,760 Gross P&L · 2026 Season", highlight: false },
                   { text: "71 HC Picks Tracked · R3–R7", highlight: false },
                   { text: "Australia's Sharpest AFL Disposal Model", highlight: false },
-                  { text: "Unlock Pro — $29/month →", highlight: true },
+                  { text: "Unlock Pro - $29/month →", highlight: true },
                 ].map((item, i) => (
                   <Link key={`${rep}-${i}`} href="/auth/payment" style={{
                     display: "inline-flex", alignItems: "center",
@@ -179,7 +179,7 @@ export default function LandingPage() {
           justifyContent: "center", gap: 12,
         }}>
           <span style={{ fontSize: 11, color: "#f59e0b" }}>
-            ⚠ {highImpactNews[0].player_out} ({highImpactNews[0].team}) — team news may affect predictions.
+            ⚠ {highImpactNews[0].player_out} ({highImpactNews[0].team}) - team news may affect predictions.
           </span>
           <Link href="/predictions" style={{ fontSize: 11, color: "#fb923c", textDecoration: "none", fontWeight: 600 }}>
             Check picks →
@@ -268,7 +268,7 @@ export default function LandingPage() {
             fontSize: 14, fontWeight: 700, textDecoration: "none",
             whiteSpace: "nowrap", flexShrink: 0,
           }}>
-            Get Pro — $29/month
+            Get Pro - $29/month
           </Link>
         </div>
       </div>
@@ -316,7 +316,7 @@ export default function LandingPage() {
                 Round {lastRound.round} · {lastRound.season}
               </div>
               <div style={{ fontSize: 13, color: "#666", marginBottom: 20 }}>
-                {lastRound.total_picks} picks tracked — {lastRound.wins}W / {lastRound.losses}L
+                {lastRound.total_picks} picks tracked - {lastRound.wins}W / {lastRound.losses}L
               </div>
               <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
                 {lastRound.picks.filter(p => p.confidence === 'STRONG').slice(0, 4).map((p, i) => (
@@ -402,7 +402,7 @@ export default function LandingPage() {
               HC Filtered Pick Performance
             </h2>
             <p style={{ fontSize: 14, color: "#555", marginTop: 10, maxWidth: 560 }}>
-              The tier we publish — HIGH CONVICTION only.
+              The tier we publish - HIGH CONVICTION only.
             </p>
           </div>
 
@@ -468,7 +468,7 @@ export default function LandingPage() {
           Ready to analyse with an edge?
         </h2>
         <p style={{ fontSize: 15, color: "#777", margin: "0 0 36px", lineHeight: 1.7 }}>
-          View this round's HIGH CONVICTION picks — the tier with a verified {liveStats.hc.winRatePct}%+ win rate.
+          View this round's HIGH CONVICTION picks - the tier with a verified {liveStats.hc.winRatePct}%+ win rate.
         </p>
         <Link href="/predictions" style={{
           background: "#f97316", color: "#000",

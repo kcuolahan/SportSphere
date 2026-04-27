@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useStats } from "@/lib/useStats";
 
@@ -23,7 +23,7 @@ export function AnnualROIProof() {
       {/* YTD Performance */}
       <div style={{ background: "#080808", border: "1px solid #1a1a1a", borderRadius: 12, padding: "24px" }}>
         <div style={{ fontSize: 10, fontWeight: 700, color: "#555", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 16 }}>
-          YTD Performance — Rounds {roundsRange}
+          YTD Performance - Rounds {roundsRange}
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 1, background: "#111", borderRadius: 8, overflow: "hidden", marginBottom: 16 }}>
           {[
@@ -76,7 +76,7 @@ export function AnnualROIProof() {
       {/* Full Season Projection */}
       <div style={{ background: "#080808", border: "1px solid rgba(249,115,22,0.2)", borderRadius: 12, padding: "24px" }}>
         <div style={{ fontSize: 10, fontWeight: 700, color: "#f97316", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 6 }}>
-          Projected Full Season — {stats.projections.totalRounds} Rounds
+          Projected Full Season - {stats.projections.totalRounds} Rounds
         </div>
         <div style={{ fontSize: 12, color: "#555", marginBottom: 20 }}>
           Based on {(stats.hc.totalPicks / Math.max(stats.projections.roundsTracked, 1)).toFixed(1)} avg HC picks per round
@@ -134,7 +134,7 @@ export function AnnualROIProof() {
 
         {/* With Pro */}
         <div style={{ background: "#080808", border: "1px solid rgba(249,115,22,0.25)", borderRadius: 10, padding: "20px" }}>
-          <div style={{ fontSize: 13, fontWeight: 800, color: "#f97316", marginBottom: 16 }}>With Pro — ${stats.projections.monthlyFee}/mo</div>
+          <div style={{ fontSize: 13, fontWeight: 800, color: "#f97316", marginBottom: 16 }}>With Pro - ${stats.projections.monthlyFee}/mo</div>
           {[
             { label: "HC picks access",   value: "All picks" },
             { label: "Simulator access",  value: "Full" },

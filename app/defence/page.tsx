@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo } from "react";
 import Nav from "@/components/Nav";
@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { getTeamStyle, getCurrentPredictions, getPlayers } from "@/lib/data";
 import { useProAccess } from "@/lib/auth";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import type { Team, TeamPosition, Pick } from "@/lib/data";
 
 const TEAMS = getTeamStyle();
@@ -61,7 +62,7 @@ function computeRanks() {
   const ranks: Record<string, Record<Position, number>> = {};
   for (const pos of positions) {
     const sorted = [...TEAMS].sort((a, b) =>
-      b.concedes_by_position[pos].vs_league - a.concedes_by_position[pos].vs_league
+      (b.concedes_by_position[pos]?.vs_league ?? 1) - (a.concedes_by_position[pos]?.vs_league ?? 1)
     );
     sorted.forEach((team, i) => {
       if (!ranks[team.code]) ranks[team.code] = {} as Record<Position, number>;
@@ -77,8 +78,8 @@ function getRanges() {
   const positions: Position[] = ["MID", "DEF", "FWD", "RUCK"];
   const ranges: Record<string, { min: number; max: number }> = {};
   for (const pos of positions) {
-    const vals = TEAMS.map(t => t.concedes_by_position[pos].vs_league);
-    ranges[pos] = { min: Math.min(...vals), max: Math.max(...vals) };
+    const vals = TEAMS.map(t => t.concedes_by_position[pos]?.vs_league ?? 1).filter(v => isFinite(v));
+    ranges[pos] = { min: vals.length ? Math.min(...vals) : 0.9, max: vals.length ? Math.max(...vals) : 1.1 };
   }
   return ranges;
 }
@@ -115,7 +116,8 @@ function rankBadge(rank: number) {
 }
 
 // ── Table cell with trend + sample warning ────────────────────────────────────
-function Cell({ pos, posKey, rank }: { pos: TeamPosition; posKey: string; rank: number }) {
+function Cell({ pos, posKey, rank }: { pos: TeamPosition | undefined; posKey: string; rank: number }) {
+  if (!pos) return <td style={{ padding: "11px 14px", borderRight: "1px solid #0a0a0a" }}><span style={{ fontSize: 10, color: "#555" }}>-</span></td>;
   const lowN = pos.games < 4;
   const trend = getTrend(pos.vs_league, pos.games);
   const trendColor = trend === "↑" ? "#ef4444" : trend === "↓" ? "#22c55e" : "#555";
@@ -234,8 +236,8 @@ function MatchupCard({ pick, rank }: { pick: Pick; rank: number }) {
           borderRadius: 6, padding: "6px 10px",
         }}>
           {pick.opponent} concede <strong>{isPositive ? "+" : ""}{(diff * 100).toFixed(0)}%</strong> vs league avg to {pick.position}s
-          {isPositive ? " — favourable OVER matchup" : isNegative ? " — tough matchup" : " — neutral matchup"}
-          {concession.games < 4 && <span style={{ color: "#555", marginLeft: 6 }}>(low sample — {concession.games}g)</span>}
+          {isPositive ? " - favourable OVER matchup" : isNegative ? " - tough matchup" : " - neutral matchup"}
+          {concession.games < 4 && <span style={{ color: "#555", marginLeft: 6 }}>(low sample - {concession.games}g)</span>}
         </div>
       )}
     </div>
@@ -272,12 +274,12 @@ function BestMatchupsPanel() {
 // ── Sub-position legend panel ─────────────────────────────────────────────────
 function SubPositionGuide() {
   const guide: { sub: SubPos; desc: string; style: string }[] = [
-    { sub: "MID Inside", style: "STOP", desc: "Contested midfielders — high CBA, inside 50s" },
-    { sub: "MID Outside", style: "TRANS", desc: "Run-and-carry — transition chains, high disposals" },
-    { sub: "DEF Ball User", style: "TRANS", desc: "Intercept markers, rebounders — disposal hungry" },
-    { sub: "DEF General", style: "STOP", desc: "Role defenders, taggers — lower disposal volume" },
-    { sub: "FWD General", style: "HIGH CBA%", desc: "Crumbing forwards — work rate dependent" },
-    { sub: "FWD Key", style: "LOW CBA%", desc: "Marking targets — disposal count volatile" },
+    { sub: "MID Inside", style: "STOP", desc: "Contested midfielders - high CBA, inside 50s" },
+    { sub: "MID Outside", style: "TRANS", desc: "Run-and-carry - transition chains, high disposals" },
+    { sub: "DEF Ball User", style: "TRANS", desc: "Intercept markers, rebounders - disposal hungry" },
+    { sub: "DEF General", style: "STOP", desc: "Role defenders, taggers - lower disposal volume" },
+    { sub: "FWD General", style: "HIGH CBA%", desc: "Crumbing forwards - work rate dependent" },
+    { sub: "FWD Key", style: "LOW CBA%", desc: "Marking targets - disposal count volatile" },
   ];
   return (
     <div style={{ background: "#080808", border: "1px solid #111", borderRadius: 10, padding: "16px 20px", marginBottom: 24 }}>
@@ -313,8 +315,8 @@ function DvPGate() {
           <h1 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 12px" }}>DvP Rankings</h1>
           <div style={{ background: "#080808", border: "1px solid #111", borderRadius: 8, padding: "14px 16px", maxWidth: 680 }}>
             <p style={{ fontSize: 12, color: "#555", margin: 0, lineHeight: 1.7 }}>
-              Teams in <span style={{ color: "#ef4444" }}>red concede more</span> — good OVER targets.
-              Teams in <span style={{ color: "#22c55e" }}>green concede fewer</span> — tilt toward UNDERs.
+              Teams in <span style={{ color: "#ef4444" }}>red concede more</span> - good OVER targets.
+              Teams in <span style={{ color: "#22c55e" }}>green concede fewer</span> - tilt toward UNDERs.
               See which teams are leaking disposals to each position.
             </p>
           </div>
@@ -375,14 +377,14 @@ function DvPGate() {
               <div style={{ fontSize: 10, color: "#f97316", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8, fontWeight: 700 }}>Pro Feature</div>
               <div style={{ fontSize: 22, fontWeight: 800, color: "#f0f0f0", marginBottom: 8, letterSpacing: "-0.02em" }}>DvP Rankings</div>
               <div style={{ fontSize: 14, color: "#888", marginBottom: 20, lineHeight: 1.6 }}>
-                See which teams concede most to each position — the edge behind every pick.
+                See which teams concede most to each position - the edge behind every pick.
               </div>
               <a href="/auth/payment" style={{
                 display: "inline-block", background: "#f97316", color: "#000",
                 fontWeight: 800, fontSize: 14, borderRadius: 8, padding: "12px 32px",
                 textDecoration: "none",
               }}>
-                Unlock DvP — $29/month
+                Unlock DvP - $29/month
               </a>
             </div>
           </div>
@@ -403,7 +405,7 @@ export default function DefencePage() {
   const [showBestMatchups, setShowBestMatchups] = useState(false);
   const [showSubPosGuide, setShowSubPosGuide] = useState(false);
 
-  if (!proLoading && !isPro) return <DvPGate />;
+  if (!proLoading && !isPro) return <ErrorBoundary><DvPGate /></ErrorBoundary>;
 
   const sorted = useMemo(() => {
     return [...TEAMS].sort((a, b) => {
@@ -443,6 +445,7 @@ export default function DefencePage() {
   }).length;
 
   return (
+    <ErrorBoundary>
     <div style={{ minHeight: "100vh", background: "#000", color: "#f0f0f0", fontFamily: "system-ui, -apple-system, sans-serif" }}>
       <Nav />
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "84px 20px 60px" }}>
@@ -453,8 +456,8 @@ export default function DefencePage() {
           <h1 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 12px" }}>DvP Rankings</h1>
           <div style={{ background: "#080808", border: "1px solid #111", borderRadius: 8, padding: "14px 16px", maxWidth: 680 }}>
             <p style={{ fontSize: 12, color: "#555", margin: 0, lineHeight: 1.7 }}>
-              Teams in <span style={{ color: "#ef4444" }}>red concede more</span> — good OVER targets.
-              Teams in <span style={{ color: "#22c55e" }}>green concede fewer</span> — tilt toward UNDERs.
+              Teams in <span style={{ color: "#ef4444" }}>red concede more</span> - good OVER targets.
+              Teams in <span style={{ color: "#22c55e" }}>green concede fewer</span> - tilt toward UNDERs.
               <strong style={{ color: "#888" }}> ↑↓→</strong> trend vs season avg.
               <span style={{ color: "#555" }}> LOW n = fewer than 4 games sampled.</span>
             </p>
@@ -598,11 +601,12 @@ export default function DefencePage() {
 
         <div style={{ marginTop: 16, fontSize: 11, color: "#555" }}>
           Data based on {TEAMS[0]?.concedes_by_position.MID.games ?? 0} rounds sampled. Rank #1–6 = easy matchup (green). Rank #13–18 = hard (red).
-          ↑↓ trend derived from season avg deviation. LOW n = &lt;4 games — insufficient sample to act on.
+          ↑↓ trend derived from season avg deviation. LOW n = &lt;4 games - insufficient sample to act on.
         </div>
       </div>
       <Footer />
 
     </div>
+    </ErrorBoundary>
   );
 }

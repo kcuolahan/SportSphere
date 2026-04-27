@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
@@ -83,7 +83,7 @@ export default function ReferralPage() {
             Upgrade to Pro to get your unique referral link.
           </p>
           <Link href="/auth/payment" style={{ background: "#f97316", color: "#000", borderRadius: 8, padding: "13px 28px", fontSize: 14, fontWeight: 700, textDecoration: "none", display: "inline-block" }}>
-            Upgrade to Pro — $29/month →
+            Upgrade to Pro - $29/month →
           </Link>
         </div>
         <Footer />
@@ -94,7 +94,7 @@ export default function ReferralPage() {
   const referralUrl = referralCode ? `https://www.sportspherehq.com/ref/${referralCode}` : null;
   const twitterText = referralUrl
     ? encodeURIComponent(
-        `I've been using @SportSphereHQ for AFL disposal picks — 67.6% win rate this season, $18,760 gross profit. Check it out: ${referralUrl}`
+        `I've been using @SportSphereHQ for AFL disposal picks - 67.6% win rate this season, $18,760 gross profit. Check it out: ${referralUrl}`
       )
     : "";
   const twitterHref = `https://twitter.com/intent/tweet?text=${twitterText}`;
@@ -128,7 +128,7 @@ export default function ReferralPage() {
               You earn 1 free month for every friend who subscribes
             </div>
             <div style={{ fontSize: 13, color: "#4ade8099", lineHeight: 1.6 }}>
-              Share your unique link. When a friend signs up and converts to Pro, you automatically get 1 month added to your subscription — no cap.
+              Share your unique link. When a friend signs up and converts to Pro, you automatically get 1 month added to your subscription - no cap.
             </div>
           </div>
         </div>
@@ -188,7 +188,7 @@ export default function ReferralPage() {
             {[
               { step: "01", text: "Share your unique referral link with friends or on social media." },
               { step: "02", text: "When they click your link, their browser remembers your referral code." },
-              { step: "03", text: "If they sign up and subscribe to Pro, your account gets 1 free month — automatically." },
+              { step: "03", text: "If they sign up and subscribe to Pro, your account gets 1 free month - automatically." },
               { step: "04", text: "No cap. Refer 10 friends, get 10 months free." },
             ].map(item => (
               <div key={item.step} style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>

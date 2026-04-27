@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -49,7 +49,7 @@ export default function FAQPage() {
         <div style={{ fontSize: 11, color: "#f97316", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 4 }}>About SportSphere HQ</div>
 
         <Q q="What is SportSphere HQ?">
-          SportSphere HQ is an AFL disposal prediction analytics platform. We publish model outputs, edge scores, and verified accuracy data for AFL player disposal markets each round. We are an analytics tool — not a tipping service and not a bookmaker.
+          SportSphere HQ is an AFL disposal prediction analytics platform. We publish model outputs, edge scores, and verified accuracy data for AFL player disposal markets each round. We are an analytics tool - not a tipping service and not a bookmaker.
         </Q>
 
         <Q q="How does the model work?">
@@ -58,15 +58,15 @@ export default function FAQPage() {
         </Q>
 
         <Q q="What does HIGH CONVICTION mean?">
-          HIGH CONVICTION picks have an Edge/Vol score of 0.90 or above. This means the model's edge — the difference between its prediction and the bookie's line — is large relative to the player's typical disposal variance. It's the highest statistical confidence tier. Historically these picks have achieved 66%+ accuracy.
+          HIGH CONVICTION picks have an Edge/Vol score of 0.90 or above. This means the model's edge - the difference between its prediction and the bookie's line - is large relative to the player's typical disposal variance. It's the highest statistical confidence tier. Historically these picks have achieved 66%+ accuracy.
         </Q>
 
         <Q q="What does Edge/Vol (E/V) mean?">
-          Edge/Vol is the model's edge divided by the player's estimated disposal standard deviation. It measures the statistical significance of the edge. An E/V of 1.0 means the edge is equal to one full standard deviation — a meaningfully large signal. An E/V of 0.20 means the edge is small relative to how much that player typically varies game-to-game.
+          Edge/Vol is the model's edge divided by the player's estimated disposal standard deviation. It measures the statistical significance of the edge. An E/V of 1.0 means the edge is equal to one full standard deviation - a meaningfully large signal. An E/V of 0.20 means the edge is small relative to how much that player typically varies game-to-game.
         </Q>
 
         <Q q="Why are FWD players excluded from the bet filter?">
-          FWD disposal predictions have achieved only 38% accuracy across the backtested sample — below break-even. FWD disposal counts are heavily influenced by game style, matching, and team tactics in ways the current model doesn't fully capture. FWD picks are still published for analysis, but they are excluded from the E/V filter.
+          FWD disposal predictions have achieved only 38% accuracy across the backtested sample - below break-even. FWD disposal counts are heavily influenced by game style, matching, and team tactics in ways the current model doesn't fully capture. FWD picks are still published for analysis, but they are excluded from the E/V filter.
         </Q>
 
         <Q q="How often are predictions updated?">
@@ -89,7 +89,7 @@ export default function FAQPage() {
         </Q>
 
         <Q q="How do I use this responsibly?">
-          SportSphere HQ is an analytical tool. If you choose to use this data in conjunction with betting markets, we strongly recommend: setting strict loss limits before you start, never chasing losses, treating every bet as independent and not part of a system, and taking regular breaks. The model helps identify statistical edges — it does not remove variance or guarantee profits.
+          SportSphere HQ is an analytical tool. If you choose to use this data in conjunction with betting markets, we strongly recommend: setting strict loss limits before you start, never chasing losses, treating every bet as independent and not part of a system, and taking regular breaks. The model helps identify statistical edges - it does not remove variance or guarantee profits.
         </Q>
 
         <Q q="I need help with problem gambling.">

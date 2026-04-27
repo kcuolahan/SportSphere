@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -47,7 +47,7 @@ const TIPS = [
   { title: "Set time limits", body: "Decide in advance how long you'll spend gambling and stick to it. Take regular breaks." },
   { title: "Never chase losses", body: "Accept losses as the cost of entertainment. Chasing losses leads to bigger losses." },
   { title: "Don't bet when emotional", body: "Avoid betting when stressed, depressed, or under the influence of alcohol or drugs." },
-  { title: "Treat betting as entertainment", body: "Treat any money you spend on betting as you would any other entertainment expense — not as an investment." },
+  { title: "Treat betting as entertainment", body: "Treat any money you spend on betting as you would any other entertainment expense - not as an investment." },
   { title: "Use platform tools", body: "Use deposit limits, time-outs, and self-exclusion features offered by your bookmaker." },
 ];
 
@@ -176,7 +176,7 @@ export default function ResponsibleGamblingPage() {
               Self-Exclusion
             </h2>
             <p style={{ fontSize: 14, color: "#4ade8099", lineHeight: 1.7, margin: "0 0 16px" }}>
-              If you feel you need a break from gambling, most Australian jurisdictions offer formal self-exclusion programs. Contact your bookmaker directly to activate self-exclusion, or use BetStop — Australia&apos;s national self-exclusion register.
+              If you feel you need a break from gambling, most Australian jurisdictions offer formal self-exclusion programs. Contact your bookmaker directly to activate self-exclusion, or use BetStop - Australia&apos;s national self-exclusion register.
             </p>
             <a href="https://www.betstop.gov.au" target="_blank" rel="noopener noreferrer" style={{
               display: "inline-block", background: "#14532d",

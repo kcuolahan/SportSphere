@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { useStats } from "@/lib/useStats";
@@ -16,7 +16,7 @@ const TESTIMONIALS: Testimonial[] = [
     role: "Melbourne, AFL punter",
   },
   {
-    quote: "The E/V filtering is legitimately different. Not just 'strong confidence' fluff — actual math.",
+    quote: "The E/V filtering is legitimately different. Not just 'strong confidence' fluff - actual math.",
     handle: "@sharpAFL",
     role: "Systematic bettor",
   },

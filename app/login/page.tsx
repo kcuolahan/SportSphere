@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -57,7 +57,7 @@ export default function LoginPage() {
           )}
           {resetSent && (
             <div style={{ padding: "10px 14px", background: "#030f08", border: "1px solid #14532d", borderRadius: 8, fontSize: 12, color: "#4ade80" }}>
-              Password reset email sent — check your inbox.
+              Password reset email sent - check your inbox.
             </div>
           )}
 

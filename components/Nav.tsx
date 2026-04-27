@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -94,7 +94,7 @@ export default function Nav() {
           gap: 16,
         }}>
 
-          {/* Left — Logo */}
+          {/* Left - Logo */}
           <Link href="/" style={{ textDecoration: "none", flexShrink: 0, display: "flex", alignItems: "center", gap: 8, marginRight: 8 }}>
             <img src="/logo.svg" alt="SportSphere HQ" width={28} height={28} style={{ width: 28, height: 28, flexShrink: 0 }} />
             <span className="nav-logo-label" style={{ fontSize: 15, fontWeight: 700, letterSpacing: "-0.02em", color: "#f0f0f0", lineHeight: 1, whiteSpace: "nowrap" }}>
@@ -102,7 +102,7 @@ export default function Nav() {
             </span>
           </Link>
 
-          {/* Centre — Main nav links */}
+          {/* Centre - Main nav links */}
           <div className="nav-centre" style={{ display: "flex", alignItems: "center", gap: 2, flex: 1, justifyContent: "center" }}>
             {CENTRE_LINKS.map(link => {
               const active = pathname === link.href;
@@ -122,7 +122,7 @@ export default function Nav() {
             })}
           </div>
 
-          {/* Right — Secondary links + controls */}
+          {/* Right - Secondary links + controls */}
           <div className="nav-right" style={{ display: "flex", alignItems: "center", gap: 4, flexShrink: 0 }}>
             {RIGHT_LINKS.map(link => {
               const active = pathname === link.href;
@@ -175,7 +175,7 @@ export default function Nav() {
               </Link>
             )}
 
-            {/* Hamburger — mobile only (≤1024px) */}
+            {/* Hamburger - mobile only (≤1024px) */}
             <button
               onClick={() => setMenuOpen(o => !o)}
               className="nav-hamburger"

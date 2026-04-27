@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -134,7 +134,7 @@ export function FreeTierPaywall({ totalPicksAvailable, totalHCPicksAvailable, fr
               textAlign: "center",
             }}
           >
-            {loading ? "Loading…" : "Start Pro — $29/month"}
+            {loading ? "Loading…" : "Start Pro - $29/month"}
           </button>
 
           <button

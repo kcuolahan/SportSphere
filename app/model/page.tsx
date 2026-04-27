@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -6,7 +6,7 @@ import { strongRate, strongPicks, filteredRate, filteredPicks, roundsLabel, curr
 
 export const metadata: Metadata = {
   title: "How The Model Works",
-  description: "A technical breakdown of the SportSphere HQ AFL disposal prediction model — six factors, Edge/Vol filtering, position thresholds, and dynamic season blending.",
+  description: "A technical breakdown of the SportSphere HQ AFL disposal prediction model - six factors, Edge/Vol filtering, position thresholds, and dynamic season blending.",
 };
 
 function Section({ num, title, children }: { num: string; title: string; children: ReactNode }) {
@@ -75,7 +75,7 @@ export default function ModelPage() {
             How The Model Works
           </h1>
           <p style={{ fontSize: 15, color: "#555", lineHeight: 1.7, margin: 0, maxWidth: 560 }}>
-            A full technical breakdown of how SportSphere HQ generates AFL disposal predictions — every factor, every weight, every filter. No black boxes.
+            A full technical breakdown of how SportSphere HQ generates AFL disposal predictions - every factor, every weight, every filter. No black boxes.
           </p>
         </div>
 
@@ -88,7 +88,7 @@ export default function ModelPage() {
             <FactorRow
               name="2026 Season Average"
               weight="65% blend"
-              desc="The player's current-season average disposals. By Round 6, this dominates the season blend at 65% weighting — we trust recent data more than historical as sample size builds."
+              desc="The player's current-season average disposals. By Round 6, this dominates the season blend at 65% weighting - we trust recent data more than historical as sample size builds."
             />
             <FactorRow
               name="2025 Season Average"
@@ -113,7 +113,7 @@ export default function ModelPage() {
             <FactorRow
               name="Play Style Factor"
               weight="60% sensitivity"
-              desc="TRANS (transition) players get a 1.05 multiplier in dry conditions — they generate disposals through run and carry. STOP (stoppage) players get 0.90 — their disposals come from contested ball, which is more volatile. HYBRID players sit at 1.00."
+              desc="TRANS (transition) players get a 1.05 multiplier in dry conditions - they generate disposals through run and carry. STOP (stoppage) players get 0.90 - their disposals come from contested ball, which is more volatile. HYBRID players sit at 1.00."
             />
           </div>
         </Section>
@@ -152,7 +152,7 @@ export default function ModelPage() {
                   Model prediction: 22.5<br />
                   Edge: +4.0<br />
                   Std Dev: 8.0<br />
-                  <strong style={{ color: "#ef4444" }}>Edge/Vol: 0.50 → borderline — filter with caution</strong>
+                  <strong style={{ color: "#ef4444" }}>Edge/Vol: 0.50 → borderline - filter with caution</strong>
                 </div>
               </div>
             </div>
@@ -186,8 +186,8 @@ export default function ModelPage() {
             {[
               { pos: "MID", threshold: "≥ 3.0 disposal edge", note: "Most liquid market. Bookmakers price MIDs well. Standard threshold." },
               { pos: "DEF", threshold: "≥ 3.0 disposal edge", note: "Similar liquidity to MID. DEF markets have been profitable historically." },
-              { pos: "FWD", threshold: "≥ 4.5 disposal edge", note: "EXCLUDED from bet filter. Model accuracy on FWDs is 38% — below break-even. FWDs are listed for analysis only." },
-              { pos: "RUCK", threshold: "≥ 5.0 disposal edge", note: "Very conservative. Disposals are a poor proxy for RUCK performance — contest stats drive their role, not disposals." },
+              { pos: "FWD", threshold: "≥ 4.5 disposal edge", note: "EXCLUDED from bet filter. Model accuracy on FWDs is 38% - below break-even. FWDs are listed for analysis only." },
+              { pos: "RUCK", threshold: "≥ 5.0 disposal edge", note: "Very conservative. Disposals are a poor proxy for RUCK performance - contest stats drive their role, not disposals." },
               { pos: "Premium (line ≥ 27)", threshold: "+2.0 bonus edge required", note: "Players with high bookie lines are priced more efficiently. An extra 2.0 disposal edge is required for STRONG on these players." },
             ].map(p => (
               <div key={p.pos} style={{ display: "grid", gridTemplateColumns: "100px 160px 1fr", gap: 16, padding: "14px 0", borderBottom: "1px solid #0a0a0a", alignItems: "start" }}>
@@ -207,10 +207,10 @@ export default function ModelPage() {
           <div style={{ borderTop: "1px solid #111" }}>
             {[
               { factor: "Dry conditions", mult: "×1.00", desc: "Baseline. No adjustment." },
-              { factor: "Wet conditions", mult: "×0.95 base", desc: "Rain reduces total disposals across the game. Additionally: TRANS players (×0.95) are more penalised as run-and-carry is harder. STOP players (×1.04) benefit — congestion and contested ball increases." },
+              { factor: "Wet conditions", mult: "×0.95 base", desc: "Rain reduces total disposals across the game. Additionally: TRANS players (×0.95) are more penalised as run-and-carry is harder. STOP players (×1.04) benefit - congestion and contested ball increases." },
               { factor: "Roof venue (Marvel Stadium)", mult: "×1.02", desc: "Indoor venues produce marginally higher disposal counts. The roof removes weather risk and the surface tends to produce faster, higher-disposal games." },
-              { factor: "2026 rule changes — DEF", mult: "×1.03", desc: "Rule changes boosted intercept marking (+11% league-wide) disproportionately benefitting defenders who read the play." },
-              { factor: "2026 rule changes — RUCK", mult: "×0.90", desc: "Ruck contest rule changes reduced centre bounce frequency by 16%, directly cutting RUCK disposal counts." },
+              { factor: "2026 rule changes - DEF", mult: "×1.03", desc: "Rule changes boosted intercept marking (+11% league-wide) disproportionately benefitting defenders who read the play." },
+              { factor: "2026 rule changes - RUCK", mult: "×0.90", desc: "Ruck contest rule changes reduced centre bounce frequency by 16%, directly cutting RUCK disposal counts." },
             ].map(p => (
               <div key={p.factor} style={{ display: "grid", gridTemplateColumns: "180px 90px 1fr", gap: 16, padding: "14px 0", borderBottom: "1px solid #0a0a0a", alignItems: "start" }}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: "#f0f0f0" }}>{p.factor}</div>
@@ -228,11 +228,11 @@ export default function ModelPage() {
           </p>
           <div style={{ borderTop: "1px solid #111" }}>
             {[
-              { round: "Rds 1–3", blend: "60% 2025 / 40% 2026", note: "Early season — 2026 data is thin. 2025 full-season averages dominate." },
+              { round: "Rds 1–3", blend: "60% 2025 / 40% 2026", note: "Early season - 2026 data is thin. 2025 full-season averages dominate." },
               { round: "Rds 4–7", blend: "20% 2025 / 80% 2026", note: "2026 data becomes reliable. Heavy weighting shifts to current season." },
               { round: "Rds 8–11", blend: "20% 2025 / 80% 2026", note: "Stable mid-season blend. 2025 retained as a small anchor." },
               { round: "Rds 12–17", blend: "10% 2025 / 90% 2026", note: "2026 data now authoritative. 2025 used only for stability." },
-              { round: "Rd 18+", blend: "5% 2025 / 95% 2026", note: "Finals and late rounds — almost entirely current season data." },
+              { round: "Rd 18+", blend: "5% 2025 / 95% 2026", note: "Finals and late rounds - almost entirely current season data." },
             ].map(p => (
               <div key={p.round} style={{ display: "grid", gridTemplateColumns: "100px 200px 1fr", gap: 16, padding: "14px 0", borderBottom: "1px solid #0a0a0a", alignItems: "start" }}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: "#f0f0f0" }}>{p.round}</div>
@@ -251,9 +251,9 @@ export default function ModelPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {[
               { issue: "Real-time injury news", detail: "The model does not scrape team selection or last-minute injury updates. Always check official team lists before acting on any analysis. A key teammate out can dramatically change a player's disposal count." },
-              { issue: "FWD accuracy is 38%", detail: "FWDs are listed for analysis but are excluded from the bet filter. The model does not explain why FWD predictions underperform — it's a known limitation, not a solved problem." },
+              { issue: "FWD accuracy is 38%", detail: "FWDs are listed for analysis but are excluded from the bet filter. The model does not explain why FWD predictions underperform - it's a known limitation, not a solved problem." },
               { issue: "Early-season opponent factors are noisy", detail: "Opponent concession data is unreliable before Round 6 (small sample size). The model halves opponent sensitivity (0.30 vs 0.60) to compensate. Treat early-season DvP data with caution." },
-              { issue: "This is a decision-support tool", detail: "The model identifies statistical edges. It does not account for every variable — weather changes, game-day motivations, selection surprises. It is a tool, not a guarantee." },
+              { issue: "This is a decision-support tool", detail: "The model identifies statistical edges. It does not account for every variable - weather changes, game-day motivations, selection surprises. It is a tool, not a guarantee." },
             ].map(item => (
               <div key={item.issue} style={{
                 background: "#080808", border: "1px solid #111",

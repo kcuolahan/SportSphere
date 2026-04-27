@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -38,7 +38,7 @@ export default function AccuracyPage() {
         {/* Header */}
         <div style={{ marginBottom: 40 }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: "#f97316", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 10 }}>
-            Verified Track Record — HC Filtered Picks Only
+            Verified Track Record - HC Filtered Picks Only
           </div>
           <h1 style={{ fontSize: "clamp(28px, 5vw, 44px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 12px" }}>
             Public Track Record
@@ -71,7 +71,7 @@ export default function AccuracyPage() {
           <div>
             <div style={{ fontSize: 14, fontWeight: 700, color: "#f0f0f0", marginBottom: 6 }}>What this track record shows</div>
             <p style={{ fontSize: 13, color: "#777", margin: 0, lineHeight: 1.7 }}>
-              These results cover only our HIGH CONVICTION (HC) filtered picks — the tier published to subscribers each week.
+              These results cover only our HIGH CONVICTION (HC) filtered picks - the tier published to subscribers each week.
               HC picks require both STRONG model confidence AND Edge/Vol ≥ 0.50. The full model generates ~150 predictions
               per round across all tiers; we publish and track only the HC filtered subset. This is the most transparent way
               to show real-world performance of the picks we actually recommend.
@@ -129,12 +129,12 @@ export default function AccuracyPage() {
             </div>
           </div>
           <p style={{ fontSize: 11, color: "#444", marginTop: 10, lineHeight: 1.6 }}>
-            R4 shows a losing round — included for full transparency.
+            R4 shows a losing round - included for full transparency.
             $1,000 flat stake assumed. 1.87 average odds.
           </p>
         </section>
 
-        {/* Position breakdown — Pro gate */}
+        {/* Position breakdown - Pro gate */}
         <section style={{ marginBottom: 40 }}>
           <h2 style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.02em", margin: "0 0 20px" }}>By Position</h2>
 
@@ -184,10 +184,10 @@ export default function AccuracyPage() {
               </div>
               <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <div style={{ textAlign: "center", background: "rgba(0,0,0,0.85)", borderRadius: 10, padding: "24px 32px", border: "1px solid #1a1a1a" }}>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: "#f0f0f0", marginBottom: 6 }}>Position breakdown — Pro only</div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: "#f0f0f0", marginBottom: 6 }}>Position breakdown - Pro only</div>
                   <p style={{ fontSize: 12, color: "#555", margin: "0 0 16px", lineHeight: 1.6 }}>Win rates by MID, DEF and RUCK position</p>
                   <Link href="/auth/payment" style={{ display: "inline-block", background: "#f97316", color: "#000", fontWeight: 700, fontSize: 13, padding: "10px 24px", borderRadius: 6, textDecoration: "none" }}>
-                    Unlock Pro — $29/month
+                    Unlock Pro - $29/month
                   </Link>
                 </div>
               </div>
@@ -207,7 +207,7 @@ export default function AccuracyPage() {
                 "$1,000 flat stake assumed per pick at 1.87 average decimal odds",
                 "Win = actual disposals meet or exceed the line in the predicted direction",
                 "Loss = actual disposals miss the line in the predicted direction",
-                "No picks excluded retrospectively — all results published including losses",
+                "No picks excluded retrospectively - all results published including losses",
               ].map((item, i) => (
                 <div key={i} style={{ fontSize: 13, color: "#666", display: "flex", gap: 8, alignItems: "flex-start" }}>
                   <span style={{ color: "#333", flexShrink: 0 }}>•</span>
@@ -221,7 +221,7 @@ export default function AccuracyPage() {
         {/* Disclaimer */}
         <p style={{ fontSize: 11, color: "#444", textAlign: "center", lineHeight: 1.7 }}>
           Past performance does not guarantee future results.
-          Analytics only — not financial or betting advice. 18+ only.
+          Analytics only - not financial or betting advice. 18+ only.
           Please gamble responsibly. Call{" "}
           <a href="tel:1800858858" style={{ color: "#555" }}>1800 858 858</a>.
         </p>

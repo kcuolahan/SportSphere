@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
@@ -185,7 +185,7 @@ export default function TrackerPage() {
           Pro Feature
         </div>
         <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.02em", margin: "0 0 12px" }}>
-          Tracker — Pro Only
+          Tracker - Pro Only
         </h2>
         <p style={{ fontSize: 14, color: "#666", lineHeight: 1.7, marginBottom: 32, maxWidth: 400, marginLeft: "auto", marginRight: "auto" }}>
           Log bets, track results, and monitor P&L. Full bet tracking and CSV export included with Pro.
@@ -197,7 +197,7 @@ export default function TrackerPage() {
           fontSize: 15, fontWeight: 700, textDecoration: "none",
           marginBottom: 12,
         }}>
-          Upgrade to Pro — $29/month
+          Upgrade to Pro - $29/month
         </a>
         <div style={{ fontSize: 12, color: "#555", marginTop: 8 }}>
           Cancel anytime. No lock-in.
@@ -211,7 +211,7 @@ export default function TrackerPage() {
     <div style={{ minHeight: "100vh", background: "#000", color: "#f0f0f0", fontFamily: "system-ui, -apple-system, sans-serif", position: "relative" }}>
       <Nav />
 
-      {/* Auth gate — blur overlay when not signed in */}
+      {/* Auth gate - blur overlay when not signed in */}
       {user === null && (
         <div style={{
           position: "fixed", inset: 0, zIndex: 50,
@@ -257,7 +257,7 @@ export default function TrackerPage() {
             Bet Tracker
           </h1>
           <p style={{ fontSize: 13, color: "#666", margin: 0 }}>
-            Log your bets, track results, and monitor P&L. Stored locally — no account needed.
+            Log your bets, track results, and monitor P&L. Stored locally - no account needed.
           </p>
         </div>
 
@@ -498,7 +498,7 @@ export default function TrackerPage() {
         )}
 
         <div style={{ marginTop: 24, fontSize: 11, color: "#555", lineHeight: 1.7 }}>
-          Data stored locally in your browser. Not synced across devices. For entertainment purposes. 18+ only. Gamble responsibly — 1800 858 858.
+          Data stored locally in your browser. Not synced across devices. For entertainment purposes. 18+ only. Gamble responsibly - 1800 858 858.
         </div>
       </div>
 

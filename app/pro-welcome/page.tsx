@@ -7,12 +7,11 @@ import { getCurrentPredictions } from "@/lib/data";
 
 const { round } = getCurrentPredictions();
 
-const PRO_PERKS = [
-  { icon: "⚡", label: "Picks on publish day", desc: "Every Tuesday the moment they go live" },
-  { icon: "🔬", label: "H2H suppression intelligence", desc: "See when opponents historically suppress a player" },
-  { icon: "🎛", label: "Full simulator access", desc: "Weight editor, grid search, scenario presets" },
-  { icon: "📧", label: "Email alerts", desc: "Picks delivered to your inbox every Tuesday" },
-  { icon: "📈", label: "Line movement tracking", desc: "Coming soon — see when sharp money moves lines" },
+const QUICK_LINKS = [
+  { label: "View HC Picks", href: "/predictions", desc: `Round ${round} picks are live now`, primary: true },
+  { label: "DvP Rankings", href: "/defence", desc: "Find the sharpest matchups this week" },
+  { label: "Your Dashboard", href: "/dashboard", desc: "Subscription details and referral link" },
+  { label: "Simulator", href: "/simulator", desc: "Test model weight combinations" },
 ];
 
 export default function ProWelcomePage() {
@@ -22,28 +21,59 @@ export default function ProWelcomePage() {
 
       <div style={{ maxWidth: 640, margin: "0 auto", padding: "96px 20px 80px", textAlign: "center" }}>
 
-        {/* Success icon */}
-        <div style={{
-          width: 72, height: 72, borderRadius: "50%",
-          background: "rgba(34,197,94,0.12)", border: "2px solid rgba(34,197,94,0.3)",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: 32, margin: "0 auto 24px",
-        }}>
-          ✓
+        {/* Confetti via CSS */}
+        <style>{`
+          @keyframes confettiFall {
+            0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(80px) rotate(360deg); opacity: 0; }
+          }
+          .confetti-piece {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+            animation: confettiFall 1.2s ease-out forwards;
+          }
+        `}</style>
+
+        {/* Success icon with confetti */}
+        <div style={{ position: "relative", display: "inline-block", marginBottom: 24 }}>
+          {[
+            { left: "-30px", top: "10px", bg: "#f97316", delay: "0s" },
+            { left: "30px", top: "-5px", bg: "#22c55e", delay: "0.1s" },
+            { left: "-20px", top: "-10px", bg: "#60a5fa", delay: "0.2s" },
+            { left: "20px", top: "15px", bg: "#f97316", delay: "0.05s" },
+            { left: "-40px", top: "25px", bg: "#22c55e", delay: "0.15s" },
+            { left: "40px", top: "5px", bg: "#60a5fa", delay: "0.25s" },
+          ].map((c, i) => (
+            <div key={i} className="confetti-piece" style={{ left: c.left, top: c.top, background: c.bg, animationDelay: c.delay }} />
+          ))}
+          <div style={{
+            width: 72, height: 72, borderRadius: "50%",
+            background: "rgba(34,197,94,0.12)", border: "2px solid rgba(34,197,94,0.3)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            fontSize: 32,
+          }}>
+            ✓
+          </div>
         </div>
 
         <div style={{ fontSize: 11, fontWeight: 700, color: "#f97316", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12 }}>
           Payment confirmed
         </div>
 
-        <h1 style={{ fontSize: "clamp(26px, 5vw, 38px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 16px" }}>
+        <h1 style={{ fontSize: "clamp(26px, 5vw, 38px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 14px" }}>
           Welcome to SportSphere HQ Pro
         </h1>
 
-        <p style={{ fontSize: 16, color: "#888", marginBottom: 36, lineHeight: 1.6 }}>
-          Your account is now active. Round {round} picks are live — you have full access right now.
+        <p style={{ fontSize: 15, color: "#888", marginBottom: 10, lineHeight: 1.6 }}>
+          Your account is now active. Round {round} picks are live right now.
+        </p>
+        <p style={{ fontSize: 13, color: "#555", marginBottom: 36, lineHeight: 1.6 }}>
+          Check your email for a confirmation from SportSphere HQ.
         </p>
 
+        {/* Primary CTA */}
         <Link href="/predictions" style={{
           display: "inline-block",
           padding: "14px 32px", borderRadius: 8,
@@ -54,28 +84,45 @@ export default function ProWelcomePage() {
           View Round {round} Picks →
         </Link>
 
-        {/* Pro perks summary */}
+        {/* Quick access grid */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 36, textAlign: "left" }}>
+          {QUICK_LINKS.map(l => (
+            <Link key={l.href} href={l.href} style={{
+              background: l.primary ? "rgba(249,115,22,0.06)" : "#080808",
+              border: l.primary ? "1px solid rgba(249,115,22,0.3)" : "1px solid #111",
+              borderRadius: 10, padding: "16px", textDecoration: "none",
+              display: "block",
+            }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: l.primary ? "#f97316" : "#f0f0f0", marginBottom: 4 }}>{l.label} →</div>
+              <div style={{ fontSize: 11, color: "#555", lineHeight: 1.5 }}>{l.desc}</div>
+            </Link>
+          ))}
+        </div>
+
+        {/* What to expect */}
         <div style={{
           background: "#080808", border: "1px solid rgba(249,115,22,0.2)",
-          borderRadius: 16, padding: "28px 24px", textAlign: "left",
+          borderRadius: 16, padding: "24px", textAlign: "left", marginBottom: 32,
         }}>
-          <div style={{ fontSize: 12, fontWeight: 700, color: "#f97316", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 20 }}>
-            What you now have access to
+          <div style={{ fontSize: 11, fontWeight: 700, color: "#f97316", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>
+            What to expect each week
           </div>
-          {PRO_PERKS.map(p => (
-            <div key={p.label} style={{ display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 18 }}>
-              <span style={{ fontSize: 20, flexShrink: 0, marginTop: 1 }}>{p.icon}</span>
-              <div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: "#f0f0f0", marginBottom: 2 }}>{p.label}</div>
-                <div style={{ fontSize: 12, color: "#666", lineHeight: 1.5 }}>{p.desc}</div>
-              </div>
+          {[
+            { day: "Thursday", desc: "HC picks published the moment bookmaker lines release" },
+            { day: "Thursday onwards", desc: "Results update automatically as games finish" },
+            { day: "Monday", desc: "Weekly results digest email - full round P&L" },
+          ].map(item => (
+            <div key={item.day} style={{ display: "flex", gap: 12, marginBottom: 12, alignItems: "flex-start" }}>
+              <span style={{ fontSize: 10, fontWeight: 700, color: "#f97316", background: "#1a0800", border: "1px solid #f9731640", borderRadius: 4, padding: "2px 8px", whiteSpace: "nowrap", flexShrink: 0 }}>{item.day}</span>
+              <span style={{ fontSize: 13, color: "#666", lineHeight: 1.5 }}>{item.desc}</span>
             </div>
           ))}
         </div>
 
-        <p style={{ marginTop: 32, fontSize: 12, color: "#444", lineHeight: 1.7 }}>
-          Manage your subscription anytime via your Stripe customer portal.<br />
-          Questions? Email us at{" "}
+        <p style={{ fontSize: 12, color: "#444", lineHeight: 1.7 }}>
+          Manage subscription anytime from your{" "}
+          <Link href="/dashboard" style={{ color: "#666", textDecoration: "none" }}>dashboard</Link>.
+          Questions? Email{" "}
           <a href="mailto:support@sportspherehq.com" style={{ color: "#666", textDecoration: "none" }}>
             support@sportspherehq.com
           </a>

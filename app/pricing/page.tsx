@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -7,10 +7,12 @@ import Footer from "@/components/Footer";
 import { supabase } from "@/lib/supabase";
 
 const PRO_FEATURES = [
-  "Picks on publication day (Tuesday)",
-  "H2H suppression intelligence",
-  "Full simulator access",
-  "Email alerts every Tuesday",
+  "All HC picks every round (Thursday)",
+  "Real-time result tracking",
+  "Defence vs Position (DvP) rankings",
+  "Weight Optimisation Simulator",
+  "Picks archive - all rounds",
+  "Weekly results digest email",
 ];
 
 export default function PricingPage() {
@@ -24,12 +26,8 @@ export default function PricingPage() {
     try {
       let userEmail: string | null = null;
       if (supabase) {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) {
-          router.push("/auth/signup");
-          return;
-        }
-        userEmail = user.email ?? null;
+        const { data: { user } } = await supabase.auth.getUser().catch(() => ({ data: { user: null } }));
+        userEmail = user?.email ?? null;
       }
 
       const res = await fetch("/api/create-checkout", {
@@ -63,7 +61,7 @@ export default function PricingPage() {
             Get ahead of the market
           </h1>
           <p style={{ fontSize: 16, color: "#888", margin: 0, lineHeight: 1.6 }}>
-            60.7% win rate tracked publicly. Pro members get picks the moment they publish every Tuesday.
+            67.6% HC win rate tracked publicly. Pro members get picks the moment they publish every Tuesday.
           </p>
         </div>
 
@@ -111,7 +109,7 @@ export default function PricingPage() {
               marginBottom: 12, transition: "opacity 0.15s",
             }}
           >
-            {loading ? "Redirecting…" : "Start Pro — $29/month"}
+            {loading ? "Redirecting…" : "Start Pro - $29/month"}
           </button>
 
           <div style={{ textAlign: "center", fontSize: 12, color: "#555" }}>
@@ -127,7 +125,7 @@ export default function PricingPage() {
         {/* Trust row */}
         <div style={{ display: "flex", justifyContent: "center", gap: 24, flexWrap: "wrap", marginTop: 32 }}>
           {[
-            "60.7% win rate · verified publicly",
+            "67.6% HC win rate · verified publicly",
             "Cancel anytime",
             "Secure via Stripe",
           ].map(text => (

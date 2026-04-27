@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
@@ -86,10 +86,10 @@ export default function ArchivePage() {
           <div style={{ fontSize: 11, fontWeight: 700, color: "#f97316", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 16 }}>Pro Only</div>
           <h1 style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 14px" }}>Picks Archive</h1>
           <p style={{ fontSize: 14, color: "#555", lineHeight: 1.7, margin: "0 0 32px" }}>
-            Access every HC pick from every tracked round — with results, P&L, and filtering by position.
+            Access every HC pick from every tracked round - with results, P&L, and filtering by position.
           </p>
           <Link href="/auth/payment" style={{ background: "#f97316", color: "#000", borderRadius: 8, padding: "13px 28px", fontSize: 14, fontWeight: 700, textDecoration: "none", display: "inline-block" }}>
-            Unlock Pro — $29/month →
+            Unlock Pro - $29/month →
           </Link>
         </div>
         <Footer />
@@ -195,12 +195,12 @@ export default function ArchivePage() {
                                 <td style={{ padding: "12px 16px", fontSize: 13, fontWeight: 700, color: p.prediction === "OVER" ? "#22c55e" : "#ef4444" }}>
                                   {p.prediction} {p.line}
                                 </td>
-                                <td style={{ padding: "12px 16px", fontSize: 12, color: "#60a5fa" }}>{p.edge_vol?.toFixed(2) ?? "—"}</td>
+                                <td style={{ padding: "12px 16px", fontSize: 12, color: "#60a5fa" }}>{p.edge_vol?.toFixed(2) ?? "-"}</td>
                                 <td style={{ padding: "12px 16px", fontSize: 12, fontWeight: 700, color: p.result === "WIN" ? "#4ade80" : p.result === "LOSS" ? "#f87171" : "#555" }}>
                                   {p.result ?? (p.final_disposals !== null ? `${p.final_disposals} disp` : "Pending")}
                                 </td>
                                 <td style={{ padding: "12px 16px", fontSize: 12, fontWeight: 700, color: (p.profit_loss ?? 0) >= 0 ? "#4ade80" : "#f87171" }}>
-                                  {p.profit_loss !== null ? `${p.profit_loss >= 0 ? "+" : ""}$${Math.abs(p.profit_loss).toLocaleString()}` : "—"}
+                                  {p.profit_loss !== null ? `${p.profit_loss >= 0 ? "+" : ""}$${Math.abs(p.profit_loss).toLocaleString()}` : "-"}
                                 </td>
                               </tr>
                             ))}

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -53,8 +53,8 @@ export default function InsightsPage() {
   if (loading || !isPro) return null;
 
   function getStyle(idx: number): { label: string; color: string; meaning: string } {
-    if (idx <= -21) return { label: "TRANS", color: "#60a5fa", meaning: "Facing this team favours OVER — more open play disposals" };
-    if (idx >= 21)  return { label: "STOP",  color: "#f97316", meaning: "Facing this team restricts disposals — UNDER edge applies" };
+    if (idx <= -21) return { label: "TRANS", color: "#60a5fa", meaning: "Facing this team favours OVER - more open play disposals" };
+    if (idx >= 21)  return { label: "STOP",  color: "#f97316", meaning: "Facing this team restricts disposals - UNDER edge applies" };
     return           { label: "BAL",   color: "#888",    meaning: "Standard model prediction applies" };
   }
 
@@ -84,8 +84,8 @@ export default function InsightsPage() {
               <h2 style={{ fontSize: 20, fontWeight: 700, color: "#f0f0f0", margin: 0 }}>Team Style Impact</h2>
             </div>
             <p style={{ fontSize: 13, color: "#666", marginBottom: 20, marginLeft: 36, lineHeight: 1.6 }}>
-              TRANS teams generate more open play disposals — their players tend to run more and accumulate more kicks.
-              STOP teams favour contested ball — fewer disposals but more tackles.
+              TRANS teams generate more open play disposals - their players tend to run more and accumulate more kicks.
+              STOP teams favour contested ball - fewer disposals but more tackles.
               When a TRANS player faces a STOP team&apos;s defence, the model gets a double signal.
             </p>
 
@@ -141,7 +141,7 @@ export default function InsightsPage() {
             <div style={{ background: "#080808", border: "1px solid #f97316", borderRadius: 8, padding: "14px 16px" }}>
               <span style={{ fontSize: 12, color: "#999" }}>
                 <strong style={{ color: "#f97316" }}>How to apply:</strong>{" "}
-                Check the opponent&apos;s style on the DvP page before placing. A MID pick facing a TRANS team is a double tailwind —
+                Check the opponent&apos;s style on the DvP page before placing. A MID pick facing a TRANS team is a double tailwind -
                 the player generates disposals AND the opponent creates more turnovers to run off.
                 Disposal Index: negative = TRANS (kick chains), positive = STOP (stoppages).
               </span>
@@ -241,7 +241,7 @@ export default function InsightsPage() {
                                 )}
                               </div>
                             ) : (
-                              <span style={{ color: "#333" }}>—</span>
+                              <span style={{ color: "#333" }}>-</span>
                             )}
                           </td>
                         );
@@ -305,7 +305,7 @@ export default function InsightsPage() {
               <div style={{ background: "#080808", border: "1px solid #111", borderRadius: 10, padding: "24px" }}>
                 <div style={{ fontSize: 11, color: "#555", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>Structural Edge</div>
                 <p style={{ fontSize: 13, color: "#888", lineHeight: 1.7, margin: 0, marginBottom: 12 }}>
-                  The model historically over-predicts by <strong style={{ color: "#f97316" }}>+0.78 disposals</strong> on average. This creates a systematic UNDER edge — predictions are systematically set slightly high.
+                  The model historically over-predicts by <strong style={{ color: "#f97316" }}>+0.78 disposals</strong> on average. This creates a systematic UNDER edge - predictions are systematically set slightly high.
                 </p>
                 <p style={{ fontSize: 13, color: "#888", lineHeight: 1.7, margin: 0 }}>
                   The optimised configuration reduces this to <strong style={{ color: "#22c55e" }}>+0.09</strong>, near-perfect calibration. Use the Simulator to test optimised weights against historical picks.
@@ -386,7 +386,7 @@ export default function InsightsPage() {
                 {
                   stat: `${strongRate}%`,
                   label: "Raise Your E/V Threshold",
-                  detail: `HC picks (E/V ≥ 0.90) hit ${strongRate}% vs ${filteredRate}% for all filtered picks. Every 0.1 increase in your threshold cuts noise and improves hit rate. When in doubt, filter up — not down.`,
+                  detail: `HC picks (E/V ≥ 0.90) hit ${strongRate}% vs ${filteredRate}% for all filtered picks. Every 0.1 increase in your threshold cuts noise and improves hit rate. When in doubt, filter up - not down.`,
                   color: "#f97316",
                   border: "#f9731620",
                 },
@@ -400,7 +400,7 @@ export default function InsightsPage() {
                 {
                   stat: "3.0+",
                   label: "Premium Lines Edge",
-                  detail: "Picks where the model edge exceeds 3.0 disposals correlate strongly with higher E/V and better win rates. A large raw edge signals the bookmaker has underpriced the line — these are the highest-value opportunities.",
+                  detail: "Picks where the model edge exceeds 3.0 disposals correlate strongly with higher E/V and better win rates. A large raw edge signals the bookmaker has underpriced the line - these are the highest-value opportunities.",
                   color: "#60a5fa",
                   border: "#1e3a5f",
                 },
@@ -414,7 +414,7 @@ export default function InsightsPage() {
                 {
                   stat: "↑ R6",
                   label: "Improving Trend",
-                  detail: "Win rate has trended upward from Round 3 through Round 6 as the model has been recalibrated against live data. Round 6 is the highest-performing round in the 2026 season. More picks = better calibration — early-season samples should be weighted accordingly.",
+                  detail: "Win rate has trended upward from Round 3 through Round 6 as the model has been recalibrated against live data. Round 6 is the highest-performing round in the 2026 season. More picks = better calibration - early-season samples should be weighted accordingly.",
                   color: "#4ade80",
                   border: "#14532d",
                 },

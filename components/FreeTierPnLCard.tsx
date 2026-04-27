@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import pnlData from "@/data/paywall.json";
 
@@ -98,7 +98,7 @@ export function FreeTierPnLCard() {
         </div>
       </div>
 
-      {/* P&L by round — horizontal bar chart */}
+      {/* P&L by round - horizontal bar chart */}
       <div>
         <div style={{ fontSize: 10, fontWeight: 700, color: "#666", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12 }}>
           P&amp;L by Round (3–7)

@@ -1,9 +1,6 @@
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import results from "@/data/results.json";
 import { roundsLabel, currentSeason } from "@/lib/siteData";
-
-const SS = results.season_summary;
 
 export default function AboutPage() {
   return (
@@ -25,7 +22,7 @@ export default function AboutPage() {
             </p>
           </div>
 
-          {/* Section 1 — What is SportSphere HQ */}
+          {/* Section 1 -What is SportSphere HQ */}
           <section style={{ marginBottom: 48 }}>
             <h2 style={{ fontSize: 20, fontWeight: 700, color: "#f0f0f0", margin: "0 0 16px", letterSpacing: "-0.01em" }}>
               What is SportSphere HQ?
@@ -35,7 +32,7 @@ export default function AboutPage() {
                 SportSphere HQ is a statistical model that predicts AFL player disposal counts and evaluates player prop betting lines offered by bookmakers. It identifies picks where the model has genuine confidence the bookmaker line is mispriced.
               </p>
               <p style={{ fontSize: 14, color: "#888", lineHeight: 1.8, margin: "0 0 16px" }}>
-                Every pick is graded using <strong style={{ color: "#f97316" }}>Edge/Volatility (E/V)</strong> — the ratio of predicted edge to historical standard deviation. This measures not just whether the model predicts differently from the line, but whether that difference is statistically meaningful.
+                Every pick is graded using <strong style={{ color: "#f97316" }}>Edge/Volatility (E/V)</strong> -the ratio of predicted edge to historical standard deviation. This measures not just whether the model predicts differently from the line, but whether that difference is statistically meaningful.
               </p>
               <p style={{ fontSize: 14, color: "#888", lineHeight: 1.8, margin: 0 }}>
                 Picks are tiered into <strong style={{ color: "#f97316" }}>HC (High Conviction, E/V ≥ 0.90)</strong>, <strong style={{ color: "#60a5fa" }}>SHARP (E/V 0.70–0.89)</strong>, and <strong style={{ color: "#22c55e" }}>BET (E/V 0.50–0.69)</strong>. Picks below 0.50 are shown for reference only and excluded from recommendations.
@@ -43,16 +40,16 @@ export default function AboutPage() {
             </div>
           </section>
 
-          {/* Section 2 — Track Record */}
+          {/* Section 2 -Track Record */}
           <section style={{ marginBottom: 48 }}>
             <h2 style={{ fontSize: 20, fontWeight: 700, color: "#f0f0f0", margin: "0 0 16px", letterSpacing: "-0.01em" }}>
               Track Record
             </h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 1, background: "#111", borderRadius: 12, overflow: "hidden", marginBottom: 16 }}>
               {[
-                { label: "HC Win Rate", value: `${SS.strong_rate}%`, sub: `${SS.strong_picks} picks · E/V ≥ 0.90`, color: "#f97316" },
-                { label: "Filtered Win Rate", value: `${SS.filtered_rate}%`, sub: `${SS.filtered_picks} picks · E/V ≥ 0.50`, color: "#22c55e" },
-                { label: "Overall Win Rate", value: `${SS.overall_rate}%`, sub: `${SS.total_picks} picks tracked`, color: "#f0f0f0" },
+                { label: "HC Win Rate", value: "67.6%", sub: "71 picks - R3 to R7", color: "#f97316" },
+                { label: "Season P&L", value: "+$18,760", sub: "$1,000 flat stake", color: "#22c55e" },
+                { label: "Rounds Tracked", value: "5", sub: "R3, R4, R5, R6, R7", color: "#f0f0f0" },
               ].map(stat => (
                 <div key={stat.label} style={{ background: "#080808", padding: "20px 24px" }}>
                   <div style={{ fontSize: 10, color: "#555", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>{stat.label}</div>
@@ -68,25 +65,25 @@ export default function AboutPage() {
             </p>
           </section>
 
-          {/* Section 3 — Who Built This */}
+          {/* Section 3 -Who Built This */}
           <section style={{ marginBottom: 48 }}>
             <h2 style={{ fontSize: 20, fontWeight: 700, color: "#f0f0f0", margin: "0 0 16px", letterSpacing: "-0.01em" }}>
               Who Built This?
             </h2>
             <div style={{ background: "#080808", border: "1px solid #111", borderRadius: 12, padding: "24px 28px" }}>
               <p style={{ fontSize: 14, color: "#888", lineHeight: 1.8, margin: "0 0 16px" }}>
-                SportSphere HQ is an independent project built by an AFL fan and software developer who got frustrated by the lack of transparent, data-driven analysis in the player prop space.
+                Built by a financial analyst who spends his days researching companies, reading balance sheets, and modelling cash flows for a living. The same analytical framework that drives investment decisions - edge identification, probability weighting, and disciplined position sizing - turned out to translate directly to AFL disposal markets.
               </p>
               <p style={{ fontSize: 14, color: "#888", lineHeight: 1.8, margin: "0 0 16px" }}>
-                The model was built from scratch using historical AFL player data, bookmaker line history, and a custom Edge/Volatility framework. Every design decision — from the tier system to the position exclusions — is grounded in backtested results, not intuition.
+                SportSphere is what happens when you apply institutional research discipline to sports analytics. The model was built from scratch using historical AFL player data, bookmaker line history, and a custom Edge/Volatility framework. Every design decision - from the tier system to the position exclusions - is grounded in backtested results, not intuition.
               </p>
               <p style={{ fontSize: 14, color: "#888", lineHeight: 1.8, margin: 0 }}>
-                SportSphere HQ is not affiliated with any bookmaker, tipping service, or betting syndicate. There is no subscription fee. The model is published weekly for free.
+                SportSphere HQ is not affiliated with any bookmaker, tipping service, or betting syndicate.
               </p>
             </div>
           </section>
 
-          {/* Section 4 — Legal */}
+          {/* Section 4 -Legal */}
           <section style={{ marginBottom: 48 }}>
             <h2 style={{ fontSize: 20, fontWeight: 700, color: "#f0f0f0", margin: "0 0 16px", letterSpacing: "-0.01em" }}>
               Legal & Disclaimer
@@ -122,14 +119,14 @@ export default function AboutPage() {
             </div>
           </section>
 
-          {/* Section 5 — Contact */}
+          {/* Section 5 -Contact */}
           <section style={{ marginBottom: 0 }}>
             <h2 style={{ fontSize: 20, fontWeight: 700, color: "#f0f0f0", margin: "0 0 16px", letterSpacing: "-0.01em" }}>
               Contact
             </h2>
             <div style={{ background: "#080808", border: "1px solid #111", borderRadius: 12, padding: "24px 28px" }}>
               <p style={{ fontSize: 14, color: "#888", lineHeight: 1.8, margin: "0 0 20px" }}>
-                For questions about the model methodology, data issues, or general feedback — reach out directly.
+                For questions about the model methodology, data issues, or general feedback -reach out directly.
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 {[

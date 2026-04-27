@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "About | SportSphere HQ",
-  description: "What SportSphere HQ is, how it works, our track record, and the legal disclaimer. AFL disposal analytics — not financial advice.",
+  description: "What SportSphere HQ is, how it works, our track record, and the legal disclaimer. AFL disposal analytics - not financial advice.",
   openGraph: {
-    title: "About SportSphere HQ — AFL Disposal Analytics",
+    title: "About SportSphere HQ - AFL Disposal Analytics",
     description: "Independent AFL disposal model with a verified track record. Built on real data, not intuition.",
     type: "website",
   },

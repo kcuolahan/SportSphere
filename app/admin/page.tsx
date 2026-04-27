@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
@@ -135,7 +135,7 @@ export default function AdminPage() {
                 {[
                   { label: "Current Round", value: `R${currentRound}`, color: "#f97316" },
                   { label: "Picks Seeded", value: picksSeeded ? "Yes" : "No", color: picksSeeded ? "#22c55e" : "#f87171" },
-                  { label: "Alert Sent", value: alertStatus?.startsWith("✓") ? "Yes" : "—", color: alertStatus?.startsWith("✓") ? "#22c55e" : "#888" },
+                  { label: "Alert Sent", value: alertStatus?.startsWith("✓") ? "Yes" : "-", color: alertStatus?.startsWith("✓") ? "#22c55e" : "#888" },
                 ].map(s => (
                   <div key={s.label} style={{ background: "#080808", border: "1px solid #1a1a1a", borderRadius: 10, padding: "20px", textAlign: "center" }}>
                     <div style={{ fontSize: 30, fontWeight: 800, color: s.color, letterSpacing: "-0.02em" }}>{s.value}</div>

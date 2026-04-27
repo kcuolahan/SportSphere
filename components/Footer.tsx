@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -117,7 +117,7 @@ export default function Footer() {
           gap: 8,
         }}>
           <p style={{ fontSize: 10, color: "#555", margin: 0 }}>
-            © 2026 SportSphere HQ. Analytics only — not financial or betting advice.
+            © 2026 SportSphere HQ. Analytics only - not financial or betting advice.
           </p>
           <p style={{ fontSize: 10, color: "#555", margin: 0 }}>
             Not affiliated with any bookmaker.

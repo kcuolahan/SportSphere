@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 
@@ -30,11 +30,11 @@ export function EmailSignup({ round = 7, variant = "hero" }: EmailSignupProps) {
       if (data.success) {
         setStatus("success");
       } else {
-        setErrorMsg(data.error ?? "Something went wrong — try again");
+        setErrorMsg(data.error ?? "Something went wrong - try again");
         setStatus("error");
       }
     } catch {
-      setErrorMsg("Something went wrong — try again");
+      setErrorMsg("Something went wrong - try again");
       setStatus("error");
     }
   }
@@ -48,7 +48,7 @@ export function EmailSignup({ round = 7, variant = "hero" }: EmailSignupProps) {
       }}>
         <span style={{ fontSize: 18 }}>✅</span>
         <span style={{ fontSize: 14, color: "#4ade80", fontWeight: 600 }}>
-          You&apos;re in — check your inbox
+          You&apos;re in - check your inbox
         </span>
       </div>
     );
@@ -66,7 +66,7 @@ export function EmailSignup({ round = 7, variant = "hero" }: EmailSignupProps) {
         margin: "0 0 6px",
         letterSpacing: "-0.02em",
       }}>
-        Get Round {round} picks in your inbox — free during beta
+        Get Round {round} picks in your inbox - free during beta
       </h3>
       <p style={{ fontSize: 13, color: "#555", margin: "0 0 16px", lineHeight: 1.6 }}>
         Join others getting the sharpest AFL disposal picks each week.

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -100,7 +100,7 @@ export default function SignupPage() {
         )}
 
         <p style={{ fontSize: 10, color: "#333", marginTop: 24, textAlign: "center", lineHeight: 1.7 }}>
-          Free forever · No credit card · Analytics only — not betting advice
+          Free forever · No credit card · Analytics only - not betting advice
         </p>
       </div>
       <Footer />

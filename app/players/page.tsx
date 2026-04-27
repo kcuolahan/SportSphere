@@ -1,23 +1,46 @@
-"use client";
+﻿"use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 import SearchInput from "@/components/ui/SearchInput";
 import { getPlayers, getCurrentPredictions } from "@/lib/data";
-import { TEAM_COLOURS, getTeamName } from "@/lib/teams";
+import { createClient } from "@supabase/supabase-js";
 import { PLAYERS as PLAYERS_FULL } from "@/data/players";
 import type { Player } from "@/lib/data";
 
-// Build name → slug map from the full players dataset
+// Build name -> slug map from the full players dataset
 const NAME_TO_SLUG = new Map(PLAYERS_FULL.map(p => [p.fullName, p.id]));
 
 const ALL_PLAYERS = getPlayers();
 const predictions = getCurrentPredictions();
-const featuredPlayers = new Set(predictions.picks.map(p => p.player));
 const currentRound = predictions.round;
+
+const TEAM_ABBREV_MAP: Record<string, string> = {
+  Adelaide: "ADE", Brisbane: "BRL", "Brisbane Lions": "BRL",
+  Carlton: "CAR", Collingwood: "COL", Essendon: "ESS",
+  Fremantle: "FRE", Geelong: "GEE", "Gold Coast": "GCS",
+  "GWS Giants": "GWS", "Greater Western Sydney": "GWS",
+  Hawthorn: "HAW", Melbourne: "MEL", "North Melbourne": "NTH",
+  "Port Adelaide": "PTA", Richmond: "RCE", "St Kilda": "STK",
+  Sydney: "SYD", "Sydney Swans": "SYD", "West Coast": "WCE",
+  "West Coast Eagles": "WCE", "Western Bulldogs": "WBD",
+};
+
+const TEAM_FULL_NAMES: Record<string, string> = {
+  ADE: "Adelaide", BRL: "Brisbane Lions", CAR: "Carlton",
+  COL: "Collingwood", ESS: "Essendon", FRE: "Fremantle",
+  GEE: "Geelong", GCS: "Gold Coast", GWS: "GWS Giants",
+  HAW: "Hawthorn", MEL: "Melbourne", NTH: "North Melbourne",
+  PTA: "Port Adelaide", RCE: "Richmond", STK: "St Kilda",
+  SYD: "Sydney", WCE: "West Coast", WBD: "Western Bulldogs",
+};
+
+function normalizeTeam(team: string): string {
+  return TEAM_ABBREV_MAP[team] ?? team;
+}
 
 type Position = "ALL" | "MID" | "DEF" | "FWD" | "RUCK";
 type VolTier = "ALL" | "LOW" | "MODERATE" | "HIGH" | "V.HIGH";
@@ -41,7 +64,7 @@ function TrendIcon({ p }: { p: Player }) {
   const t = p.form_trend ?? (p.avg_2026 - p.avg_2025 > 1.5 ? "UP" : p.avg_2026 - p.avg_2025 < -1.5 ? "DOWN" : "STEADY");
   if (t === "UP") return <span style={{ color: "#22c55e", fontSize: 10 }}>▲</span>;
   if (t === "DOWN") return <span style={{ color: "#ef4444", fontSize: 10 }}>▼</span>;
-  return <span style={{ color: "#555", fontSize: 10 }}>—</span>;
+  return <span style={{ color: "#555", fontSize: 10 }}>-</span>;
 }
 
 function BarChart({ value, max, color }: { value: number; max: number; color: string }) {
@@ -55,7 +78,7 @@ function BarChart({ value, max, color }: { value: number; max: number; color: st
 
 // ── Sparkline component ───────────────────────────────────────────────────────
 function Sparkline({ values, avg }: { values: number[]; avg: number }) {
-  if (!values.length) return <span style={{ fontSize: 10, color: "#555" }}>—</span>;
+  if (!values.length) return <span style={{ fontSize: 10, color: "#555" }}>-</span>;
   const max = Math.max(...values, avg + 2);
   const min = Math.min(...values, avg - 2);
   const range = max - min || 1;
@@ -93,7 +116,7 @@ function PlayerDetail({ p }: { p: Player }) {
   return (
     <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid #111" }}>
 
-      {/* Disposal stats — median, range, above-median rate */}
+      {/* Disposal stats - median, range, above-median rate */}
       <div style={{
         background: "#0a0a0a", border: "1px solid #1f1f1f",
         borderRadius: 8, padding: "12px 14px", marginBottom: 12,
@@ -107,11 +130,11 @@ function PlayerDetail({ p }: { p: Player }) {
         <div>
           <div style={{ fontSize: 9, color: "#aaa", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Season Range</div>
           <div style={{ fontSize: 14, fontWeight: 700 }}>
-            <span style={{ color: "#ef4444" }}>{p.season_low ?? "—"}</span>
-            <span style={{ color: "#555", margin: "0 4px" }}>—</span>
-            <span style={{ color: "#22c55e" }}>{p.season_high ?? "—"}</span>
+            <span style={{ color: "#ef4444" }}>{p.season_low ?? "-"}</span>
+            <span style={{ color: "#555", margin: "0 4px" }}>-</span>
+            <span style={{ color: "#22c55e" }}>{p.season_high ?? "-"}</span>
           </div>
-          <div style={{ fontSize: 10, color: "#666", marginTop: 2 }}>Low — High this season</div>
+          <div style={{ fontSize: 10, color: "#666", marginTop: 2 }}>Low - High this season</div>
         </div>
         <div>
           <div style={{ fontSize: 9, color: "#aaa", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Above Median</div>
@@ -168,7 +191,7 @@ function PlayerDetail({ p }: { p: Player }) {
           { label: "Games '25", value: p.games_2025 },
           { label: "Games '26", value: p.games_2026 },
           { label: "Std Dev", value: p.std_dev.toFixed(1) },
-          { label: "CBA%", value: p.cba_pct > 0 ? `${(p.cba_pct * 100).toFixed(0)}%` : "—" },
+          { label: "CBA%", value: p.cba_pct > 0 ? `${(p.cba_pct * 100).toFixed(0)}%` : "-" },
           { label: "Avg TOG", value: `${(p.avg_tog * 100).toFixed(0)}%` },
           { label: "Play Style", value: p.play_style },
           { label: "Volatility", value: <span style={{ color: VOL_COLOR[p.volatility_tier] ?? "#888" }}>{p.volatility_tier}</span> },
@@ -213,17 +236,40 @@ export default function PlayersPage() {
   const [sort, setSort] = useState<SortOption>("avg_2026");
   const [sortDesc, setSortDesc] = useState(true);
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [hcPlayerNames, setHcPlayerNames] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    async function fetchHCPicks() {
+      try {
+        const supabase = createClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL!,
+          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        );
+        const { data } = await supabase
+          .from("live_picks")
+          .select("player_name")
+          .eq("round", currentRound)
+          .eq("tier", "HC");
+        if (data && data.length > 0) {
+          setHcPlayerNames(new Set(data.map((p: { player_name: string }) => p.player_name)));
+        }
+      } catch {
+        // no badges if fetch fails
+      }
+    }
+    fetchHCPicks();
+  }, []);
 
   const teams = useMemo(() => {
-    const codes = [...new Set(ALL_PLAYERS.map(p => p.team))].sort();
-    return ["ALL", ...codes];
+    const abbrevs = new Set(ALL_PLAYERS.map(p => normalizeTeam(p.team)));
+    return ["ALL", ...[...abbrevs].sort()];
   }, []);
 
   const filtered = useMemo(() => {
     const list = ALL_PLAYERS.filter(p => {
       if (pos !== "ALL" && p.position !== pos) return false;
       if (vol !== "ALL" && p.volatility_tier !== vol) return false;
-      if (team !== "ALL" && p.team !== team) return false;
+      if (team !== "ALL" && normalizeTeam(p.team) !== team) return false;
       if (search) {
         const s = search.toLowerCase();
         return p.name.toLowerCase().includes(s) || p.team.toLowerCase().includes(s);
@@ -308,7 +354,7 @@ export default function PlayersPage() {
           >
             <option value="ALL">All Teams</option>
             {teams.filter(t => t !== "ALL").map(t => (
-              <option key={t} value={t}>{getTeamName(t)} ({t})</option>
+              <option key={t} value={t}>{TEAM_FULL_NAMES[t] ?? t}</option>
             ))}
           </select>
 
@@ -334,9 +380,9 @@ export default function PlayersPage() {
         {/* Count */}
         <div style={{ fontSize: 11, color: "#555", marginBottom: 12 }}>
           {filtered.length} player{filtered.length !== 1 ? "s" : ""} shown
-          {featuredPlayers.size > 0 && (
+          {hcPlayerNames.size > 0 && (
             <span style={{ marginLeft: 8, color: "#f97316" }}>
-              · {filtered.filter(p => featuredPlayers.has(p.name)).length} featured in Round {currentRound} picks
+              · {filtered.filter(p => hcPlayerNames.has(p.name)).length} HC picks in Round {currentRound}
             </span>
           )}
         </div>
@@ -344,7 +390,7 @@ export default function PlayersPage() {
         {/* Player cards */}
         <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
           {filtered.map((p: Player) => {
-            const isFeatured = featuredPlayers.has(p.name);
+            const isFeatured = hcPlayerNames.has(p.name);
             const isOpen = expanded === p.name;
             return (
               <div
@@ -373,11 +419,11 @@ export default function PlayersPage() {
                           borderRadius: 4, padding: "1px 6px", letterSpacing: "0.06em",
                           textTransform: "uppercase",
                         }}>
-                          R{currentRound} Pick
+                          HC Pick
                         </span>
                       )}
                     </div>
-                    <div style={{ fontSize: 13, fontWeight: 500, color: "#aaaaaa" }}>{getTeamName(p.team)} · {p.position} · {p.play_style}</div>
+                    <div style={{ fontSize: 13, fontWeight: 500, color: "#aaaaaa" }}>{TEAM_FULL_NAMES[normalizeTeam(p.team)] ?? p.team} · {p.position} · {p.play_style}</div>
                   </div>
 
                   {/* Stats */}

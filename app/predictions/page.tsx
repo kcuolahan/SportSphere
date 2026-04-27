@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@supabase/supabase-js'
@@ -143,7 +143,7 @@ function PickCard({ pick }: { pick: LivePick }) {
         </div>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: 10, color: '#555', textTransform: 'uppercase', marginBottom: 2 }}>E/V</div>
-          <div style={{ fontSize: 15, fontWeight: 800, color: '#60a5fa' }}>{pick.edge_vol?.toFixed(2) ?? '—'}</div>
+          <div style={{ fontSize: 15, fontWeight: 800, color: '#60a5fa' }}>{pick.edge_vol?.toFixed(2) ?? '-'}</div>
         </div>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: 10, color: '#555', textTransform: 'uppercase', marginBottom: 2 }}>Status</div>
@@ -244,7 +244,7 @@ export default function PredictionsPage() {
         <div style={{ background: '#0d0d0d', border: '1px solid rgba(249,115,22,0.2)', borderRadius: 10, padding: '14px 18px', marginBottom: 36 }}>
           <p style={{ fontSize: 13, color: '#888', margin: 0, lineHeight: 1.7 }}>
             <span style={{ color: '#f97316', fontWeight: 700 }}>HC picks only.</span>{' '}
-            We publish HIGH CONVICTION filtered picks — STRONG model confidence with Edge/Vol ≥ 0.50.
+            We publish HIGH CONVICTION filtered picks - STRONG model confidence with Edge/Vol ≥ 0.50.
             The full model generates ~150 predictions per round; these are the subset we stand behind.
             All results verified against official AFL game data.
           </p>
@@ -426,7 +426,7 @@ export default function PredictionsPage() {
                   </p>
                   <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
                     <a href="/auth/payment" style={{ display: 'inline-block', background: '#f97316', color: '#000', borderRadius: 8, padding: '11px 24px', fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
-                      Unlock All Signals — $29/month
+                      Unlock All Signals - $29/month
                     </a>
                   </div>
                 </div>

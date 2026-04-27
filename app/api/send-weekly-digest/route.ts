@@ -7,11 +7,7 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-export async function GET(request: Request) {
-  const authHeader = request.headers.get('authorization')
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+async function runDigest() {
 
   try {
     const { data: proUsers } = await supabase
@@ -154,5 +150,27 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error('Weekly digest error:', error)
     return NextResponse.json({ error: 'Failed to send digest' }, { status: 500 })
+  }
+}
+
+const ADMIN_PW = 'sportsphereadmin2026'
+
+export async function GET(request: Request) {
+  const authHeader = request.headers.get('authorization')
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}` && authHeader !== `Bearer ${ADMIN_PW}`) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+  return runDigest()
+}
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json()
+    if (body.secret !== ADMIN_PW) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+    return runDigest()
+  } catch {
+    return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
   }
 }

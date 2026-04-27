@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
@@ -217,12 +217,12 @@ export default function DashboardPage() {
               <div style={{ background: "#080808", border: "1px solid #1a1a1a", borderRadius: 12, padding: "24px 28px" }}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: "#888", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 16 }}>Account Details</div>
                 {[
-                  { label: "Email", value: profile?.email ?? "—" },
-                  { label: "Member since", value: profile?.created_at ? new Date(profile.created_at).toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" }) : "—" },
+                  { label: "Email", value: profile?.email ?? "-" },
+                  { label: "Member since", value: profile?.created_at ? new Date(profile.created_at).toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" }) : "-" },
                   { label: "Plan", value: isPro ? "Pro" : "Free" },
                   ...(isPro ? [
                     { label: "Status", value: "Active" },
-                    { label: "Next billing", value: proUntil ? proUntil.toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" }) : "—" },
+                    { label: "Next billing", value: proUntil ? proUntil.toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" }) : "-" },
                     { label: "Season ends", value: "September 2026" },
                   ] : []),
                 ].map(row => (

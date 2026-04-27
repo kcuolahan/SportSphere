@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "SportSphere HQ — AFL Disposal Analytics | Australia's Sharpest Model",
+    default: "SportSphere HQ - AFL Disposal Analytics | Australia's Sharpest Model",
     template: "%s | SportSphere HQ",
   },
   description:
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     apple: "/logo.svg",
   },
   openGraph: {
-    title: "SportSphere HQ — AFL Disposal Analytics",
+    title: "SportSphere HQ - AFL Disposal Analytics",
     description: "67.6% HC win rate · $18,760 gross profit · 71 HC picks tracked. Australia's sharpest AFL disposal model.",
     siteName: "SportSphere HQ",
     locale: "en_AU",
@@ -37,13 +37,13 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "SportSphere HQ — AFL Disposal Analytics. 67.6% HC win rate. $18,760 gross profit.",
+        alt: "SportSphere HQ - AFL Disposal Analytics. 67.6% HC win rate. $18,760 gross profit.",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "SportSphere HQ — AFL Disposal Analytics",
+    title: "SportSphere HQ - AFL Disposal Analytics",
     description: "67.6% HC win rate · $18,760 gross profit · 71 HC picks. Australia's sharpest AFL disposal model.",
     images: ["/og-image.png"],
   },
@@ -60,6 +60,23 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-black">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "SportSphere HQ",
+              "url": "https://www.sportspherehq.com",
+              "description": "AFL disposal analytics platform with a verified 67.6% HC win rate track record",
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://www.sportspherehq.com/players?q={search_term_string}",
+                "query-input": "required name=search_term_string",
+              },
+            }),
+          }}
+        />
         {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
           <>
             <Script

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -21,10 +21,10 @@ export default function RoundPreviewPage() {
           </div>
           <h1 style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 14px" }}>Round Preview</h1>
           <p style={{ fontSize: 14, color: "#555", lineHeight: 1.7, margin: "0 0 32px" }}>
-            Pre-round analysis including key matchups, DvP quick hits, and team news — available to Pro subscribers before picks go live.
+            Pre-round analysis including key matchups, DvP quick hits, and team news - available to Pro subscribers before picks go live.
           </p>
           <Link href="/auth/payment" style={{ background: "#f97316", color: "#000", borderRadius: 8, padding: "13px 28px", fontSize: 14, fontWeight: 700, textDecoration: "none", display: "inline-block" }}>
-            Unlock Pro — $29/month →
+            Unlock Pro - $29/month →
           </Link>
         </div>
         <Footer />
@@ -130,7 +130,7 @@ export default function RoundPreviewPage() {
         {/* Bottom note */}
         <div style={{ paddingTop: 24, borderTop: "1px solid #111", textAlign: "center" }}>
           <p style={{ fontSize: 11, color: "#444", lineHeight: 1.7, margin: 0 }}>
-            Full HC picks published Thursday · Analytics only — not financial advice · 18+ · Gamble responsibly
+            Full HC picks published Thursday · Analytics only - not financial advice · 18+ · Gamble responsibly
           </p>
         </div>
       </div>

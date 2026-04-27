@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
@@ -23,10 +23,6 @@ const FAQ_ITEMS = [
   {
     q: "Is this financial advice?",
     a: "No. SportSphere HQ provides analytical data for informational purposes only. Nothing here is betting or financial advice. Always bet responsibly.",
-  },
-  {
-    q: "What's your refund policy?",
-    a: "If you're not satisfied in your first 7 days, contact us for a full refund — no questions asked.",
   },
   {
     q: "Do you cover NRL or other sports?",
@@ -63,7 +59,7 @@ function PaymentContent() {
   return (
     <div style={{ maxWidth: 780, margin: "0 auto", padding: "100px 20px 60px" }}>
 
-      {/* Hook — headline */}
+      {/* Hook - headline */}
       <div style={{ textAlign: "center", marginBottom: 48 }}>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#030f08", border: "1px solid #14532d", borderRadius: 20, padding: "5px 14px", marginBottom: 20 }}>
           <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e" }} />
@@ -165,7 +161,7 @@ function PaymentContent() {
             letterSpacing: "0.01em",
           }}
         >
-          {loading ? "Redirecting to Stripe…" : "Get Pro — $29/month →"}
+          {loading ? "Redirecting to Stripe…" : "Get Pro - $29/month →"}
         </button>
 
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginTop: 14 }}>
@@ -176,22 +172,7 @@ function PaymentContent() {
           <div style={{ width: 1, height: 12, background: "#222" }} />
           <span style={{ fontSize: 11, color: "#444" }}>Cancel anytime</span>
           <div style={{ width: 1, height: 12, background: "#222" }} />
-          <span style={{ fontSize: 11, color: "#444" }}>7-day guarantee</span>
-        </div>
-      </div>
-
-      {/* Guarantee */}
-      <div style={{
-        background: "#030f08", border: "1px solid #14532d",
-        borderRadius: 12, padding: "24px 28px", marginBottom: 40,
-        display: "flex", alignItems: "flex-start", gap: 16,
-      }}>
-        <div style={{ fontSize: 28, flexShrink: 0, lineHeight: 1 }}>🛡</div>
-        <div>
-          <div style={{ fontSize: 15, fontWeight: 700, color: "#4ade80", marginBottom: 6 }}>7-Day Money-Back Guarantee</div>
-          <p style={{ fontSize: 13, color: "#4ade8099", margin: 0, lineHeight: 1.7 }}>
-            If you&apos;re not completely satisfied within your first 7 days, email us for a full refund. No forms, no questions, no hassle. We&apos;re confident you&apos;ll stay once you see the picks.
-          </p>
+          <span style={{ fontSize: 11, color: "#444" }}>AFL season access</span>
         </div>
       </div>
 

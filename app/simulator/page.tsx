@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 // TODO: Gate behind Pro subscription in Phase 3
 
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
@@ -232,7 +232,7 @@ function CompareRow({ label, original, simulated, isCount = false }: {
   const deltaStr = isCount
     ? `${delta >= 0 ? "+" : ""}${Math.round(delta)}`
     : `${delta >= 0 ? "+" : ""}${delta.toFixed(1)}%`;
-  const arrow = delta > 0 ? "▲" : delta < 0 ? "▼" : "—";
+  const arrow = delta > 0 ? "▲" : delta < 0 ? "▼" : "-";
   return (
     <div style={{
       display: "grid", gridTemplateColumns: "1fr 90px 90px 90px",
@@ -258,11 +258,11 @@ function generateInsight(orig: SimStats, sim: SimStats): string {
   if (Math.abs(filteredDelta) < 0.5 && Math.abs(strongDelta) < 0.5)
     return "Your configuration produces similar results to the live model. Try adjusting the STRONG thresholds or opp sensitivity for a bigger impact.";
   if (filteredDelta > 3 && countDelta < -3)
-    return `Filtered win rate improves by ${filteredDelta.toFixed(1)}% but reduces actionable picks by ${Math.abs(countDelta)}. Fewer, sharper picks — consider if that suits your approach.`;
+    return `Filtered win rate improves by ${filteredDelta.toFixed(1)}% but reduces actionable picks by ${Math.abs(countDelta)}. Fewer, sharper picks - consider if that suits your approach.`;
   if (filteredDelta > 2)
     return `Filtered win rate improves by ${filteredDelta.toFixed(1)}% with ${countDelta >= 0 ? "no reduction" : `${Math.abs(countDelta)} fewer`} actionable picks. Strong configuration.`;
   if (filteredDelta < -2)
-    return `Filtered win rate drops ${Math.abs(filteredDelta).toFixed(1)}%. This configuration is weaker than the current model — try reducing opp sensitivity or adjusting the season blend.`;
+    return `Filtered win rate drops ${Math.abs(filteredDelta).toFixed(1)}%. This configuration is weaker than the current model - try reducing opp sensitivity or adjusting the season blend.`;
   if (strongDelta > 3)
     return `STRONG tier accuracy improves by ${strongDelta.toFixed(1)}% under this configuration. Threshold and sensitivity changes are working well together.`;
   return `Configuration differs from live model. Filtered rate: ${filteredDelta >= 0 ? "+" : ""}${filteredDelta.toFixed(1)}%, STRONG rate: ${strongDelta >= 0 ? "+" : ""}${strongDelta.toFixed(1)}%.`;
@@ -560,7 +560,7 @@ export default function SimulatorPage() {
 
   const { isPro, loading: proLoading } = useProAccess();
 
-  // This Week's Impact — current picks under current vs default weights
+  // This Week's Impact - current picks under current vs default weights
   const thisWeekImpact = useMemo(() => {
     return CURRENT_PICKS.map(p => {
       const rawInputs = buildRawInputsFromCurrentPick(p);
@@ -649,7 +649,7 @@ export default function SimulatorPage() {
           Pro Feature
         </div>
         <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.02em", margin: "0 0 12px" }}>
-          Simulator Access — Pro Only
+          Simulator Access - Pro Only
         </h2>
         <p style={{ fontSize: 14, color: "#666", lineHeight: 1.7, marginBottom: 32, maxWidth: 400, marginLeft: "auto", marginRight: "auto" }}>
           Optimize model weights and run grid search across {TOTAL_COMBOS.toLocaleString()} parameter combinations with full historical backtesting.
@@ -661,7 +661,7 @@ export default function SimulatorPage() {
           fontSize: 15, fontWeight: 700, textDecoration: "none",
           marginBottom: 12,
         }}>
-          Upgrade to Pro — $29/month
+          Upgrade to Pro - $29/month
         </a>
         <div style={{ fontSize: 12, color: "#555", marginTop: 8 }}>
           Cancel anytime. No lock-in.
@@ -753,14 +753,14 @@ export default function SimulatorPage() {
               </SectionPanel>
 
               <SectionPanel title="Edge Thresholds" defaultOpen={false}>
-                <SliderControl label="STRONG — MID" value={w.strong_threshold_mid} min={1.5} max={5.0} step={0.25}
+                <SliderControl label="STRONG - MID" value={w.strong_threshold_mid} min={1.5} max={5.0} step={0.25}
                   format={v => `${v.toFixed(2)} disp`} onChange={v => updateWeight("strong_threshold_mid", v)} />
-                <SliderControl label="STRONG — DEF" value={w.strong_threshold_def} min={1.5} max={5.0} step={0.25}
+                <SliderControl label="STRONG - DEF" value={w.strong_threshold_def} min={1.5} max={5.0} step={0.25}
                   format={v => `${v.toFixed(2)} disp`} onChange={v => updateWeight("strong_threshold_def", v)} />
-                <SliderControl label="STRONG — FWD" value={w.strong_threshold_fwd} min={2.0} max={7.0} step={0.25}
+                <SliderControl label="STRONG - FWD" value={w.strong_threshold_fwd} min={2.0} max={7.0} step={0.25}
                   format={v => `${v.toFixed(2)} disp`} onChange={v => updateWeight("strong_threshold_fwd", v)}
                   hint="FWDs excluded from bet filter regardless" />
-                <SliderControl label="STRONG — RUCK" value={w.strong_threshold_ruck} min={2.0} max={7.0} step={0.25}
+                <SliderControl label="STRONG - RUCK" value={w.strong_threshold_ruck} min={2.0} max={7.0} step={0.25}
                   format={v => `${v.toFixed(2)} disp`} onChange={v => updateWeight("strong_threshold_ruck", v)} />
                 <SliderControl label="Premium line threshold" value={w.premium_line_threshold} min={20} max={35} step={1}
                   format={v => `≥${v} disp`} onChange={v => updateWeight("premium_line_threshold", v)} />
@@ -851,12 +851,12 @@ export default function SimulatorPage() {
                       {!isPro && <span style={{ marginLeft: 6, fontSize: 8, color: "#f97316", background: "#f9731618", border: "1px solid #f9731440", borderRadius: 3, padding: "1px 4px" }}>PRO</span>}
                     </button>
                   )}
-                  {!isPro && !isSearching && <div style={{ position: "absolute", inset: 0, borderRadius: 6, backdropFilter: "blur(2px)", background: "rgba(0,0,0,0.4)", cursor: "not-allowed" }} onClick={() => alert("Pro feature — set ss_pro_access=1 in localStorage to enable")} />}
+                  {!isPro && !isSearching && <div style={{ position: "absolute", inset: 0, borderRadius: 6, backdropFilter: "blur(2px)", background: "rgba(0,0,0,0.4)", cursor: "not-allowed" }} onClick={() => alert("Pro feature - set ss_pro_access=1 in localStorage to enable")} />}
                 </div>
 
                 <div style={{ position: "relative" }}>
                   <button
-                    onClick={isPro ? runR7Optimisation : () => alert("Pro feature — coming soon")}
+                    onClick={isPro ? runR7Optimisation : () => alert("Pro feature - coming soon")}
                     disabled={isSearching}
                     style={{
                       width: "100%", background: "#0a0800", border: "1px solid #f9731630", borderRadius: 6,
@@ -867,7 +867,7 @@ export default function SimulatorPage() {
                     ⚡ Optimise for Round {CURRENT_PREDICTIONS.round}
                     {!isPro && <span style={{ marginLeft: 6, fontSize: 8, color: "#f97316", background: "#f9731618", border: "1px solid #f9731440", borderRadius: 3, padding: "1px 4px" }}>PRO</span>}
                   </button>
-                  {!isPro && <div style={{ position: "absolute", inset: 0, borderRadius: 6, backdropFilter: "blur(2px)", background: "rgba(0,0,0,0.4)", cursor: "not-allowed" }} onClick={() => alert("Pro feature — set ss_pro_access=1 in localStorage to enable")} />}
+                  {!isPro && <div style={{ position: "absolute", inset: 0, borderRadius: 6, backdropFilter: "blur(2px)", background: "rgba(0,0,0,0.4)", cursor: "not-allowed" }} onClick={() => alert("Pro feature - set ss_pro_access=1 in localStorage to enable")} />}
                 </div>
 
                 <button onClick={exportConfig} disabled={isSearching} style={{
@@ -885,7 +885,7 @@ export default function SimulatorPage() {
                     Save Config
                     {!isPro && <span style={{ marginLeft: 6, fontSize: 8, color: "#f97316", background: "#f9731618", border: "1px solid #f9731440", borderRadius: 3, padding: "1px 4px" }}>PRO</span>}
                   </button>
-                  {!isPro && <div style={{ position: "absolute", inset: 0, borderRadius: 6, backdropFilter: "blur(2px)", background: "rgba(0,0,0,0.4)", cursor: "not-allowed" }} onClick={() => alert("Pro feature — set ss_pro_access=1 in localStorage to enable")} />}
+                  {!isPro && <div style={{ position: "absolute", inset: 0, borderRadius: 6, backdropFilter: "blur(2px)", background: "rgba(0,0,0,0.4)", cursor: "not-allowed" }} onClick={() => alert("Pro feature - set ss_pro_access=1 in localStorage to enable")} />}
                 </div>
               </div>
 
@@ -996,7 +996,7 @@ export default function SimulatorPage() {
             <div style={{ position: "relative", background: "#080808", border: "1px solid #111", borderRadius: 12, marginBottom: 16, overflow: "hidden" }}>
               <div style={{ padding: "10px 14px", borderBottom: "1px solid #111", display: "flex", alignItems: "center", gap: 8 }}>
                 <span style={{ fontSize: 10, fontWeight: 700, color: "#555", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-                  This Week&apos;s Impact — Round {CURRENT_PREDICTIONS.round}
+                  This Week&apos;s Impact - Round {CURRENT_PREDICTIONS.round}
                 </span>
                 {!isPro && <span style={{ fontSize: 8, fontWeight: 800, color: "#f97316", background: "#f9731618", border: "1px solid #f9731440", borderRadius: 3, padding: "1px 5px", marginLeft: "auto" }}>PRO</span>}
                 {isPro && <span style={{ fontSize: 9, color: "#555", marginLeft: "auto" }}>{CURRENT_PICKS.length} picks</span>}
@@ -1050,7 +1050,7 @@ export default function SimulatorPage() {
               ) : (
                 <div style={{ padding: "24px 14px", textAlign: "center" }}>
                   <div style={{ fontSize: 12, color: "#555", marginBottom: 8 }}>See how current weights affect Round {CURRENT_PREDICTIONS.round} picks in real time.</div>
-                  <div style={{ fontSize: 11, color: "#444" }}>Pro feature — coming soon</div>
+                  <div style={{ fontSize: 11, color: "#444" }}>Pro feature - coming soon</div>
                 </div>
               )}
               {!isPro && (
@@ -1111,7 +1111,7 @@ export default function SimulatorPage() {
               )}
               {Math.abs(biasStats.avgBias) <= 1 && (
                 <div style={{ padding: "8px 14px", fontSize: 11, color: "#666" }}>
-                  Bias within ±1 disposal — model is well-calibrated under this configuration.
+                  Bias within ±1 disposal - model is well-calibrated under this configuration.
                 </div>
               )}
             </div>
@@ -1147,7 +1147,7 @@ export default function SimulatorPage() {
                     <span style={{ fontSize: 13, color: "#666" }}>{ps.origRate}%</span>
                     <span style={{ fontSize: 13, fontWeight: 700, color: "#f0f0f0" }}>{ps.simRate}%</span>
                     <span style={{ fontSize: 11, fontWeight: 700, color: delta > 0 ? "#22c55e" : delta < 0 ? "#ef4444" : "#666" }}>
-                      {delta >= 0 ? "+" : ""}{delta.toFixed(1)}% {delta > 0 ? "▲" : delta < 0 ? "▼" : "—"}
+                      {delta >= 0 ? "+" : ""}{delta.toFixed(1)}% {delta > 0 ? "▲" : delta < 0 ? "▼" : "-"}
                     </span>
                   </div>
                 );
@@ -1181,7 +1181,7 @@ export default function SimulatorPage() {
                     <span style={{ fontSize: 13, color: "#666" }}>{rs.origRate}%</span>
                     <span style={{ fontSize: 13, fontWeight: 700, color: "#f0f0f0" }}>{rs.simRate}%</span>
                     <span style={{ fontSize: 11, fontWeight: 700, color: delta > 0 ? "#22c55e" : delta < 0 ? "#ef4444" : "#666" }}>
-                      {delta >= 0 ? "+" : ""}{delta.toFixed(1)}% {delta > 0 ? "▲" : delta < 0 ? "▼" : "—"}
+                      {delta >= 0 ? "+" : ""}{delta.toFixed(1)}% {delta > 0 ? "▲" : delta < 0 ? "▼" : "-"}
                     </span>
                   </div>
                 );

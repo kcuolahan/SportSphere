@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 
@@ -131,7 +131,7 @@ export default function SeedPicksPage() {
                   <p className="text-xs font-semibold text-green-500">Seeded picks:</p>
                   {result.picks.map((pick: any, i: number) => (
                     <p key={i} className="text-xs text-green-500/70">
-                      {pick.player_name} ({pick.team}) — {pick.prediction} {pick.line}
+                      {pick.player_name} ({pick.team}) - {pick.prediction} {pick.line}
                     </p>
                   ))}
                 </div>
