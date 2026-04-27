@@ -108,24 +108,24 @@ export async function POST(req: Request) {
   if (event.type === "invoice.paid") {
     const invoice = event.data.object as Stripe.Invoice;
     const customerId = invoice.customer as string;
-    const subscriptionId = invoice.subscription as string;
 
-    if (customerId && subscriptionId) {
+    if (customerId) {
       const customer = await stripe.customers.retrieve(customerId);
       if (!customer.deleted) {
         const c = customer as Stripe.Customer;
         if (c.email) {
-          const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-          const periodEnd = subscription.items?.data?.[0]?.current_period_end;
+          const subscriptions = await stripe.subscriptions.list({ customer: customerId, status: "active", limit: 1 });
+          const sub = subscriptions.data[0];
+          const periodEnd = sub?.items?.data?.[0]?.current_period_end;
           const currentPeriodEnd = periodEnd ? new Date(periodEnd * 1000) : null;
 
           await supabase.from("user_profiles").upsert(
             {
               email: c.email,
               is_pro: true,
-              pro_until: currentPeriodEnd?.toISOString() ?? null,
+              ...(currentPeriodEnd && { pro_until: currentPeriodEnd.toISOString() }),
+              ...(sub?.id && { stripe_subscription_id: sub.id }),
               stripe_customer_id: customerId,
-              stripe_subscription_id: subscriptionId,
               updated_at: new Date().toISOString(),
             },
             { onConflict: "email" },
