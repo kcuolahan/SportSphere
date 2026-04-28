@@ -267,6 +267,20 @@ export default function PredictionsPage() {
           </div>
         )}
 
+        {/* ── PRO STATUS BANNER ── */}
+        {isPro && (
+          <div style={{
+            background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.2)',
+            borderRadius: 10, padding: '10px 18px', marginBottom: 16,
+            display: 'flex', alignItems: 'center', gap: 8,
+          }}>
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#4ade80', flexShrink: 0 }} />
+            <span style={{ fontSize: 13, color: '#4ade80', fontWeight: 600 }}>
+              Pro access active — all picks unlocked
+            </span>
+          </div>
+        )}
+
         {/* ── HC DISCLOSURE ── */}
         <div style={{ background: '#0d0d0d', border: '1px solid rgba(249,115,22,0.2)', borderRadius: 10, padding: '14px 18px', marginBottom: 36 }}>
           <p style={{ fontSize: 13, color: '#888', margin: 0, lineHeight: 1.7 }}>
