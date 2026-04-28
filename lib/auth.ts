@@ -1,6 +1,27 @@
 'use client'
-import { useState, useEffect, useCallback } from 'react'
-import { createClient } from '@supabase/supabase-js'
+import { useState, useEffect } from 'react'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
+
+// Singleton client — created once, session persists across renders
+let _supabase: SupabaseClient | null = null
+
+function getSupabase(): SupabaseClient {
+  if (!_supabase) {
+    _supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true,
+          storageKey: 'supabase-auth',
+        },
+      }
+    )
+  }
+  return _supabase
+}
 
 export interface ProAccess {
   isPro: boolean
@@ -16,77 +37,88 @@ export function useProAccess(): ProAccess {
   const [loading, setLoading] = useState(true)
   const [userEmail, setUserEmail] = useState<string | null>(null)
 
-  const checkStatus = useCallback(async () => {
+  async function check() {
+    const supabase = getSupabase()
     try {
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-      )
+      const { data: { session }, error: sessionError } =
+        await supabase.auth.getSession()
 
-      const { data: { session } } = await supabase.auth.getSession()
+      if (sessionError) {
+        console.error('[auth] session error:', sessionError.message)
+        setLoading(false)
+        return
+      }
 
       if (!session?.user) {
         setIsLoggedIn(false)
         setIsPro(false)
-        setUserEmail(null)
         setLoading(false)
         return
       }
 
+      const user = session.user
       setIsLoggedIn(true)
-      setUserEmail(session.user.email || null)
+      setUserEmail(user.email || null)
 
-      // Check by email first (webhook uses email as conflict key)
-      const { data } = await supabase
+      // Query by email first — webhook inserts use email as conflict key
+      const { data: byEmail, error: emailErr } = await supabase
         .from('user_profiles')
-        .select('is_pro')
-        .eq('email', session.user.email!)
+        .select('is_pro, pro_until, email, id')
+        .eq('email', user.email!)
         .maybeSingle()
 
-      if (data) {
-        setIsPro(data.is_pro === true)
+      console.log('[auth] byEmail:', byEmail, emailErr?.message)
+
+      if (byEmail != null) {
+        setIsPro(byEmail.is_pro === true)
         setLoading(false)
         return
       }
 
-      // Fallback: check by user ID
-      const { data: byId } = await supabase
+      // Fallback: query by auth UUID
+      const { data: byId, error: idErr } = await supabase
         .from('user_profiles')
-        .select('is_pro')
-        .eq('id', session.user.id)
+        .select('is_pro, pro_until')
+        .eq('id', user.id)
         .maybeSingle()
+
+      console.log('[auth] byId:', byId, idErr?.message)
 
       setIsPro(byId?.is_pro === true)
+      setLoading(false)
     } catch (e) {
-      console.error('Auth error:', e)
-    } finally {
+      console.error('[auth] critical error:', e)
       setLoading(false)
     }
-  }, [])
+  }
 
   useEffect(() => {
-    checkStatus()
+    const supabase = getSupabase()
 
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
+    check()
 
-    const { data: { subscription } } =
-      supabase.auth.onAuthStateChange((event) => {
-        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-          checkStatus()
-        }
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        console.log('[auth] state change:', event)
         if (event === 'SIGNED_OUT') {
           setIsPro(false)
           setIsLoggedIn(false)
           setUserEmail(null)
           setLoading(false)
+        } else if (session) {
+          check()
         }
-      })
+      }
+    )
 
     return () => subscription.unsubscribe()
-  }, [checkStatus])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-  return { isPro, isLoggedIn, loading, userEmail, recheckPro: checkStatus }
+  const recheckPro = async () => {
+    setLoading(true)
+    await check()
+  }
+
+  return { isPro, isLoggedIn, loading, userEmail, recheckPro }
 }
