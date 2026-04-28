@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import Nav from '@/components/Nav'
+import { AFLSidebar } from '@/components/AFLSidebar'
 import Footer from '@/components/Footer'
 import { PlayerAvatar } from '@/components/PlayerAvatar'
 import { useProAccess } from '@/lib/auth'
@@ -222,6 +223,9 @@ export default function PredictionsPage() {
   const perBetAvg = Math.round(stats.hc.grossPL / Math.max(stats.hc.totalPicks, 1))
 
   return (
+    <div className="flex min-h-screen bg-[#0a0a0a]">
+      <AFLSidebar />
+      <div className="flex-1 min-w-0">
     <div style={{ minHeight: '100vh', background: '#000', color: '#f0f0f0', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
       <Nav />
 
@@ -472,6 +476,8 @@ export default function PredictionsPage() {
       </div>
 
       <Footer />
+    </div>
+      </div>
     </div>
   )
 }

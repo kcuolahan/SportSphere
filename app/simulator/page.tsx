@@ -3,6 +3,7 @@
 
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import Nav from "@/components/Nav";
+import { AFLSidebar } from "@/components/AFLSidebar";
 import Footer from "@/components/Footer";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 import {
@@ -672,6 +673,9 @@ export default function SimulatorPage() {
   );
 
   return (
+    <div className="flex min-h-screen bg-[#0a0a0a]">
+      <AFLSidebar />
+      <div className="flex-1 min-w-0">
     <div style={{ minHeight: "100vh", background: "#000", color: "#f0f0f0", fontFamily: "system-ui, -apple-system, sans-serif" }}>
       <Nav />
 
@@ -1439,6 +1443,8 @@ export default function SimulatorPage() {
       </div>
 
       <Footer />
+    </div>
+      </div>
     </div>
   );
 }

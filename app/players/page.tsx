@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import Nav from "@/components/Nav";
+import { AFLSidebar } from "@/components/AFLSidebar";
 import Footer from "@/components/Footer";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 import SearchInput from "@/components/ui/SearchInput";
@@ -291,6 +292,9 @@ export default function PlayersPage() {
   const volTiers: VolTier[] = ["ALL", "LOW", "MODERATE", "HIGH", "V.HIGH"];
 
   return (
+    <div className="flex min-h-screen bg-[#0a0a0a]">
+      <AFLSidebar />
+      <div className="flex-1 min-w-0">
     <div style={{ minHeight: "100vh", background: "#000", color: "#f0f0f0", fontFamily: "system-ui, -apple-system, sans-serif" }}>
       <Nav />
 
@@ -465,6 +469,8 @@ export default function PlayersPage() {
       </div>
 
       <Footer />
+    </div>
+      </div>
     </div>
   );
 }

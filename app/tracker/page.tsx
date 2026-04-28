@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import Nav from "@/components/Nav";
+import { AFLSidebar } from "@/components/AFLSidebar";
 import Footer from "@/components/Footer";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { getCurrentPredictions, getPlayers } from "@/lib/data";
@@ -208,6 +209,9 @@ export default function TrackerPage() {
   );
 
   return (
+    <div className="flex min-h-screen bg-[#0a0a0a]">
+      <AFLSidebar />
+      <div className="flex-1 min-w-0">
     <div style={{ minHeight: "100vh", background: "#000", color: "#f0f0f0", fontFamily: "system-ui, -apple-system, sans-serif", position: "relative" }}>
       <Nav />
 
@@ -503,6 +507,8 @@ export default function TrackerPage() {
       </div>
 
       <Footer />
+    </div>
+      </div>
     </div>
   );
 }

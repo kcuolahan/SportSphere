@@ -124,15 +124,27 @@ export default function ProWelcomePage() {
         </p>
 
         {/* Primary CTA */}
-        <Link href="/predictions" style={{
-          display: "inline-block",
-          padding: "14px 32px", borderRadius: 8,
-          background: "#f97316", color: "#000",
-          fontSize: 15, fontWeight: 700, textDecoration: "none",
-          marginBottom: 48,
-        }}>
-          View Round {round} Picks →
-        </Link>
+        <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: 48 }}>
+          <Link href="/predictions" style={{
+            display: "inline-block",
+            padding: "14px 32px", borderRadius: 8,
+            background: "#f97316", color: "#000",
+            fontSize: 15, fontWeight: 700, textDecoration: "none",
+          }}>
+            View Round {round} Picks →
+          </Link>
+          <button
+            onClick={() => window.location.href = '/predictions'}
+            style={{
+              padding: "14px 24px", borderRadius: 8,
+              background: "transparent", color: "#888",
+              fontSize: 15, fontWeight: 600,
+              border: "1px solid #1f1f1f", cursor: "pointer",
+            }}
+          >
+            View My Picks
+          </button>
+        </div>
 
         {/* Quick access grid */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 36, textAlign: "left" }}>

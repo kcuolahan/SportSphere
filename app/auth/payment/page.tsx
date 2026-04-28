@@ -6,6 +6,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { AnnualROIProof } from "@/components/AnnualROIProof";
 import { useStats } from "@/lib/useStats";
+import { useProAccess } from "@/lib/auth";
 
 const FAQ_ITEMS = [
   {
@@ -37,6 +38,7 @@ function PaymentContent() {
   const [error, setError] = useState<string | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const stats = useStats();
+  const { isPro } = useProAccess();
 
   async function handlePay() {
     setError(null);
@@ -95,10 +97,12 @@ function PaymentContent() {
         ))}
       </div>
 
-      {/* ROI proof */}
-      <div style={{ marginBottom: 32 }}>
-        <AnnualROIProof />
-      </div>
+      {/* ROI proof — only show to non-pro users */}
+      {!isPro && (
+        <div style={{ marginBottom: 32 }}>
+          <AnnualROIProof />
+        </div>
+      )}
 
       {/* Payment card */}
       <div style={{
