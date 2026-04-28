@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from "react";
 import Nav from "@/components/Nav";
-import { AFLSidebar } from "@/components/AFLSidebar";
 import Footer from "@/components/Footer";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { getTeamStyle, getCurrentPredictions, getPlayers } from "@/lib/data";
@@ -449,9 +448,6 @@ export default function DefencePage() {
 
   return (
     <ErrorBoundary>
-    <div className="flex min-h-screen bg-[#0a0a0a]">
-      <AFLSidebar />
-      <div className="flex-1 min-w-0">
     <div style={{ minHeight: "100vh", background: "#000", color: "#f0f0f0", fontFamily: "system-ui, -apple-system, sans-serif" }}>
       <Nav />
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "84px 20px 60px" }}>
@@ -612,8 +608,6 @@ export default function DefencePage() {
       </div>
       <Footer />
 
-    </div>
-      </div>
     </div>
     </ErrorBoundary>
   );

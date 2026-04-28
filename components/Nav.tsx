@@ -3,37 +3,19 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { useProAccess } from '@/lib/auth'
-import { createClient } from '@supabase/supabase-js'
 
 export default function Nav() {
   const pathname = usePathname()
-  const { isPro, isLoggedIn, loading } = useProAccess()
-  const [userEmail, setUserEmail] = useState<string | null>(null)
+  const { isPro, isLoggedIn, loading, userEmail, signOut } = useProAccess()
   const [currentRound, setCurrentRound] = useState(8)
   const [mobileOpen, setMobileOpen] = useState(false)
 
   useEffect(() => {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUserEmail(session?.user?.email || null)
-    })
     fetch('/api/current-round')
       .then(r => r.json())
       .then(d => setCurrentRound(d.round || 8))
       .catch(() => {})
-  }, [isLoggedIn])
-
-  const handleSignOut = async () => {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
-    await supabase.auth.signOut()
-    window.location.href = '/'
-  }
+  }, [])
 
   return (
     <>
@@ -126,7 +108,7 @@ export default function Nav() {
                       </span>
                     </div>
                     <button
-                      onClick={handleSignOut}
+                      onClick={signOut}
                       className="text-[#555] hover:text-white text-sm"
                     >
                       Sign Out
@@ -214,7 +196,7 @@ export default function Nav() {
                   </Link>
                 )}
                 <button
-                  onClick={() => { handleSignOut(); setMobileOpen(false) }}
+                  onClick={() => { signOut(); setMobileOpen(false) }}
                   className="mt-3 text-sm text-[#555] text-left py-2"
                 >
                   Sign Out

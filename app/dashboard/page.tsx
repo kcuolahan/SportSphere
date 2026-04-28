@@ -1,8 +1,8 @@
 ﻿"use client";
 
 import { useState, useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
 import Nav from "@/components/Nav";
+import { supabase } from "@/lib/supabase";
 import Footer from "@/components/Footer";
 import { useProAccess } from "@/lib/auth";
 import Link from "next/link";
@@ -24,10 +24,6 @@ export default function DashboardPage() {
 
   useEffect(() => {
     async function load() {
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-      );
       const { data: { user } } = await supabase.auth.getUser();
       if (!user?.email) { setLoading(false); return; }
 

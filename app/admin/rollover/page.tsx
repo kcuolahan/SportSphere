@@ -224,6 +224,38 @@ function RolloverContent() {
           </div>
         )}
 
+        {/* Quick Seed R8 */}
+        <div style={{ ...card, borderColor: "#f9731640" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
+            <div style={{ ...stepBadge, background: "#4ade80" }}>R8</div>
+            <div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: "#fff" }}>Quick Seed — Round 8</div>
+              <div style={{ fontSize: 12, color: "#555", marginTop: 2 }}>Seeds all 15 R8 picks directly (9 HC + 6 BET). Deletes existing R8 picks first.</div>
+            </div>
+          </div>
+          <button
+            onClick={async () => {
+              setLoading(true);
+              const res = await fetch(`/api/seed-r8?secret=${ADMIN_PW}`);
+              const data = await res.json();
+              if (data.error) {
+                setMessage("Error: " + data.error);
+                setMessageOk(false);
+              } else {
+                setMessage(`R8 seeded — ${data.seeded} picks inserted`);
+                setMessageOk(true);
+                setPicksSeeded(true);
+                fetchStatus();
+              }
+              setLoading(false);
+            }}
+            disabled={loading}
+            style={{ ...btnPrimary, background: loading ? "#555" : "#4ade80" }}
+          >
+            {loading ? "Seeding..." : "Seed R8 Picks Now"}
+          </button>
+        </div>
+
         {/* Step 1: Seed */}
         <div style={card}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>

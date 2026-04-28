@@ -1,27 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { createClient, SupabaseClient } from '@supabase/supabase-js'
-
-// Singleton client — created once, session persists across renders
-let _supabase: SupabaseClient | null = null
-
-function getSupabase(): SupabaseClient {
-  if (!_supabase) {
-    _supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        auth: {
-          persistSession: true,
-          autoRefreshToken: true,
-          detectSessionInUrl: true,
-          storageKey: 'supabase-auth',
-        },
-      }
-    )
-  }
-  return _supabase
-}
+import { supabase } from './supabase'
 
 export interface ProAccess {
   isPro: boolean
@@ -29,6 +8,7 @@ export interface ProAccess {
   isLoggedIn: boolean
   userEmail: string | null
   recheckPro: () => Promise<void>
+  signOut: () => Promise<void>
 }
 
 export function useProAccess(): ProAccess {
@@ -37,11 +17,9 @@ export function useProAccess(): ProAccess {
   const [loading, setLoading] = useState(true)
   const [userEmail, setUserEmail] = useState<string | null>(null)
 
-  async function check() {
-    const supabase = getSupabase()
+  async function checkStatus() {
     try {
-      const { data: { session }, error: sessionError } =
-        await supabase.auth.getSession()
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
 
       if (sessionError) {
         console.error('[auth] session error:', sessionError.message)
@@ -56,35 +34,16 @@ export function useProAccess(): ProAccess {
         return
       }
 
-      const user = session.user
       setIsLoggedIn(true)
-      setUserEmail(user.email || null)
+      setUserEmail(session.user.email || null)
 
-      // Query by email first — webhook inserts use email as conflict key
-      const { data: byEmail, error: emailErr } = await supabase
-        .from('user_profiles')
-        .select('is_pro, pro_until, email, id')
-        .eq('email', user.email!)
-        .maybeSingle()
-
-      console.log('[auth] byEmail:', byEmail, emailErr?.message)
-
-      if (byEmail != null) {
-        setIsPro(byEmail.is_pro === true)
-        setLoading(false)
-        return
-      }
-
-      // Fallback: query by auth UUID
-      const { data: byId, error: idErr } = await supabase
-        .from('user_profiles')
-        .select('is_pro, pro_until')
-        .eq('id', user.id)
-        .maybeSingle()
-
-      console.log('[auth] byId:', byId, idErr?.message)
-
-      setIsPro(byId?.is_pro === true)
+      const res = await fetch('/api/check-pro', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: session.user.email }),
+      })
+      const data = await res.json()
+      setIsPro(data.isPro === true)
       setLoading(false)
     } catch (e) {
       console.error('[auth] critical error:', e)
@@ -93,23 +52,19 @@ export function useProAccess(): ProAccess {
   }
 
   useEffect(() => {
-    const supabase = getSupabase()
+    checkStatus()
 
-    check()
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        console.log('[auth] state change:', event)
-        if (event === 'SIGNED_OUT') {
-          setIsPro(false)
-          setIsLoggedIn(false)
-          setUserEmail(null)
-          setLoading(false)
-        } else if (session) {
-          check()
-        }
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      console.log('[auth] state change:', event)
+      if (event === 'SIGNED_OUT') {
+        setIsPro(false)
+        setIsLoggedIn(false)
+        setUserEmail(null)
+        setLoading(false)
+      } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        checkStatus()
       }
-    )
+    })
 
     return () => subscription.unsubscribe()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -117,8 +72,13 @@ export function useProAccess(): ProAccess {
 
   const recheckPro = async () => {
     setLoading(true)
-    await check()
+    await checkStatus()
   }
 
-  return { isPro, isLoggedIn, loading, userEmail, recheckPro }
+  const signOut = async () => {
+    await supabase.auth.signOut()
+    window.location.href = '/'
+  }
+
+  return { isPro, isLoggedIn, loading, userEmail, recheckPro, signOut }
 }

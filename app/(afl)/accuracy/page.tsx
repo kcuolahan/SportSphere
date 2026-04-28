@@ -1,7 +1,6 @@
 ﻿"use client";
 
 import Nav from "@/components/Nav";
-import { AFLSidebar } from "@/components/AFLSidebar";
 import Footer from "@/components/Footer";
 import { useProAccess } from "@/lib/auth";
 import Link from "next/link";
@@ -32,9 +31,6 @@ export default function AccuracyPage() {
   if (authLoading) return <div style={{ minHeight: "100vh", background: "#000" }} />;
 
   return (
-    <div className="flex min-h-screen bg-[#0a0a0a]">
-      <AFLSidebar />
-      <div className="flex-1 min-w-0">
     <div style={{ minHeight: "100vh", background: "#000", color: "#f0f0f0", fontFamily: "system-ui, -apple-system, sans-serif" }}>
       <Nav />
       <div style={{ maxWidth: 900, margin: "0 auto", padding: "84px 20px 60px" }}>
@@ -231,8 +227,6 @@ export default function AccuracyPage() {
         </p>
       </div>
       <Footer />
-    </div>
-      </div>
     </div>
   );
 }

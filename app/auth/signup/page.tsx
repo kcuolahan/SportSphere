@@ -5,8 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import { signUp } from "@/lib/supabase";
-import { createClient } from "@supabase/supabase-js";
+import { signUp, supabase } from "@/lib/supabase";
 
 function generateReferralCode(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -31,10 +30,6 @@ export default function SignupPage() {
     if (err) { setLoading(false); setError(err.message); return; }
 
     try {
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-      );
       await supabase
         .from("user_profiles")
         .update({ referral_code: generateReferralCode() })

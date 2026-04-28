@@ -3,12 +3,11 @@
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import Nav from "@/components/Nav";
-import { AFLSidebar } from "@/components/AFLSidebar";
 import Footer from "@/components/Footer";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 import SearchInput from "@/components/ui/SearchInput";
 import { getPlayers, getCurrentPredictions } from "@/lib/data";
-import { createClient } from "@supabase/supabase-js";
+import { supabase } from "@/lib/supabase";
 import { PLAYERS as PLAYERS_FULL } from "@/data/players";
 import type { Player } from "@/lib/data";
 
@@ -242,10 +241,6 @@ export default function PlayersPage() {
   useEffect(() => {
     async function fetchHCPicks() {
       try {
-        const supabase = createClient(
-          process.env.NEXT_PUBLIC_SUPABASE_URL!,
-          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-        );
         const { data } = await supabase
           .from("live_picks")
           .select("player_name")
@@ -292,9 +287,6 @@ export default function PlayersPage() {
   const volTiers: VolTier[] = ["ALL", "LOW", "MODERATE", "HIGH", "V.HIGH"];
 
   return (
-    <div className="flex min-h-screen bg-[#0a0a0a]">
-      <AFLSidebar />
-      <div className="flex-1 min-w-0">
     <div style={{ minHeight: "100vh", background: "#000", color: "#f0f0f0", fontFamily: "system-ui, -apple-system, sans-serif" }}>
       <Nav />
 
@@ -469,8 +461,6 @@ export default function PlayersPage() {
       </div>
 
       <Footer />
-    </div>
-      </div>
     </div>
   );
 }

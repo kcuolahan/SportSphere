@@ -1,6 +1,15 @@
 const SQUIGGLE_BASE = 'https://api.squiggle.com.au/'
 const USER_AGENT = 'SportSphere/1.0 (keegan.cuolahan9@gmail.com)'
 
+// Canonical name → possible Squiggle names
+const PLAYER_ALIASES: Record<string, string[]> = {
+  'mattaes phillipou': ['mattaes phillipou', 'matthew phillipou', 'mat phillipou'],
+  'jordan de goey':    ['jordan de goey', 'jordan degoey'],
+  'jagga smith':       ['jagga smith'],
+  'ed langdon':        ['ed langdon', 'edward langdon'],
+  'brodie grundy':     ['brodie grundy'],
+}
+
 interface SquiggleStat {
   player: string
   team: string
@@ -25,20 +34,20 @@ export async function getPlayerDisposals(
     const data = await response.json()
     const stats: SquiggleStat[] = data.stats ?? []
 
-    // Exact name + team match first
+    const nameLower = playerName.toLowerCase()
+    const aliases = PLAYER_ALIASES[nameLower] ?? [nameLower]
+    const teamUpper = team.toUpperCase()
+
+    // Try aliases first (exact match)
     let stat = stats.find(
-      s =>
-        s.player.toLowerCase() === playerName.toLowerCase() &&
-        s.team.toUpperCase() === team.toUpperCase(),
+      s => aliases.includes(s.player.toLowerCase()) && s.team.toUpperCase() === teamUpper,
     )
 
     // Fall back to last-name + team match (handles "Zak" vs "Zachary")
     if (!stat) {
       const lastName = playerName.split(' ').pop()?.toLowerCase() ?? ''
       stat = stats.find(
-        s =>
-          s.player.toLowerCase().includes(lastName) &&
-          s.team.toUpperCase() === team.toUpperCase(),
+        s => s.player.toLowerCase().includes(lastName) && s.team.toUpperCase() === teamUpper,
       )
     }
 
