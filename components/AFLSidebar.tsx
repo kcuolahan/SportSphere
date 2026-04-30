@@ -6,6 +6,7 @@ import { useProAccess } from '@/lib/auth'
 
 const AFL_NAV = [
   { label: "This Week's Picks", href: '/predictions', pro: false },
+  { label: 'Research Terminal', href: '/research', pro: true },
   { label: 'Track Record', href: '/accuracy', pro: true },
   { label: 'DvP Rankings', href: '/defence', pro: true },
   { label: 'Player Explorer', href: '/players', pro: false },
