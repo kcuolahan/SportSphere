@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { useProAccess } from "@/lib/auth";
+import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 
 function generateReferralCode(): string {
@@ -29,10 +30,6 @@ export default function ReferralPage() {
     if (proLoading || !isLoggedIn) return;
 
     async function load() {
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-      );
       const { data: { user } } = await supabase.auth.getUser();
       if (!user?.email) { setLoading(false); return; }
 
