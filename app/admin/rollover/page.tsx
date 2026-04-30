@@ -117,7 +117,15 @@ function RolloverContent() {
     setLoading(true);
     const res = await fetch("/api/auto-update-results");
     const data = await res.json();
-    setMessage(`Results updated: ${data.updated ?? 0} picks matched, ${data.errors ?? 0} errors out of ${data.totalChecked ?? 0} checked`);
+    const matched = data.matched ?? data.updated ?? 0;
+    const pending = data.pending ?? 0;
+    const errors = data.errors ?? 0;
+    const total = data.totalChecked ?? 0;
+    let msg = `Results: ${matched} updated · ${pending} pending (not yet played) · ${errors} errors · ${total} total checked`;
+    if (data.unmatched?.length > 0) {
+      msg += ` | Pending: ${data.unmatched.map((u: { player: string }) => u.player).join(', ')}`;
+    }
+    setMessage(msg);
     setMessageOk(true);
     fetchStatus();
     setLoading(false);

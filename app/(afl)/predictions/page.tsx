@@ -21,18 +21,44 @@ interface LivePick {
   result: string | null
   profit_loss: number | null
   is_free_pick: boolean
+  game_time?: string | null
+  game_id?: string | null
 }
 
 const TIER_STYLE: Record<string, { border: string; badge: string; badgeText: string }> = {
-  HC:   { border: 'rgba(249,115,22,0.25)', badge: '#f97316',        badgeText: '#000' },
-  BET:  { border: 'rgba(96,165,250,0.2)',  badge: 'rgba(96,165,250,0.2)', badgeText: '#60a5fa' },
-  LEAN: { border: 'rgba(80,80,80,0.3)',    badge: '#2a2a2a',        badgeText: '#666' },
+  HC:   { border: 'rgba(249,115,22,0.25)', badge: '#f97316',               badgeText: '#000' },
+  BET:  { border: 'rgba(96,165,250,0.2)',  badge: 'rgba(96,165,250,0.2)',  badgeText: '#60a5fa' },
+  LEAN: { border: 'rgba(80,80,80,0.3)',    badge: '#2a2a2a',               badgeText: '#666' },
+}
+
+// Keyed by alphabetically sorted team codes (matches seed-r8 getGameKey output)
+const GAME_VENUES: Record<string, string> = {
+  'COL_HAW': 'MCG',
+  'ADE_PTA': 'Adelaide Oval',
+  'FRE_WBD': 'Marvel Stadium',
+  'GEE_NTH': 'GMHBA Stadium',
+  'CAR_STK': 'Marvel Stadium',
+  'RIC_WCE': 'Optus Stadium',
+  'GCS_GWS': 'People First Stadium',
+  'BRL_ESS': 'The Gabba',
+  'MEL_SYD': 'SCG',
+}
+
+function formatGameTime(isoTime: string): string {
+  return new Date(isoTime).toLocaleString('en-AU', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+    timeZone: 'Australia/Melbourne',
+  })
 }
 
 function PickCard({ pick }: { pick: LivePick }) {
   const isOver = pick.prediction === 'OVER'
   const isWin = pick.result === 'WIN'
-  const isLoss = pick.result === 'LOSS'
   const hasResult = pick.result !== null
   const ts = TIER_STYLE[pick.tier] ?? TIER_STYLE.LEAN
 
@@ -105,7 +131,7 @@ export default function PredictionsPage() {
   const { isPro, isLoggedIn, loading: proLoading, recheckPro } = useProAccess()
   const [allPicks, setAllPicks] = useState<LivePick[]>([])
   const [loading, setLoading] = useState(true)
-  const [filter, setFilter] = useState<'HC' | 'ALL'>('HC')
+  const [view, setView] = useState<'HC' | 'GAME' | 'ALL'>('HC')
 
   useEffect(() => {
     const fetchPicks = async () => {
@@ -122,20 +148,44 @@ export default function PredictionsPage() {
       }
       setLoading(false)
     }
-
     fetchPicks()
   }, [])
 
-  const hcPicks = allPicks.filter(p => p.tier === 'HC')
+  const hcPicks  = allPicks.filter(p => p.tier === 'HC')
   const betPicks = allPicks.filter(p => p.tier === 'BET')
-  const otherPicks = allPicks.filter(p => p.tier !== 'HC' && p.tier !== 'BET')
-
-  // What gets shown depends on Pro status + filter toggle
-  const visiblePicks = (!proLoading && isPro)
-    ? (filter === 'HC' ? hcPicks : allPicks)
-    : hcPicks.filter(p => p.is_free_pick)
+  const leanPicks = allPicks.filter(p => p.tier !== 'HC' && p.tier !== 'BET')
 
   const lockedHCCount = (!proLoading && !isPro) ? hcPicks.filter(p => !p.is_free_pick).length : 0
+  const freePicks = hcPicks.filter(p => p.is_free_pick)
+
+  // Group picks by game for GAME view
+  type GameGroup = {
+    gameId: string
+    gameTime: string | null
+    teams: string[]
+    venue: string
+    picks: LivePick[]
+  }
+  const gameGroups: Record<string, GameGroup> = {}
+  allPicks.forEach(pick => {
+    const key = pick.game_id || pick.team
+    if (!gameGroups[key]) {
+      const teams = pick.game_id ? pick.game_id.split('_') : [pick.team]
+      gameGroups[key] = {
+        gameId: key,
+        gameTime: pick.game_time ?? null,
+        teams,
+        venue: (pick.game_id ? GAME_VENUES[pick.game_id] : null) ?? '',
+        picks: [],
+      }
+    }
+    gameGroups[key].picks.push(pick)
+  })
+  const sortedGames = Object.values(gameGroups).sort((a, b) => {
+    if (!a.gameTime) return 1
+    if (!b.gameTime) return -1
+    return new Date(a.gameTime).getTime() - new Date(b.gameTime).getTime()
+  })
 
   return (
     <div style={{ minHeight: '100vh', background: '#000', color: '#f0f0f0', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
@@ -188,109 +238,86 @@ export default function PredictionsPage() {
           </p>
         </div>
 
-        {/* All Tiers toggle — Pro only */}
+        {/* View toggle — Pro only */}
         {!proLoading && isPro && (
           <div style={{
-            background: '#111', border: '1px solid #2a2a2a', borderRadius: 10,
-            padding: '14px 16px', marginBottom: 24,
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12,
+            background: '#111', border: '1px solid #1a1a1a',
+            borderRadius: 10, padding: '14px 16px', marginBottom: 24,
           }}>
-            <div>
+            <div style={{ marginBottom: 10 }}>
               <div style={{ fontSize: 13, fontWeight: 700, color: '#f0f0f0', marginBottom: 2 }}>View Mode</div>
               <div style={{ fontSize: 12, color: '#555' }}>
-                {filter === 'HC'
-                  ? 'Showing HIGH CONVICTION picks only — what we recommend'
-                  : 'Showing all model picks — HC, BET, and lower tiers'}
+                {view === 'HC'   && 'Showing HIGH CONVICTION picks only — what we recommend'}
+                {view === 'GAME' && 'Picks grouped by fixture — perfect for same-game multis'}
+                {view === 'ALL'  && 'Showing all model output across HC, BET and LEAN tiers'}
               </div>
             </div>
             <div style={{ display: 'flex', gap: 2, background: '#0a0a0a', borderRadius: 6, padding: 3 }}>
-              {(['HC', 'ALL'] as const).map(f => (
+              {(['HC', 'GAME', 'ALL'] as const).map(v => (
                 <button
-                  key={f}
-                  onClick={() => setFilter(f)}
+                  key={v}
+                  onClick={() => setView(v)}
                   style={{
-                    padding: '6px 16px', borderRadius: 4, fontSize: 12, fontWeight: 700,
+                    flex: 1, padding: '6px 12px', borderRadius: 4, fontSize: 12, fontWeight: 700,
                     cursor: 'pointer', border: 'none',
-                    background: filter === f ? '#f97316' : 'transparent',
-                    color: filter === f ? '#000' : '#666',
+                    background: view === v ? '#f97316' : 'transparent',
+                    color: view === v ? '#000' : '#666',
                     transition: 'all 0.15s',
                   }}
                 >
-                  {f === 'HC' ? 'HC Only' : 'All Tiers'}
+                  {v === 'HC' ? 'HC Only' : v === 'GAME' ? 'By Game' : 'All Tiers'}
                 </button>
               ))}
             </div>
           </div>
         )}
 
-        {/* All-tiers research note */}
-        {!proLoading && isPro && filter === 'ALL' && (
-          <div style={{
-            background: '#0a0800', border: '1px solid rgba(249,115,22,0.15)',
-            borderRadius: 8, padding: '12px 16px', marginBottom: 24,
-            fontSize: 12, color: '#888', lineHeight: 1.7,
-          }}>
-            <strong style={{ color: '#f97316' }}>Research mode:</strong> LEAN and lower-tier picks are shown for analysis only — not recommended for betting.
-            HC tier has produced a 67.6% win rate. BET and LEAN tiers have lower expected hit rates and should be treated as observational data.
-          </div>
-        )}
-
-        {/* Picks list */}
+        {/* Picks */}
         {loading ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {[0, 1, 2].map(i => (
               <div key={i} style={{ background: '#080808', border: '1px solid #111', borderRadius: 10, padding: '20px', height: 76 }} />
             ))}
           </div>
-        ) : visiblePicks.length === 0 && hcPicks.length === 0 ? (
+        ) : allPicks.length === 0 ? (
           <div style={{ background: '#080808', border: '1px solid #111', borderRadius: 12, padding: '48px', textAlign: 'center' }}>
             <p style={{ fontSize: 14, color: '#555', margin: 0 }}>No picks seeded yet for Round {ROUND}.</p>
           </div>
         ) : (
           <>
-            {/* HC header */}
-            {filter === 'ALL' && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                <span style={{ fontSize: 11, fontWeight: 800, color: '#f97316', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                  HC Picks
-                </span>
-                <span style={{ fontSize: 11, color: '#555' }}>{hcPicks.length} signals</span>
-              </div>
-            )}
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
-              {visiblePicks.filter(p => p.tier === 'HC').map(pick => <PickCard key={pick.id} pick={pick} />)}
-
-              {lockedHCCount > 0 && (
-                <div style={{
-                  background: '#0a0a0a', border: '1px solid rgba(249,115,22,0.2)',
-                  borderRadius: 12, padding: '28px 32px', textAlign: 'center',
-                }}>
-                  <p style={{ fontSize: 14, color: '#888', margin: '0 0 6px' }}>
-                    You&apos;re seeing 1 of {hcPicks.length} HC picks this round.
-                  </p>
-                  <p style={{ fontSize: 13, color: '#555', margin: '0 0 20px' }}>
-                    Get Pro to unlock all {hcPicks.length} HC picks{betPicks.length > 0 ? ` plus ${betPicks.length} BET tier picks` : ''}.
-                  </p>
-                  <a
-                    href="/auth/payment"
-                    style={{
-                      display: 'inline-block', background: '#f97316', color: '#000',
-                      borderRadius: 8, padding: '11px 28px', fontSize: 14, fontWeight: 700,
-                      textDecoration: 'none',
-                    }}
-                  >
-                    Get Pro — $29/month
-                  </a>
-                </div>
-              )}
-            </div>
-
-            {/* BET/lower tier picks */}
-            {!proLoading && isPro && (
+            {/* ── HC ONLY VIEW (also default for non-Pro) ── */}
+            {(view === 'HC' || !isPro) && (
               <>
-                {/* BET section */}
-                {(filter === 'HC' ? betPicks : visiblePicks.filter(p => p.tier === 'BET')).length > 0 && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
+                  {(isPro ? hcPicks : freePicks).map(pick => <PickCard key={pick.id} pick={pick} />)}
+
+                  {lockedHCCount > 0 && (
+                    <div style={{
+                      background: '#0a0a0a', border: '1px solid rgba(249,115,22,0.2)',
+                      borderRadius: 12, padding: '28px 32px', textAlign: 'center',
+                    }}>
+                      <p style={{ fontSize: 14, color: '#888', margin: '0 0 6px' }}>
+                        You&apos;re seeing 1 of {hcPicks.length} HC picks this round.
+                      </p>
+                      <p style={{ fontSize: 13, color: '#555', margin: '0 0 20px' }}>
+                        Get Pro to unlock all {hcPicks.length} HC picks{betPicks.length > 0 ? ` plus ${betPicks.length} BET tier picks` : ''}.
+                      </p>
+                      <a
+                        href="/auth/payment"
+                        style={{
+                          display: 'inline-block', background: '#f97316', color: '#000',
+                          borderRadius: 8, padding: '11px 28px', fontSize: 14, fontWeight: 700,
+                          textDecoration: 'none',
+                        }}
+                      >
+                        Get Pro — $29/month
+                      </a>
+                    </div>
+                  )}
+                </div>
+
+                {/* BET section in HC view (Pro only) */}
+                {!proLoading && isPro && betPicks.length > 0 && (
                   <div style={{ marginBottom: 24 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
                       <span style={{ fontSize: 11, fontWeight: 800, color: '#60a5fa', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
@@ -299,30 +326,153 @@ export default function PredictionsPage() {
                       <span style={{ fontSize: 11, color: '#555' }}>{betPicks.length} signals — lower conviction</span>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                      {(filter === 'HC' ? betPicks : visiblePicks.filter(p => p.tier === 'BET')).map(pick =>
-                        <PickCard key={pick.id} pick={pick} />
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* LEAN and other tiers — only in ALL mode */}
-                {filter === 'ALL' && otherPicks.filter(p => p.tier !== 'BET').length > 0 && (
-                  <div style={{ marginBottom: 24 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                      <span style={{ fontSize: 11, fontWeight: 800, color: '#555', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                        LEAN / Other
-                      </span>
-                      <span style={{ fontSize: 11, color: '#444' }}>research only</span>
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                      {otherPicks.filter(p => p.tier !== 'BET').map(pick =>
-                        <PickCard key={pick.id} pick={pick} />
-                      )}
+                      {betPicks.map(pick => <PickCard key={pick.id} pick={pick} />)}
                     </div>
                   </div>
                 )}
               </>
+            )}
+
+            {/* ── BY GAME VIEW ── */}
+            {view === 'GAME' && !proLoading && isPro && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                {sortedGames.map(game => {
+                  const gameHC   = game.picks.filter(p => p.tier === 'HC')
+                  const gameBET  = game.picks.filter(p => p.tier === 'BET')
+                  const gameLEAN = game.picks.filter(p => p.tier !== 'HC' && p.tier !== 'BET')
+                  const allGamePicks = [...gameHC, ...gameBET, ...gameLEAN]
+
+                  return (
+                    <div key={game.gameId} style={{
+                      background: '#0d0d0d', border: '1px solid #1a1a1a',
+                      borderRadius: 12, overflow: 'hidden',
+                    }}>
+                      {/* Game header */}
+                      <div style={{
+                        background: '#1a1a1a', borderBottom: '1px solid #2a2a2a',
+                        padding: '12px 18px', display: 'flex', alignItems: 'center',
+                        justifyContent: 'space-between', flexWrap: 'wrap', gap: 8,
+                      }}>
+                        <div>
+                          <div style={{ fontSize: 15, fontWeight: 800, color: '#fff' }}>
+                            {game.teams.join(' vs ')}
+                          </div>
+                          <div style={{ fontSize: 12, color: '#888', marginTop: 2 }}>
+                            {[game.venue, game.gameTime ? formatGameTime(game.gameTime) : null]
+                              .filter(Boolean).join(' · ')}
+                          </div>
+                        </div>
+                        <div style={{ textAlign: 'right' }}>
+                          <div style={{ fontSize: 10, color: '#666', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Picks this game</div>
+                          <div style={{ fontSize: 14, fontWeight: 800, color: '#f97316' }}>
+                            {gameHC.length} HC{gameBET.length > 0 ? ` · ${gameBET.length} BET` : ''}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Compact pick rows */}
+                      <div style={{ padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                        {allGamePicks.map(pick => {
+                          const ts = TIER_STYLE[pick.tier] ?? TIER_STYLE.LEAN
+                          return (
+                            <div key={pick.id} style={{
+                              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                              background: '#0a0a0a', borderRadius: 8, padding: '10px 14px',
+                              border: `1px solid ${pick.tier === 'HC' ? 'rgba(249,115,22,0.25)' : pick.tier === 'BET' ? 'rgba(96,165,250,0.15)' : '#1a1a1a'}`,
+                            }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                <span style={{
+                                  fontSize: 8, fontWeight: 800, color: ts.badgeText,
+                                  background: ts.badge, borderRadius: 3, padding: '3px 7px', letterSpacing: '0.06em',
+                                }}>{pick.tier}</span>
+                                <PlayerAvatar name={pick.player_name} team={pick.team} size={28} />
+                                <div>
+                                  <div style={{ fontSize: 13, fontWeight: 700, color: '#f0f0f0' }}>{pick.player_name}</div>
+                                  <div style={{ fontSize: 10, color: '#666' }}>{pick.team} · {pick.position}</div>
+                                </div>
+                              </div>
+                              <div style={{ textAlign: 'right' }}>
+                                <div style={{ fontSize: 14, fontWeight: 800, color: pick.prediction === 'OVER' ? '#22c55e' : '#ef4444' }}>
+                                  {pick.prediction} {pick.line}
+                                </div>
+                                <div style={{ fontSize: 10, color: '#888' }}>E/V {pick.edge_vol?.toFixed(2)}</div>
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+
+                      {/* SGM hint */}
+                      {gameHC.length >= 2 && (
+                        <div style={{
+                          background: '#0a0a0a', borderTop: '1px solid #1a1a1a',
+                          padding: '8px 18px', textAlign: 'center',
+                        }}>
+                          <span style={{ fontSize: 11, color: '#666' }}>
+                            {gameHC.length} HC picks in this game — potential same-game multi
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+
+            {/* ── ALL TIERS VIEW ── */}
+            {view === 'ALL' && !proLoading && isPro && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+
+                {/* HC section */}
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+                    <span style={{ fontSize: 10, fontWeight: 800, background: '#f97316', color: '#000', padding: '3px 8px', borderRadius: 4 }}>HC</span>
+                    <span style={{ fontSize: 16, fontWeight: 800, color: '#fff' }}>High Conviction</span>
+                    <span style={{ fontSize: 12, color: '#666' }}>Edge/Vol ≥ 0.50 · what we recommend</span>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    {hcPicks.map(pick => <PickCard key={pick.id} pick={pick} />)}
+                  </div>
+                </div>
+
+                {/* BET section */}
+                {betPicks.length > 0 && (
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+                      <span style={{ fontSize: 10, fontWeight: 800, background: 'rgba(96,165,250,0.2)', color: '#60a5fa', padding: '3px 8px', borderRadius: 4 }}>BET</span>
+                      <span style={{ fontSize: 16, fontWeight: 800, color: '#fff' }}>Moderate Conviction</span>
+                      <span style={{ fontSize: 12, color: '#666' }}>Lower edge · observational only</span>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                      {betPicks.map(pick => <PickCard key={pick.id} pick={pick} />)}
+                    </div>
+                  </div>
+                )}
+
+                {/* LEAN section */}
+                {leanPicks.length > 0 && (
+                  <div style={{ opacity: 0.75 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+                      <span style={{ fontSize: 10, fontWeight: 800, background: '#2a2a2a', color: '#666', padding: '3px 8px', borderRadius: 4 }}>LEAN</span>
+                      <span style={{ fontSize: 16, fontWeight: 800, color: '#fff' }}>Lean Tier</span>
+                      <span style={{ fontSize: 12, color: '#666' }}>Research mode only · not recommended</span>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                      {leanPicks.map(pick => <PickCard key={pick.id} pick={pick} />)}
+                    </div>
+                  </div>
+                )}
+
+                {/* Disclaimer */}
+                <div style={{ background: '#0a0a0a', border: '1px solid #1a1a1a', borderRadius: 10, padding: '14px 18px' }}>
+                  <div style={{ fontSize: 12, color: '#888', lineHeight: 1.7 }}>
+                    <strong style={{ color: '#f0f0f0' }}>Tier guidance:</strong> Only HC picks are recommended for betting.
+                    BET tier picks have lower confidence and historically lower hit rates.
+                    LEAN tier picks are shown for research and methodology transparency only — do not bet these.
+                  </div>
+                </div>
+
+              </div>
             )}
           </>
         )}

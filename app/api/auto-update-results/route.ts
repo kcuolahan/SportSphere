@@ -12,11 +12,12 @@ async function runUpdate() {
 
   if (picks.length === 0) {
     console.log('[Auto-Update] No unresolved picks found')
-    return { updated: 0, errors: 0, totalChecked: 0 }
+    return { updated: 0, matched: 0, errors: 0, totalChecked: 0, pending: 0, unmatched: [] }
   }
 
   let updatedCount = 0
   let errorCount = 0
+  const pendingPicks: { player: string; reason: string }[] = []
 
   for (const pick of picks) {
     try {
@@ -26,6 +27,7 @@ async function runUpdate() {
 
       if (disposals === null) {
         console.log(`[Auto-Update] No data yet for ${pick.player_name}`)
+        pendingPicks.push({ player: pick.player_name, reason: 'No matching player found in Squiggle data' })
         continue
       }
 
@@ -55,25 +57,30 @@ async function runUpdate() {
     }
   }
 
-  return { updated: updatedCount, errors: errorCount, totalChecked: picks.length }
+  return {
+    updated: updatedCount,
+    matched: updatedCount,
+    errors: errorCount,
+    totalChecked: picks.length,
+    pending: pendingPicks.length,
+    unmatched: pendingPicks,
+  }
 }
 
 export async function POST() {
   try {
     console.log('[Auto-Update] Starting Supabase results update...', new Date().toISOString())
-    const { updated, errors, totalChecked } = await runUpdate()
-    console.log(`[Auto-Update] Completed: ${updated} updated, ${errors} errors`)
+    const result = await runUpdate()
+    console.log(`[Auto-Update] Completed: ${result.updated} updated, ${result.pending} pending, ${result.errors} errors`)
     return Response.json({
-      status: 'success',
-      updated,
-      errors,
-      totalChecked,
+      success: true,
+      ...result,
       timestamp: new Date().toISOString(),
     })
   } catch (error) {
     console.error('[Auto-Update] Fatal error:', error)
     return Response.json(
-      { status: 'error', error: String(error), timestamp: new Date().toISOString() },
+      { success: false, status: 'error', error: String(error), timestamp: new Date().toISOString() },
       { status: 500 },
     )
   }
