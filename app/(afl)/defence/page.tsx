@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
@@ -400,8 +400,16 @@ function DvPGate() {
 // ── Main page ─────────────────────────────────────────────────────────────────
 export default function DefencePage() {
   const { isPro, loading: proLoading } = useProAccess();
+  const [currentRound, setCurrentRound] = useState(8);
   const [posFilter, setPosFilter] = useState<"ALL" | Position>("ALL");
   const [sortKey, setSortKey] = useState<SortKey>("MID");
+
+  useEffect(() => {
+    fetch('/api/current-round')
+      .then(r => r.json())
+      .then(d => setCurrentRound(d.round || 8))
+      .catch(() => {})
+  }, []);
   const [sortDesc, setSortDesc] = useState(true);
   const [viewMode, setViewMode] = useState<ViewMode>("table");
   const [showBestMatchups, setShowBestMatchups] = useState(false);
@@ -455,7 +463,10 @@ export default function DefencePage() {
         {/* Header */}
         <div style={{ marginBottom: 28 }}>
           <div style={{ fontSize: 11, color: "#f97316", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 }}>Defence vs Position</div>
-          <h1 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 12px" }}>DvP Rankings</h1>
+          <h1 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 8px" }}>DvP Rankings</h1>
+          <p style={{ fontSize: 13, color: "#666", margin: "0 0 12px" }}>
+            Disposal concession data through Round {currentRound - 1}, used to inform Round {currentRound} picks.
+          </p>
           <div style={{ background: "#080808", border: "1px solid #111", borderRadius: 8, padding: "14px 16px", maxWidth: 680 }}>
             <p style={{ fontSize: 12, color: "#555", margin: 0, lineHeight: 1.7 }}>
               Teams in <span style={{ color: "#ef4444" }}>red concede more</span> - good OVER targets.
@@ -602,8 +613,9 @@ export default function DefencePage() {
         )}
 
         <div style={{ marginTop: 16, fontSize: 11, color: "#555" }}>
-          Data based on {TEAMS[0]?.concedes_by_position.MID.games ?? 0} rounds sampled. Rank #1-6 = easy matchup (green). Rank #13-18 = hard (red).
-          ↑↓ trend derived from season avg deviation. LOW n = &lt;4 games - insufficient sample to act on.
+          Data sampled from Rounds 2 to {currentRound - 1} of 2026 season. Rankings reflect disposals conceded to each position vs season averages.
+          Refreshed every Monday after weekend results. Rank #1-6 = easy matchup (green). Rank #13-18 = hard (red).
+          LOW n = &lt;4 games - insufficient sample to act on.
         </div>
       </div>
       <Footer />

@@ -300,8 +300,11 @@ export default function PlayersPage() {
           <h1 style={{ fontSize: "clamp(24px, 4vw, 38px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 8px" }}>
             Player Explorer
           </h1>
-          <p style={{ fontSize: 13, color: "#666", margin: 0 }}>
+          <p style={{ fontSize: 13, color: "#666", margin: "0 0 4px" }}>
             {ALL_PLAYERS.length} players tracked in the model. Click any card for their full model profile.
+          </p>
+          <p style={{ fontSize: 12, color: "#555", margin: 0 }}>
+            Player data updated through Round 7 — auto-syncs after each round.
           </p>
         </div>
 

@@ -125,14 +125,11 @@ export default function AboutPage() {
               Contact
             </h2>
             <div style={{ background: "#080808", border: "1px solid #111", borderRadius: 12, padding: "24px 28px" }}>
-              <p style={{ fontSize: 14, color: "#888", lineHeight: 1.8, margin: "0 0 20px" }}>
-                For questions about the model methodology, data issues, or general feedback -reach out directly.
-              </p>
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 {[
-                  { label: "Model questions & feedback", href: "mailto:hello@sportsphere.com.au", text: "hello@sportsphere.com.au" },
-                  { label: "Data errors or corrections", href: "mailto:hello@sportsphere.com.au", text: "hello@sportsphere.com.au" },
-                  { label: "How the model works", href: "/model", text: "Read the methodology →" },
+                  { label: "General queries", href: "mailto:support@sportspherehq.com", text: "support@sportspherehq.com" },
+                  { label: "Data errors or corrections", href: "mailto:support@sportspherehq.com", text: "support@sportspherehq.com" },
+                  { label: "Methodology questions", href: "/model", text: "Read how the model works →" },
                   { label: "Common questions", href: "/faq", text: "Read the FAQ →" },
                 ].map(row => (
                   <div key={row.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: "1px solid #111" }}>

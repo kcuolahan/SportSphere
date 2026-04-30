@@ -13,6 +13,7 @@ export default function Nav() {
     { href: '/afl', label: 'AFL' },
     { href: '/model', label: 'How It Works' },
     { href: '/faq', label: 'FAQ' },
+    { href: '/about', label: 'About' },
   ]
 
   return (

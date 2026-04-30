@@ -8,15 +8,24 @@ const supabase = createClient(
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
-  const round = parseInt(searchParams.get('round') || '8')
-  const tier = searchParams.get('tier') || 'HC'
+  const roundParam = searchParams.get('round') || '8'
+  const tier = searchParams.get('tier')
 
-  const { data, error } = await supabase
+  let query = supabase
     .from('live_picks')
     .select('*')
-    .eq('round', round)
-    .eq('tier', tier)
+    .order('round', { ascending: false })
     .order('edge_vol', { ascending: false })
+
+  if (roundParam !== 'ALL') {
+    query = query.eq('round', parseInt(roundParam))
+  }
+
+  if (tier && tier !== 'ALL') {
+    query = query.eq('tier', tier)
+  }
+
+  const { data, error } = await query
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })

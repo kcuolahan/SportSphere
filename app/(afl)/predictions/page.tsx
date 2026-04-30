@@ -5,7 +5,6 @@ import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import { PlayerAvatar } from '@/components/PlayerAvatar'
 import { useProAccess } from '@/lib/auth'
-import { supabase } from '@/lib/supabase'
 
 interface LivePick {
   id: string
@@ -103,23 +102,21 @@ export default function PredictionsPage() {
 
   useEffect(() => {
     const fetchPicks = async () => {
-      const { data, error } = await supabase
-        .from('live_picks')
-        .select('*')
-        .eq('round', ROUND)
-        .order('edge_vol', { ascending: false })
-      if (!error && data) setAllPicks(data)
+      try {
+        const roundRes = await fetch('/api/current-round')
+        const roundData = await roundRes.json()
+        const round = roundData.round || ROUND
+
+        const res = await fetch(`/api/picks?round=${round}`)
+        const data = await res.json()
+        setAllPicks(data.picks || [])
+      } catch {
+        // silently fail — show empty state
+      }
       setLoading(false)
     }
 
     fetchPicks()
-
-    const subscription = supabase
-      .channel('predictions_r8')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'live_picks' }, fetchPicks)
-      .subscribe()
-
-    return () => { subscription.unsubscribe() }
   }, [])
 
   const hcPicks = allPicks.filter(p => p.tier === 'HC')
@@ -210,10 +207,10 @@ export default function PredictionsPage() {
                   borderRadius: 12, padding: '28px 32px', textAlign: 'center', marginTop: 4,
                 }}>
                   <p style={{ fontSize: 14, color: '#888', margin: '0 0 6px' }}>
-                    You are seeing 1 of {hcPicks.length} HC picks this round.
+                    You&apos;re seeing 1 of {hcPicks.length} HC picks this round.
                   </p>
                   <p style={{ fontSize: 13, color: '#555', margin: '0 0 20px' }}>
-                    Get Pro to unlock all {lockedHCCount} remaining picks + BET tier.
+                    Get Pro to unlock all {hcPicks.length} HC picks{betPicks.length > 0 ? ` plus ${betPicks.length} BET tier picks` : ''}.
                   </p>
                   <a
                     href="/auth/payment"

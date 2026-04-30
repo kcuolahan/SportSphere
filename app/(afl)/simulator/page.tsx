@@ -1433,8 +1433,15 @@ export default function SimulatorPage() {
           </div>
         </div>
 
-        <div style={{ marginTop: 24, fontSize: 11, color: "#1a1a1a" }}>
-          Simulation uses {ALL_EXTENDED.length} verified picks · {roundsLabel} · {currentSeason} season. Not betting advice. 18+ only.
+        <div style={{ marginTop: 24, background: "#080808", border: "1px solid #111", borderRadius: 10, padding: "16px 20px" }}>
+          <p style={{ fontSize: 13, color: "#666", lineHeight: 1.7, margin: 0 }}>
+            This simulator runs the model against backtested data from Rounds 3 to 7 of the 2026 season.
+            Adjust the weights to see how different configurations would have performed.
+            The current production weights have produced a <strong style={{ color: "#f97316" }}>67.6% HC win rate</strong> — try beating it.
+          </p>
+          <p style={{ fontSize: 11, color: "#444", margin: "10px 0 0" }}>
+            Simulation uses {ALL_EXTENDED.length} verified picks · {roundsLabel} · {currentSeason} season · Not betting advice · 18+ only
+          </p>
         </div>
       </div>
 
