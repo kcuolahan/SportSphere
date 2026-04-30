@@ -26,7 +26,8 @@ export default function SignupPage() {
     setError(null);
     if (password.length < 8) { setError("Password must be at least 8 characters."); return; }
     setLoading(true);
-    const { error: err } = await signUp(email, password);
+
+    const { error: err, data } = await signUp(email, password);
     if (err) { setLoading(false); setError(err.message); return; }
 
     try {
@@ -49,7 +50,20 @@ export default function SignupPage() {
     }
 
     setLoading(false);
-    router.push(`/auth/payment?email=${encodeURIComponent(email)}`);
+
+    // If email confirmation is off, session is available immediately
+    if (data?.session) {
+      router.push('/auth/payment');
+    } else {
+      // Email confirmation is on — try signing in with the just-created credentials
+      const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+      if (signInError) {
+        // Couldn't auto-sign-in — send to login
+        router.push('/login');
+      } else {
+        router.push('/auth/payment');
+      }
+    }
   }
 
   return (
