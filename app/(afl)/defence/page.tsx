@@ -398,17 +398,32 @@ function DvPGate() {
 }
 
 // ── Main page ─────────────────────────────────────────────────────────────────
+interface LivePick {
+  id: string; player_name: string; team: string; position: string;
+  line: number; prediction: string; edge_vol: number; tier: string;
+}
+
 export default function DefencePage() {
   const { isPro, loading: proLoading } = useProAccess();
   const [currentRound, setCurrentRound] = useState(8);
+  const [keyMatchups, setKeyMatchups] = useState<LivePick[]>([]);
   const [posFilter, setPosFilter] = useState<"ALL" | Position>("ALL");
   const [sortKey, setSortKey] = useState<SortKey>("MID");
 
   useEffect(() => {
-    fetch('/api/current-round')
-      .then(r => r.json())
-      .then(d => setCurrentRound(d.round || 8))
-      .catch(() => {})
+    async function fetchData() {
+      try {
+        const roundRes = await fetch('/api/current-round');
+        const roundData = await roundRes.json();
+        const r = roundData.round || 8;
+        setCurrentRound(r);
+
+        const picksRes = await fetch(`/api/picks?round=${r}&tier=HC`);
+        const picksData = await picksRes.json();
+        setKeyMatchups((picksData.picks || []).slice(0, 6));
+      } catch {}
+    }
+    fetchData();
   }, []);
   const [sortDesc, setSortDesc] = useState(true);
   const [viewMode, setViewMode] = useState<ViewMode>("table");
@@ -509,16 +524,52 @@ export default function DefencePage() {
           </div>
         )}
 
-        {/* Key matchups */}
-        {currentPicks.length > 0 && !showBestMatchups && (
+        {/* Key matchups — live from current round */}
+        {keyMatchups.length > 0 && !showBestMatchups && (
           <div style={{ marginBottom: 36 }}>
             <div style={{ fontSize: 11, color: "#f97316", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 14 }}>
-              Round {predictions.round} · Key Matchups
+              Round {currentRound} · Key Matchups
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 10 }}>
-              {currentPicks.slice(0, 6).map(pick => {
-                const rank = RANKS[pick.opponent]?.[pick.position as Position] ?? 9;
-                return <MatchupCard key={pick.player} pick={pick} rank={rank} />;
+              {keyMatchups.map(pick => {
+                const initials = pick.player_name.split(' ').map((n: string) => n[0]).slice(0, 2).join('');
+                const isOver = pick.prediction === 'OVER';
+                const accentColor = isOver ? '#4ade80' : '#f87171';
+                return (
+                  <div key={pick.id} style={{
+                    background: '#080808',
+                    border: `1px solid ${isOver ? 'rgba(74,222,128,0.2)' : 'rgba(248,113,113,0.2)'}`,
+                    borderLeft: `3px solid ${accentColor}`,
+                    borderRadius: 10, padding: '14px 16px',
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
+                      <div style={{
+                        width: 38, height: 38, borderRadius: '50%',
+                        background: '#0a0a0a', border: '1px solid #2a2a2a',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: 13, fontWeight: 800, color: '#f97316', flexShrink: 0,
+                      }}>
+                        {initials}
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: '#f0f0f0', marginBottom: 2 }}>
+                          {pick.player_name}
+                        </div>
+                        <div style={{ fontSize: 11, color: '#666' }}>
+                          {pick.team} · {pick.position}
+                        </div>
+                      </div>
+                      <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                        <div style={{ fontSize: 14, fontWeight: 800, color: accentColor }}>
+                          {pick.prediction} {pick.line}
+                        </div>
+                        <div style={{ fontSize: 10, color: '#555' }}>
+                          E/V {pick.edge_vol?.toFixed(2)}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
               })}
             </div>
           </div>

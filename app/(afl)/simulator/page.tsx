@@ -16,6 +16,34 @@ import { getCurrentPredictions } from "@/lib/data";
 import type { Pick as CurrentPick } from "@/lib/data";
 import { useProAccess } from "@/lib/auth";
 
+interface LivePick {
+  id: string
+  round: number
+  player_name: string
+  team: string
+  position: string
+  line: number
+  prediction: string
+  edge_vol: number
+  tier: string
+  odds: number
+  final_disposals: number | null
+  result: string | null
+  profit_loss: number | null
+  is_free_pick: boolean
+}
+
+const ADJUSTMENT_TAGS: { id: string; label: string; impact: number; desc: string }[] = [
+  { id: 'injury_risk',    label: 'Injury Risk',        impact: -15, desc: 'Player carrying a knock into the game' },
+  { id: 'return_game',    label: 'Return Game',         impact: -10, desc: 'First game back from injury' },
+  { id: 'opp_stopper',    label: 'Opposition Stopper',  impact: -12, desc: 'Matched up on an elite tagger' },
+  { id: 'home_venue',     label: 'Home Venue',          impact:   8, desc: 'Strong historical record at this ground' },
+  { id: 'form_surge',     label: 'Form Surge',          impact:  12, desc: 'Last 3 games well above season average' },
+  { id: 'wet_forecast',   label: 'Wet Forecast',        impact:  -8, desc: 'Wet conditions expected (more stoppages)' },
+  { id: 'bench_risk',     label: 'Late Bench Risk',     impact:  -6, desc: 'Team tends to rest stars in blowouts' },
+  { id: 'ruck_matchup',   label: 'Ruck Matchup',        impact:   7, desc: 'Favourable ruck contest expected' },
+]
+
 // ── Synthesise raw_inputs for picks that don't have them ─────────────────────
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function synthesizeRawInputs(p: any): import("@/lib/model-engine").RawInputs {
@@ -284,6 +312,11 @@ export default function SimulatorPage() {
   const [outcomeFilter, setOutcomeFilter] = useState<"ALL" | "LOSS_WIN" | "WIN_LOSS">("ALL");
   const [showFullTable, setShowFullTable] = useState(false);
   const [tablePage, setTablePage] = useState(0);
+  const [mode, setMode] = useState<'overall' | 'player'>('overall')
+  const [livePicks, setLivePicks] = useState<LivePick[]>([])
+  const [selectedPlayerId, setSelectedPlayerId] = useState<string>('')
+  const [activeTags, setActiveTags] = useState<Set<string>>(new Set())
+  const [customAdjustment, setCustomAdjustment] = useState(0)
   const PAGE_SIZE = 20;
 
   // ── Slider animation ──────────────────────────────────────────────────────
@@ -477,6 +510,20 @@ export default function SimulatorPage() {
       if (stored) setSavedConfigs(JSON.parse(stored));
     } catch { /* ignore */ }
   }, []);
+
+  useEffect(() => {
+    async function loadLivePicks() {
+      try {
+        const rr = await fetch('/api/current-round')
+        const rd = await rr.json()
+        const r = rd.round || 8
+        const pr = await fetch(`/api/picks?round=${r}`)
+        const pd = await pr.json()
+        setLivePicks(pd.picks || [])
+      } catch { /* silently fail */ }
+    }
+    loadLivePicks()
+  }, [])
 
   // Bias stats
   const biasStats = useMemo(() => {
@@ -700,7 +747,26 @@ export default function SimulatorPage() {
           </p>
         </div>
 
-        <div className="sim-layout" style={{ display: "grid", gridTemplateColumns: "340px 1fr", gap: 24, alignItems: "start" }}>
+        {/* Mode toggle */}
+        <div style={{ marginBottom: 24, display: 'flex', gap: 2, background: '#111', border: '1px solid #1a1a1a', borderRadius: 8, padding: 3, width: 'fit-content' }}>
+          {(['overall', 'player'] as const).map(m => (
+            <button
+              key={m}
+              onClick={() => setMode(m)}
+              style={{
+                padding: '7px 18px', borderRadius: 6, fontSize: 12, fontWeight: 700,
+                cursor: 'pointer', border: 'none',
+                background: mode === m ? '#f97316' : 'transparent',
+                color: mode === m ? '#000' : '#666',
+                transition: 'all 0.15s',
+              }}
+            >
+              {m === 'overall' ? 'Overall Backtest' : 'Player Mode'}
+            </button>
+          ))}
+        </div>
+
+        {mode === 'overall' && (<div className="sim-layout" style={{ display: "grid", gridTemplateColumns: "340px 1fr", gap: 24, alignItems: "start" }}>
 
           {/* ── LEFT PANEL ── */}
           <div className="sim-left" style={{ position: "sticky", top: 84 }}>
@@ -1432,6 +1498,199 @@ export default function SimulatorPage() {
             </div>
           </div>
         </div>
+        )}
+
+        {mode === 'player' && (
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }} className="sim-layout">
+            {/* Left: selector + tags */}
+            <div>
+              <div style={{ background: '#080808', border: '1px solid #111', borderRadius: 12, padding: '16px 18px', marginBottom: 16 }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: '#555', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
+                  Select Player — Round {livePicks[0]?.round ?? 8} HC Picks
+                </div>
+                {livePicks.length === 0 ? (
+                  <div style={{ fontSize: 12, color: '#555' }}>Loading picks...</div>
+                ) : (
+                  <select
+                    value={selectedPlayerId}
+                    onChange={e => { setSelectedPlayerId(e.target.value); setActiveTags(new Set()); setCustomAdjustment(0) }}
+                    style={{ width: '100%', padding: '10px 14px', background: '#0a0a0a', border: '1px solid #1f1f1f', borderRadius: 8, fontSize: 13, color: selectedPlayerId ? '#f0f0f0' : '#555', outline: 'none', cursor: 'pointer' }}
+                  >
+                    <option value="">Choose a player...</option>
+                    {livePicks.filter(p => p.tier === 'HC').map(p => (
+                      <option key={p.id} value={p.id}>
+                        {p.player_name} — {p.prediction} {p.line} ({p.team})
+                      </option>
+                    ))}
+                  </select>
+                )}
+              </div>
+
+              {selectedPlayerId && (
+                <div style={{ background: '#080808', border: '1px solid #111', borderRadius: 12, padding: '16px 18px' }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: '#555', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>
+                    Adjustment Tags
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 16 }}>
+                    {ADJUSTMENT_TAGS.map(tag => {
+                      const active = activeTags.has(tag.id)
+                      return (
+                        <button
+                          key={tag.id}
+                          onClick={() => setActiveTags(prev => {
+                            const next = new Set(prev)
+                            next.has(tag.id) ? next.delete(tag.id) : next.add(tag.id)
+                            return next
+                          })}
+                          style={{
+                            background: active ? (tag.impact > 0 ? 'rgba(74,222,128,0.1)' : 'rgba(248,113,113,0.1)') : '#0a0a0a',
+                            border: `1px solid ${active ? (tag.impact > 0 ? 'rgba(74,222,128,0.5)' : 'rgba(248,113,113,0.5)') : '#1a1a1a'}`,
+                            borderRadius: 8, padding: '10px 12px', textAlign: 'left', cursor: 'pointer',
+                          }}
+                        >
+                          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
+                            <span style={{ fontSize: 11, fontWeight: 700, color: active ? (tag.impact > 0 ? '#4ade80' : '#f87171') : '#888' }}>
+                              {tag.label}
+                            </span>
+                            <span style={{ fontSize: 11, fontWeight: 800, color: tag.impact > 0 ? '#4ade80' : '#f87171' }}>
+                              {tag.impact > 0 ? '+' : ''}{tag.impact}%
+                            </span>
+                          </div>
+                          <div style={{ fontSize: 9, color: '#555' }}>{tag.desc}</div>
+                        </button>
+                      )
+                    })}
+                  </div>
+                  <div style={{ paddingTop: 12, borderTop: '1px solid #111' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                      <span style={{ fontSize: 10, color: '#555', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Custom Adjustment</span>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: customAdjustment > 0 ? '#4ade80' : customAdjustment < 0 ? '#f87171' : '#555' }}>
+                        {customAdjustment > 0 ? '+' : ''}{customAdjustment}%
+                      </span>
+                    </div>
+                    <input
+                      type="range" min={-20} max={20} step={1} value={customAdjustment}
+                      onChange={e => setCustomAdjustment(Number(e.target.value))}
+                      style={{ width: '100%' }}
+                    />
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 2 }}>
+                      <span style={{ fontSize: 9, color: '#444' }}>−20%</span>
+                      <span style={{ fontSize: 9, color: '#444' }}>neutral</span>
+                      <span style={{ fontSize: 9, color: '#444' }}>+20%</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Right: results panel */}
+            <div>
+              {!selectedPlayerId ? (
+                <div style={{ background: '#080808', border: '1px solid #111', borderRadius: 12, padding: '64px 24px', textAlign: 'center' }}>
+                  <div style={{ fontSize: 13, color: '#555' }}>Select a player to see the adjusted model output</div>
+                </div>
+              ) : (() => {
+                const pick = livePicks.find(p => p.id === selectedPlayerId)
+                if (!pick) return null
+                const basePred = pick.line + (pick.prediction === 'OVER' ? 1 : -1) * (pick.edge_vol ?? 0.5) * 4.5
+                const tagAdj = Array.from(activeTags).reduce<number>((s, id) => s + (ADJUSTMENT_TAGS.find(t => t.id === id)?.impact ?? 0), 0)
+                const totalAdj = tagAdj + customAdjustment
+                const adjPred = basePred * (1 + totalAdj / 100)
+                const adjEdge = adjPred - pick.line
+                const adjEV = Math.abs(adjEdge) / (Math.abs(adjPred) * 0.2 + 1)
+                const adjDir = adjPred > pick.line ? 'OVER' : 'UNDER'
+                const flipped = adjDir !== pick.prediction
+                const adjTier = adjEV >= 0.50 ? 'HC' : adjEV >= 0.30 ? 'BET' : 'LEAN'
+                const TC: Record<string, string> = { HC: '#f97316', BET: '#60a5fa', LEAN: '#555' }
+
+                return (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    <div style={{ background: '#080808', border: '1px solid #1a1a1a', borderRadius: 12, padding: '16px 18px' }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: '#555', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>Base Model Pick</div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+                        <PlayerAvatar name={pick.player_name} team={pick.team} size={36} />
+                        <div>
+                          <div style={{ fontSize: 15, fontWeight: 700, color: '#fff' }}>{pick.player_name}</div>
+                          <div style={{ fontSize: 11, color: '#666' }}>{pick.position} · {pick.team}</div>
+                        </div>
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+                        {[
+                          { label: 'PICK', value: `${pick.prediction} ${pick.line}`, color: pick.prediction === 'OVER' ? '#22c55e' : '#ef4444' },
+                          { label: 'BASE E/V', value: (pick.edge_vol ?? 0).toFixed(2), color: '#60a5fa' },
+                          { label: 'TIER', value: pick.tier, color: TC[pick.tier] ?? '#555' },
+                        ].map(s => (
+                          <div key={s.label}>
+                            <div style={{ fontSize: 9, color: '#555', marginBottom: 3 }}>{s.label}</div>
+                            <div style={{ fontSize: 14, fontWeight: 800, color: s.color }}>{s.value}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div style={{
+                      background: flipped ? 'rgba(249,115,22,0.06)' : totalAdj > 0 ? 'rgba(74,222,128,0.05)' : totalAdj < 0 ? 'rgba(248,113,113,0.05)' : '#080808',
+                      border: `1px solid ${flipped ? 'rgba(249,115,22,0.35)' : totalAdj > 0 ? 'rgba(74,222,128,0.2)' : totalAdj < 0 ? 'rgba(248,113,113,0.2)' : '#1a1a1a'}`,
+                      borderRadius: 12, padding: '16px 18px',
+                    }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                        <div style={{ fontSize: 10, fontWeight: 700, color: '#555', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Adjusted Output</div>
+                        {totalAdj !== 0 && (
+                          <span style={{ fontSize: 11, fontWeight: 700, color: totalAdj > 0 ? '#4ade80' : '#f87171' }}>
+                            {totalAdj > 0 ? '+' : ''}{totalAdj}% applied
+                          </span>
+                        )}
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, marginBottom: 14 }}>
+                        {[
+                          { label: 'ADJ PICK', value: `${adjDir} ${pick.line}`, color: adjDir === 'OVER' ? '#22c55e' : '#ef4444' },
+                          { label: 'ADJ E/V', value: adjEV.toFixed(2), color: '#60a5fa' },
+                          { label: 'ADJ TIER', value: adjTier, color: TC[adjTier] },
+                        ].map(s => (
+                          <div key={s.label}>
+                            <div style={{ fontSize: 9, color: '#555', marginBottom: 3 }}>{s.label}</div>
+                            <div style={{ fontSize: 14, fontWeight: 800, color: s.color }}>{s.value}</div>
+                          </div>
+                        ))}
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, paddingTop: 10, borderTop: '1px solid #111' }}>
+                        <div>
+                          <div style={{ fontSize: 9, color: '#555', marginBottom: 3 }}>MODEL PRED</div>
+                          <div style={{ fontSize: 12, color: '#888' }}>{basePred.toFixed(1)} → <strong style={{ color: '#f97316' }}>{adjPred.toFixed(1)}</strong></div>
+                        </div>
+                        <div>
+                          <div style={{ fontSize: 9, color: '#555', marginBottom: 3 }}>EDGE vs LINE</div>
+                          <div style={{ fontSize: 12, color: adjEdge > 0 ? '#22c55e' : '#ef4444' }}>{adjEdge > 0 ? '+' : ''}{adjEdge.toFixed(1)} disp</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {flipped && (
+                      <div style={{ background: 'rgba(249,115,22,0.08)', border: '1px solid rgba(249,115,22,0.4)', borderRadius: 8, padding: '12px 14px' }}>
+                        <div style={{ fontSize: 12, fontWeight: 800, color: '#f97316', marginBottom: 4 }}>Direction Flip</div>
+                        <div style={{ fontSize: 11, color: '#888', lineHeight: 1.6 }}>
+                          Adjustments push the predicted disposals below the line. Model now suggests <strong style={{ color: '#f0f0f0' }}>{adjDir} {pick.line}</strong> instead of {pick.prediction} {pick.line}.
+                        </div>
+                      </div>
+                    )}
+
+                    <div style={{ background: '#080808', border: '1px solid #111', borderRadius: 8, padding: '12px 14px' }}>
+                      <div style={{ fontSize: 9, color: '#555', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Recommendation</div>
+                      <div style={{ fontSize: 12, color: '#888', lineHeight: 1.65 }}>
+                        {adjEV >= 0.50
+                          ? `Strong signal maintained. ${adjDir} ${pick.line} remains ${adjTier} tier after adjustments.`
+                          : adjEV >= 0.30
+                          ? `Signal degraded to ${adjTier} tier. Consider reduced stake or monitor closer to game time.`
+                          : `Signal below threshold (E/V ${adjEV.toFixed(2)}). Model recommends pass.`
+                        }
+                      </div>
+                    </div>
+                  </div>
+                )
+              })()}
+            </div>
+          </div>
+        )}
 
         <div style={{ marginTop: 24, background: "#080808", border: "1px solid #111", borderRadius: 10, padding: "16px 20px" }}>
           <p style={{ fontSize: 13, color: "#666", lineHeight: 1.7, margin: 0 }}>
