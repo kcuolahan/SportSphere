@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Nav from "@/components/Nav";
 import { supabase } from "@/lib/supabase";
 import Footer from "@/components/Footer";
@@ -17,6 +18,8 @@ interface Profile {
 }
 
 export default function DashboardPage() {
+  const router = useRouter()
+  useEffect(() => { router.push('/afl') }, [router])
   const { isPro, isLoggedIn, loading: proLoading } = useProAccess();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);

@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useState, useEffect, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -57,6 +58,8 @@ function exportCSV(bets: Bet[]) {
 }
 
 export default function TrackerPage() {
+  const router = useRouter()
+  useEffect(() => { router.push('/afl') }, [router])
   const { isPro, loading: proLoading } = useProAccess();
   const [user, setUser] = useState<User | null | undefined>(undefined);
   const [bets, setBets] = useState<Bet[]>([]);

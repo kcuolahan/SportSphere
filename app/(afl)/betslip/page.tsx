@@ -1,6 +1,7 @@
 ﻿"use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { useProAccess } from "@/lib/auth";
@@ -41,6 +42,8 @@ interface BetRow {
 }
 
 export default function BetslipPage() {
+  const router = useRouter()
+  useEffect(() => { router.push('/afl') }, [router])
   const { isPro, loading: proLoading } = useProAccess();
   const [bankroll, setBankroll] = useState(10000);
   const [winProb, setWinProb] = useState(67.6);

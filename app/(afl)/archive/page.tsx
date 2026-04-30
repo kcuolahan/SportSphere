@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Nav from "@/components/Nav";
 import { supabase } from "@/lib/supabase";
 import Footer from "@/components/Footer";
@@ -33,6 +34,8 @@ interface RoundGroup {
 }
 
 export default function ArchivePage() {
+  const router = useRouter()
+  useEffect(() => { router.push('/afl') }, [router])
   const { isPro, loading: proLoading } = useProAccess();
   const [rounds, setRounds] = useState<RoundGroup[]>([]);
   const [loading, setLoading] = useState(true);

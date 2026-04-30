@@ -1,5 +1,6 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
@@ -32,6 +33,8 @@ const XP_RULES = {
 }
 
 export default function FantasyPage() {
+  const router = useRouter()
+  useEffect(() => { router.push('/afl') }, [router])
   const [waitlistEmail, setWaitlistEmail] = useState('')
   const [waitlistDone, setWaitlistDone] = useState(false)
 

@@ -39,27 +39,6 @@ const AFL_NAV = [
     pro: true,
     desc: 'Test model weights',
   },
-  {
-    label: 'Betslip',
-    href: '/betslip',
-    icon: '🧮',
-    pro: true,
-    desc: 'Calculate your stakes',
-  },
-  {
-    label: 'Round Preview',
-    href: '/round-preview',
-    icon: '👁',
-    pro: true,
-    desc: 'What to watch',
-  },
-  {
-    label: 'Archive',
-    href: '/archive',
-    icon: '📁',
-    pro: true,
-    desc: 'All past picks',
-  },
 ]
 
 export function AFLSidebar() {

@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { useState, useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { useProAccess } from "@/lib/auth";
@@ -17,6 +17,8 @@ function generateReferralCode(): string {
 }
 
 export default function ReferralPage() {
+  const router = useRouter()
+  useEffect(() => { router.push('/afl') }, [router])
   const { isPro, isLoggedIn, loading: proLoading } = useProAccess();
   const [referralCode, setReferralCode] = useState<string | null>(null);
   const [referralCount, setReferralCount] = useState(0);

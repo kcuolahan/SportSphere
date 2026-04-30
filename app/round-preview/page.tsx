@@ -1,11 +1,15 @@
 ﻿"use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { useProAccess } from "@/lib/auth";
 import Link from "next/link";
 
 export default function RoundPreviewPage() {
+  const router = useRouter()
+  useEffect(() => { router.push('/afl') }, [router])
   const { isPro, loading: proLoading } = useProAccess();
 
   if (proLoading) return <div style={{ minHeight: "100vh", background: "#000" }} />;
